@@ -11,15 +11,14 @@
         <div class="api-w1024 api-header">
             <a href="#" class="ah-logo">API开发指南</a>
         </div>
-
     </header>
     <div class="api-logo-bg">
         <div class="alb-box clearfix">
-            <form>
+            <form id="loginForm" onsubmit="return false;">
                 <h3>后台管理系统</h3>
-                <input class="alb-group" type="text" placeholder="请输入账号" />
-                <input class="alb-group" type="password" placeholder="请输入密码" />
-                <input class="alb-btn" type="submit" value="登录" />
+                <input class="alb-group" type="text" v-model="user.username" placeholder="请输入账号" />
+                <input class="alb-group" type="password" v-model="user.password" placeholder="请输入密码" />
+                <input class="alb-btn" type="submit" value="登录" @click="loginHandler" />
             </form>
         </div>
 
