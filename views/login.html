@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="/public/css/login.css" rel="stylesheet" type="text/css"/>
+    <%- include ./default.html%>
+</head>
+<body>
+    <form action="#" method="POST" id="loginForm" onsubmit="return false;">
+        用户名: <input type="text" name="username" v-model="user.username"/>  <br>
+        密码: <input type="password" name="pwd" v-model="user.password"/>
+        <input type="submit" value="登录" @click="loginHandler"/>
+    </form>
+</body>
+</html>
+<script>
+    var app1 = new Vue({
+        el:"#loginForm",
+        data:{
+            user:{
+                username:"",
+                password:""
+            }
+        },
+        methods:{
+            loginHandler:function(){
+                var user = this.$data.user;
+                if(!user.username){
+                    alert("请输入用户名！");
+                }else if(!user.password){
+                    alert("请输入密码！");
+                }else{
+                    $.ajax({
+                        type:"post",
+                        url:"/api/login",
+                        data:user,
+                        success:function(result){
+                            if(result.status === "success"){
+                                location.href = "/admin/main";
+                            }else{
+                                alert(result.message);
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    })
+</script>
