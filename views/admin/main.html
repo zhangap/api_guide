@@ -1,47 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>页面标题</title>
+    <title>欢迎使用后台管理系统</title>
     <meta charset="utf-8">
     <%- include ../default.html%>
     <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
-    <div id="wrap">
-        <header class="header">
-            <div class="logo">API开发指南后台管理系统</div>
-            <div class="bigMenu">
-                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                    <el-menu-item index="1">处理中心</el-menu-item>
-                    <el-submenu index="2">
-                        <template slot="title">我的工作台</template>
-                        <el-menu-item index="2-1">选项1</el-menu-item>
-                        <el-menu-item index="2-2">选项2</el-menu-item>
-                        <el-menu-item index="2-3">选项3</el-menu-item>
-                        <el-submenu index="2-4">
-                            <template slot="title">选项4</template>
-                            <el-menu-item index="2-4-1">选项1</el-menu-item>
-                            <el-menu-item index="2-4-2">选项2</el-menu-item>
-                            <el-menu-item index="2-4-3">选项3</el-menu-item>
-                        </el-submenu>
+<div id="wrap">
+    <header class="header">
+        <div class="logo">后台管理系统</div>
+        <div class="bigMenu"></div>
+        <div class="settings">
+            <el-dropdown>
+                  <span class="el-dropdown-link"><%=locals.username%></span>
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>设置</el-dropdown-item>
+                    <el-dropdown-item><a href="/logout">退出登录</a></el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+    </header>
+    <section>
+        <aside class="menu">
+            <el-menu :default-active="activeIndex" class="el-menu-demo" @select="handleSelect">
+                <el-submenu index="1">
+                    <template slot="title">系统管理</template>
+                    <el-menu-item index="1-1">用户管理</el-menu-item>
+                    <el-menu-item index="1-2">角色管理</el-menu-item>
+                    <el-menu-item index="1-3">资源管理</el-menu-item>
+                    <el-submenu index="2-3">
+                        <template slot="title">选项4</template>
+                        <el-menu-item index="2-3-1">选项1</el-menu-item>
+                        <el-menu-item index="2-3-2">选项2</el-menu-item>
+                        <el-menu-item index="2-3-3">选项3</el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
-                </el-menu>
-            </div>
-            <div class="settings">
-                <div>1111</div>
-            </div>
-
-        </header>
-        <section>
-            <aside class="menu">
-
-            </aside>
-            <aside class="content"></aside>
-        </section>
-    </div>
+                </el-submenu>
+                <el-submenu index="2">
+                    <template slot="title">文档管理</template>
+                    <el-menu-item index="1-1">文档管理</el-menu-item>
+                    <el-menu-item index="1-2">文档类别</el-menu-item>
+                    <el-menu-item index="1-3">标签管理</el-menu-item>
+                </el-submenu>
+            </el-menu>
+        </aside>
+        <aside class="content">
+            这个是主页信息
+        </aside>
+    </section>
+</div>
 
 </body>
 </html>

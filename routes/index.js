@@ -9,6 +9,13 @@ var router = express.Router();
 router.get("/login",function(req,res,next){
   res.render("login");
 });
+/**
+ * 退出登录
+ */
+router.get("/logout",function(req,res,next){
+  req.session.user = null;
+  res.redirect("/login");
+});
 
 
 /**

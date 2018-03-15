@@ -13,7 +13,8 @@ router.get('/*', function(req, res, next) {
 
 
 router.get("/main",function(req,res,next){
-    res.render("admin/main");
+    var username = req.session.user.username;
+    res.render("admin/main",{username:username});
 });
 router.get("/header",function(req,res,next){
     res.render("admin/header");
