@@ -3,18 +3,28 @@
 <head>
     <title>页面标题</title>
     <meta charset="utf-8">
-    <script type="text/javascript">
-
-    </script>
+    <%- include ../default.html%>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
+    <header>
+        <div class="logo">API开发指南后台管理系统</div>
+        <div></div>
+    </header>
+    <section>
+        <aside class="menu">
 
-<div>
-    <h1>这是后台主页</h1>
-
-</div>
-
+        </aside>
+        <aside class="content"></aside>
+    </section>
 </body>
-
 </html>
+<script>
+    var app1 = new Vue({
+        el:"#wrap",
+        data:{
+
+        }
+    })
+</script>

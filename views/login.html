@@ -7,11 +7,26 @@
     <%- include ./default.html%>
 </head>
 <body>
-    <form action="#" method="POST" id="loginForm" onsubmit="return false;">
-        用户名: <input type="text" name="username" v-model="user.username"/>  <br>
-        密码: <input type="password" name="pwd" v-model="user.password"/>
-        <input type="submit" value="登录" @click="loginHandler"/>
-    </form>
+    <header>
+        <div class="api-w1024 api-header">
+            <a href="#" class="ah-logo">API开发指南</a>
+        </div>
+
+    </header>
+    <div class="api-logo-bg">
+        <div class="alb-box clearfix">
+            <form>
+                <h3>后台管理系统</h3>
+                <input class="alb-group" type="text" placeholder="请输入账号" />
+                <input class="alb-group" type="password" placeholder="请输入密码" />
+                <input class="alb-btn" type="submit" value="登录" />
+            </form>
+        </div>
+
+    </div>
+    <footer class="api-footer">
+        <p class="api-w1024">胜意前端开发组开发</p>
+    </footer>
 </body>
 </html>
 <script>

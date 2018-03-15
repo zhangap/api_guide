@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var path = require("path");
-var uuid = require("node-uuid");
+var md5 = require("md5");
 var conUtil = require(path.resolve("./public/js/util/conUtil"));
 
 var responseData; //返回格式
@@ -19,13 +19,13 @@ var connection = conUtil.init();
  * 登录
  */
 router.post("/login",function(req,res,next){
-    var sql = "select * from user where username=?";
+    var sql = "select * from t_user where username=?";
     var content = req.body;
 
     connection.query(sql,[content.username],function(errors,results){
         if(results.length){
             var user = results[0];
-            if(user.password === content.password){
+            if(user.password === md5(content.password)){
                 req.session.user = user;
                 responseData.status = "success";
             }else{

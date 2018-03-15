@@ -1,8 +1,9 @@
-input[type='button']{
-     width:100px;
-     height:50px;
-     line-height:50px;
-     border: none;
-     color:#fff;
-     background-color: aqua;
- }
+.api-logo-bg{height: calc(100% - 110px);background: linear-gradient(to right top, #00e6ff, #0cb7eb 50%, #016786);}
+.alb-box{margin:0px auto;width: 360px;position: relative;height: 100%;}
+.alb-box form{background: #fff;border-radius:5px;box-shadow: 0px 5px 8px 0px rgba(0,0,0,0.4);position: absolute;left:0px;right:0px;height: 230px;top:50%;margin-top: -115px;}
+.alb-box h3{font-size: 18px;line-height: 40px;text-align: center;margin: 10px 0px;}
+.alb-box .alb-group{border-radius:3px;border:1px solid #ddd;margin:0px 30px 20px 30px;height: 34px; width: calc(100% - 110px);padding: 0px 10px 0px 40px;}
+.alb-box .alb-btn{border-radius:3px;display: block;margin:0px 30px 20px 30px;width: calc(100% - 60px);height: 34px;background: #0cb7eb;border:1px solid #0cb7eb;letter-spacing: 10px; font-size:16px;color: #fff;}
+
+.api-footer{position: fixed;bottom: 0px;left: 0px;right: 0px;height: 50px;background:#f6f6f6;}
+.api-footer p{line-height: 50px;text-align: center;}
