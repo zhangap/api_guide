@@ -14,3 +14,7 @@ core:核心js、包括jquery/vue/以及其他第三方库文件
 css:前台和后台的css文件,前台css以front_开头，后台的css以
 images:
 js:存放所有的业务js
+
+
+表结构：
+user:用户表
