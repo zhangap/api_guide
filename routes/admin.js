@@ -25,7 +25,7 @@ router.use(function(req,res,next){
  * 后台主页
  */
 router.get("/main",function(req,res,next){
-    res.render("admin/main",responseData.activeIndex);
+    res.render("admin/main",responseData);
 });
 /**
  * 用户管理
