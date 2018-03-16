@@ -16,8 +16,18 @@
         <div class="alb-box clearfix">
             <form id="loginForm" onsubmit="return false;">
                 <h3>后台管理系统</h3>
-                <input class="alb-group" type="text" v-model="user.username" placeholder="请输入账号" />
-                <input class="alb-group" type="password" v-model="user.password" placeholder="请输入密码" />
+                <div class="alb-group">
+                    <el-input placeholder="请输入账号" name="username" v-model="user.username">
+                        <template slot="prepend"><i class="fa fa-user-o"></i></template>
+                    </el-input>
+                </div>
+               <!-- <div class="alb-group">
+                    <el-input placeholder="请输入密码" name="password" v-model="user.password">
+                        <template slot="prepend"><i class="fa fa-unlock-alt"></i></template>
+                    </el-input>
+                </div>-->
+                <!--<input class="alb-group" type="text" v-model="user.username" placeholder="请输入账号" />
+                <input class="alb-group" type="password" v-model="user.password" placeholder="请输入密码" />-->
                 <input class="alb-btn" type="submit" value="登录" @click="loginHandler" />
             </form>
         </div>
