@@ -28,6 +28,8 @@ router.post("/login",function(req,res,next){
             if(user.password === md5(content.password)){
                 req.session.user = user;
                 responseData.status = "success";
+                var oUrl = req.session.originalUrl;
+                responseData.message = oUrl ? oUrl : "/admin/main";
             }else{
                 responseData.status = "error";
                 responseData.message = "用户名或密码错误";

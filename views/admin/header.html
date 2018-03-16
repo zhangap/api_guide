@@ -1,0 +1,14 @@
+<header class="header" id="header">
+    <div class="logo">后台管理系统</div>
+    <div class="bigMenu"></div>
+    <div class="settings">
+        <el-dropdown>
+            <span class="el-dropdown-link"><%=locals.username%></span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item><a href="/logout">退出登录</a></el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+    </div>
+</header>

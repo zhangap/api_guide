@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>欢迎使用后台管理系统</title>
+    <meta charset="utf-8">
+    <%- include ../default.html%>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<%- include header.html%>
+<section>
+    <%- include menu.html%>
+    <aside class="content" id="content">
+        <template>
+            <el-table :data="tableData" style="width: 100%">
+
+            </el-table>
+        </template>
+    </aside>
+</section>
+</body>
+</html>
+<script src="/public/js/main.js"> </script>
+<script src="/public/js/userManage.js"></script>

@@ -68,7 +68,7 @@
                         data:user,
                         success:function(result){
                             if(result.status === "success"){
-                                location.href = "/admin/main";
+                                location.href = result.message;
                             }else{
                                 _this.$message({
                                     showClose: true,
