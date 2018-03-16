@@ -25,4 +25,11 @@ router.get("/",function(req,res,next){
   res.render("front/home",{title:"欢迎使用API开发指南"});
 });
 
+/**
+ * 分类查找
+ */
+router.get("/list",function(req,res,next){
+  res.render("front/list");
+});
+
 module.exports = router;
