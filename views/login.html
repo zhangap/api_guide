@@ -22,7 +22,7 @@
                     </el-input>
                 </div>
                 <div class="alb-group">
-                    <el-input placeholder="请输入密码" name="password" v-model="user.password">
+                    <el-input placeholder="请输入密码" type="password" name="password" v-model="user.password">
                         <template slot="prepend"><i class="fa fa-unlock-alt"></i></template>
                     </el-input>
                 </div>
@@ -49,10 +49,19 @@
             loginHandler:function(){
                 var user = this.$data.user;
                 if(!user.username){
-                    alert("请输入用户名！");
+                    this.$message({
+                        showClose: true,
+                        message: '请输入用户名',
+                        type: 'error'
+                    });
                 }else if(!user.password){
-                    alert("请输入密码！");
+                    this.$message({
+                        showClose: true,
+                        message: '请输入密码',
+                        type: 'error'
+                    });
                 }else{
+                    var _this = this;
                     $.ajax({
                         type:"post",
                         url:"/api/login",
@@ -61,7 +70,11 @@
                             if(result.status === "success"){
                                 location.href = "/admin/main";
                             }else{
-                                alert(result.message);
+                                _this.$message({
+                                    showClose: true,
+                                    message: result.message,
+                                    type: 'error'
+                                });
                             }
                         }
                     })
