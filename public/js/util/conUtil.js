@@ -1,8 +1,8 @@
 var mySql = require("mysql");
 var path = require("path");
 
-var config = require(path.resolve("./config/config"));
-
+//var config = require(path.resolve("./config/config"));
+var config = require("../../../config/config");
 function init(){
     var connection = mySql.createConnection({
         host:config.db.host,

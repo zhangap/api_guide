@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var path = require("path");
 var md5 = require("md5");
-var conUtil = require(path.resolve("./public/js/util/conUtil"));
-
+//var conUtil = require(path.resolve("./public/js/util/conUtil"));
+var conUtil = require("../public/js/util/conUtil.js");
 var responseData; //返回格式
 router.use(function(req,res,next){
     responseData = {
