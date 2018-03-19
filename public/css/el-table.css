@@ -1,0 +1,8 @@
+.el-table td, .el-table th{padding: 5px 0;}/*设置表格单元格padding值*/
+.el-table th{background-color:#f2f5fd}    /*设定表头背景颜色*/
+.el-table td, .el-table th.is-leaf{border:1px solid #ebeef5;}/*给表格单元格设置宽度*/
+.el-table th.is-leaf{border-bottom: none;}/*设置表头无下边框线*/
+.el-table__body, .el-table__footer, .el-table__header{border-collapse:collapse; table-layout: auto}/*设置表格边框合并*/
+.el-table__body .el-table__row:nth-child(odd){background-color:#FFF}/*设置表格行底色*/
+.el-table__body .el-table__row:nth-child(even){background-color:#f5f6f7}
+.el-table__empty-block{border-right:1px solid #ebeef5; border-left:1px solid #ebeef5;border-top:1px solid #ebeef5;box-sizing: border-box;}/*没有数据时设置边框*/
