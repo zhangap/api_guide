@@ -20,4 +20,4 @@ js:存放所有的业务js
 t_user:用户表
 t_role:权限表
 t_menu:菜单表（资源表）
-t_article:文章表22
+t_article:文章表
