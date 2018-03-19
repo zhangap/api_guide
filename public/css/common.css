@@ -24,3 +24,31 @@ ul,li,dl{list-style: none;}
 .f18{font-size: 18px;}
 .f19{font-size: 19px;}
 .f20{font-size: 20px;}
+
+
+/*间距*/
+.mtb0{margin: 0px auto;}
+.mtb5{margin: 5px auto;}
+.mtb10{margin: 10px auto;}
+.mtb15{margin: 15px auto;}
+.mtb20{margin: 20px auto;}
+.mtb25{margin: 25px auto;}
+.mtb30{margin: 30px auto;}
+.mtb35{margin: 35px auto;}
+
+/*滚动条样式*/
+/*滚动条样式*/
+::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+}
