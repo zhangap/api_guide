@@ -5,6 +5,7 @@
     <title>登录</title>
     <%- include ./default.html%>
     <link href="/public/css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/animate/animate.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
     <header class="api-header">
@@ -26,7 +27,7 @@
                         <template slot="prepend"><i class="fa fa-unlock-alt"></i></template>
                     </el-input>
                 </div>
-                <input class="alb-btn" type="submit" value="登录" @click="loginHandler" />
+                <input class="alb-btn" type="submit" id="loginBtn" value="登录" @click="loginHandler" />
             </form>
         </div>
 
@@ -34,9 +35,7 @@
     <footer class="api-footer">
         <p class="api-w1024">胜意前端开发组开发</p>
     </footer>
-</body>
-</html>
-<script>
+    <script>
     var app1 = new Vue({
         el:"#loginForm",
         data:{
@@ -49,37 +48,62 @@
             loginHandler:function(){
                 var user = this.$data.user;
                 if(!user.username){
-                    this.$message({
-                        showClose: true,
-                        message: '请输入用户名',
-                        type: 'error'
-                    });
+                      this.$message({
+                          showClose: true,
+                          message: '请输入用户名',
+                          type: 'error'
+                      });
+                    $("input[name='username']").parent().addClass('animated shake');
                 }else if(!user.password){
-                    this.$message({
-                        showClose: true,
-                        message: '请输入密码',
-                        type: 'error'
-                    });
+                      this.$message({
+                          showClose: true,
+                          message: '请输入密码',
+                          type: 'error'
+                      });
+                    $("input[name='password']").parent().addClass('animated shake');
                 }else{
-                    var _this = this;
+                    var _this = this,
+                    	loading = ELEMENT.Loading.service({
+                    		//target:"#loginForm",
+                    		visible:true,
+                      		lock:true,
+                    		text:"正在登陆，请稍后...",
+                    		spinner:"el-icon-loading",
+                    		background:"transparent"//"rgba(0, 0, 0, 0.5)"
+                    	});
                     $.ajax({
                         type:"post",
                         url:"/api/login",
                         data:user,
                         success:function(result){
+                        	loading.close();
                             if(result.status === "success"){
                                 location.href = result.message;
                             }else{
-                                _this.$message({
-                                    showClose: true,
-                                    message: result.message,
-                                    type: 'error'
-                                });
+                                  _this.$message({
+                                      showClose: true,
+                                      message: result.message,
+                                     type: 'error'
+                                  });
+                                var code = result.statusCode;
+                                if(code === "10002"){
+                                	$("input[name='username']").parent().addClass('animated shake');
+                                }else{
+                                	$("input[name='password']").parent().addClass('animated shake');
+                                }
                             }
+                        },
+                        error:function(a,b,c){
+                        	loading.close();
                         }
                     })
                 }
             }
         }
-    })
+    });
+    $(".el-input-group").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',function(){
+    	$(this).removeClass('animated shake');
+    });
 </script>
+</body>
+</html>

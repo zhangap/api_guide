@@ -32,11 +32,13 @@ router.post("/login",function(req,res,next){
                 responseData.message = oUrl ? oUrl : "/admin/main";
             }else{
                 responseData.status = "error";
-                responseData.message = "用户名或密码错误";
+                responseData.message = "密码错误";
+                responseData.statusCode = "10001";
             }
         }else{
             responseData.status = "error";
             responseData.message = "用户不存在";
+            responseData.statusCode = "10002";
         }
         res.json(responseData);
     });
