@@ -1,20 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>页面标题</title>
+    <title>分类查找</title>
     <meta charset="utf-8">
-    <script type="text/javascript">
-
-    </script>
+    <%- include ../default.html%>
+    <link href="/public/css/home.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/relement.css" rel="stylesheet" type="text/css"/>
 </head>
 
-<body>
-
-<div>
-
-    <h1>这个是列表页面</h1>
-</div>
-
+<body style="background: #f6f6f6">
+    <header class="api-header">
+        <div class="api-w1024">
+            <a href="/" class="ah-logo">API开发指南</a>
+            <ul>
+                <li class="active"><a href="/list">分类查找</a></li>
+                <li><a href="#">在线学习</a></li>
+                <li><a href="#">在线考试</a></li>
+                <li><a href="/login">管理中心</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="api-w1024 api-container clearfix" id="list">
+        <el-container class="api-list-con">
+            <el-aside class="alc-tree" width="200">
+                <div style="margin:15px 15px 5px 15px;">
+                    <el-input placeholder="请输入内容" v-model="scon" class="input-with-select" size="mini">
+                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    </el-input>
+                </div>
+                <ul id="treeDemo" class="ztree"></ul>
+            </el-aside>
+            <el-main class="alc-content">
+                <div class="ac-list">
+                    <el-input placeholder="请输入内容" v-model="scon" class="input-with-select" size="small">
+                        <el-select v-model="lx" slot="prepend" placeholder="请选择">
+                            <el-option v-for="(item,i) in sortList" :label="item.v" :value="item.t" :key="item.v"></el-option>
+                        </el-select>
+                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    </el-input>
+                </div>
+                <el-table :data="tableData" borderstyle="width: 100%" size="mini">
+                    <el-table-column prop="date" label="日期" width="180"></el-table-column>
+                    <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+                    <el-table-column prop="address" label="地址"></el-table-column>
+                </el-table>
+            </el-main>
+        </el-container>
+    </div>
+    <footer class="api-footer">
+        <p class="api-w1024">胜意前端开发组开发</p>
+    </footer>
 </body>
-
 </html>
+<script>
+    var tableData=[{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+    }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+    }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+    }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+    }];
+    var app1 = new Vue({
+        el:"#list",
+        data:{
+            lx:"",
+            scon:"",
+            sortList:[
+                {t:"1",v:"产品"},
+                {t:"2",v:"java"},
+                {t:"3",v:"前端"}
+            ],
+            tableData:tableData
+        },
+        methods:{
+
+        }
+    });
+    var setting = {	};
+
+    var zNodes =[
+        { name:"父节点1 - 展开", open:true,
+            children: [
+                { name:"父节点11 - 折叠",
+                    children: [
+                        { name:"叶子节点111"},
+                        { name:"叶子节点112"},
+                        { name:"叶子节点113"},
+                        { name:"叶子节点114"}
+                    ]},
+                { name:"父节点12 - 折叠",
+                    children: [
+                        { name:"叶子节点121"},
+                        { name:"叶子节点122"},
+                        { name:"叶子节点123"},
+                        { name:"叶子节点124"}
+                    ]},
+                { name:"父节点13 - 没有子节点", isParent:true}
+            ]},
+        { name:"父节点2 - 折叠",
+            children: [
+                { name:"父节点21 - 展开", open:true,
+                    children: [
+                        { name:"叶子节点211"},
+                        { name:"叶子节点212"},
+                        { name:"叶子节点213"},
+                        { name:"叶子节点214"}
+                    ]},
+                { name:"父节点22 - 折叠",
+                    children: [
+                        { name:"叶子节点221"},
+                        { name:"叶子节点222"},
+                        { name:"叶子节点223"},
+                        { name:"叶子节点224"}
+                    ]},
+                { name:"父节点23 - 折叠",
+                    children: [
+                        { name:"叶子节点231"},
+                        { name:"叶子节点232"},
+                        { name:"叶子节点233"},
+                        { name:"叶子节点234"}
+                    ]}
+            ]},
+        { name:"父节点3 - 没有子节点", isParent:true}
+
+    ];
+
+    $(document).ready(function(){
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    });
+</script>
