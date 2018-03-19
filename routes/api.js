@@ -45,4 +45,32 @@ router.post("/login",function(req,res,next){
 });
 
 
+/**
+ * 获取菜单
+ */
+router.get("/menuList",function(req,res,next){
+    // var sql = "select * from t_menu where FIND_IN_SET(menuId,getChildLst('0'))";
+    var sql = "select * from t_menu";
+    connection.query(sql,function(errors,results){
+        var resultData = [];
+        getMenuList(resultData,results,"0");
+        console.log("resultData",resultData);
+        res.json(resultData);
+    });
+
+});
+
+
+function getMenuList(resultData,results,pId){
+    for(var i =0,len = results.length;i<len;i++){
+        if(results[i].pId == pId){
+            var item = results[i];
+            item.childs = [];
+            resultData.push(item);
+            getMenuList(item.childs,results,item.menuId);
+        }
+    }
+}
+
+
 module.exports = router;

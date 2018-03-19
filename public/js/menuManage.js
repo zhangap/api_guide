@@ -1,6 +1,10 @@
-var app1 = new Vue({
-    el:"#content",
-    data:{
-        tableData:[]
-    }
+$(function(){
+
+
+    var app1 = new Vue({
+        el:"#content",
+        data:{
+            tableData:[]
+        }
+    });
 });
