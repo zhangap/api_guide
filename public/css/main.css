@@ -70,4 +70,4 @@ section{
     padding: 15px 10px;
 }
 
-.api-dialog-tips{padding: 0px 20px;}
+.api-dialog-tips .el-dialog__body{padding: 0px 20px;}
