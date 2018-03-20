@@ -57,11 +57,9 @@ router.post("/login",function(req,res,next){
             responseData.statusCode = "10002";
             Log.loginLog("",content.username,ip,responseData.msg);
         }
-
         res.json(responseData);
     });
 });
-
 
 
 /**
