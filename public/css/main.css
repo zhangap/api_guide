@@ -53,12 +53,11 @@ section{
     position: absolute;
     left:0;
     right:250px;
-    top:0;
+    top:2px;
     bottom:0;
     border-right: solid 1px #0cb7eb;
 }
 .menu ul{
-    margin-top:10px;
     border-right:none;
 }
 
@@ -70,3 +69,5 @@ section{
     bottom:0;
     padding: 15px 10px;
 }
+
+.api-dialog-tips{padding: 0px 20px;}
