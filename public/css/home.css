@@ -20,8 +20,10 @@
 /*分类查找页面样式*/
 #list{height:calc(100% - 140px);}
 .api-list-con{height:100%;background: #fff;border:1px solid #ddd;}
-.api-list-con .alc-tree{ border-right:1px solid #ddd;}
-.api-list-con .alc-tree .ztree{ padding: 10px;}
+.api-list-con .alc-tree{ border-right:1px solid #ddd;position: relative}
+.api-list-con .at-pa{position: absolute;top: 15px ;right:15px;left: 15px;}
+.api-list-con .at-pa .el-input-group__append,.api-list-con .at-pa .el-input-group__prepend{padding: 0px 10px}
+.api-list-con .alc-tree .ztree{ padding: 10px;margin-top: 40px;}
 .ac-list{width: 50%;display: inline-block;margin-bottom: 10px;float: right;}
 .ac-list .el-select .el-input { width: 85px;}
 .ac-list .input-with-select .el-input-group__prepend { background-color: #fff;}
