@@ -48,43 +48,24 @@
             loginHandler:function(){
                 var user = this.$data.user;
                 if(!user.username){
-                      this.$message({
-                          showClose: true,
-                          message: '请输入用户名',
-                          type: 'error'
-                      });
+                    eleUtil.message("请输入用户名");
                     $("input[name='username']").parent().addClass('animated shake');
                 }else if(!user.password){
-                      this.$message({
-                          showClose: true,
-                          message: '请输入密码',
-                          type: 'error'
-                      });
+                    eleUtil.message("请输入密码");
                     $("input[name='password']").parent().addClass('animated shake');
                 }else{
-                    var _this = this,
-                    	loading = ELEMENT.Loading.service({
-                    		//target:"#loginForm",
-                    		visible:true,
-                      		lock:true,
-                    		text:"正在登陆，请稍后...",
-                    		spinner:"el-icon-loading",
-                    		background:"transparent"//"rgba(0, 0, 0, 0.5)"
-                    	});
+                    var _this = this;
+                    eleUtil.loading("正在登陆，请稍后...");
                     $.ajax({
                         type:"post",
                         url:"/api/login",
                         data:user,
                         success:function(result){
-                        	loading.close();
+                        	eleUtil.closeLoading();
                             if(result.status === "success"){
                                 location.href = result.message;
                             }else{
-                                  _this.$message({
-                                      showClose: true,
-                                      message: result.message,
-                                     type: 'error'
-                                  });
+                                eleUtil.message(result.message);
                                 var code = result.statusCode;
                                 if(code === "10002"){
                                 	$("input[name='username']").parent().addClass('animated shake');
@@ -94,7 +75,7 @@
                             }
                         },
                         error:function(a,b,c){
-                        	loading.close();
+                        	eleUtil.closeLoading();
                         }
                     })
                 }
