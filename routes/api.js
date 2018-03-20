@@ -63,6 +63,58 @@ router.get("/menuList",function(req,res,next){
 });
 
 /**
+ * 获取资源列表
+ */
+router.get("/getResourceList",function(req,res,next){
+    var sql = "select t1.menuId, t1.menuName, t1.url,t2.menuName as pMenuName,t1.memo from t_menu t1 left join t_menu t2 on t1.pid = t2.menuId";
+    connection.query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 根据menuId删除菜单数据及下层数据
+ */
+router.get("/delResourceById",function(req,res,next){
+    debugger;
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "select menuId from t_menu  t2 where FIND_IN_SET(menuId,getChildLst(?))";
+    connection.query(sql,[reqObj.menuId],function(errs,results){
+        var sql2 = "delete from t_menu where menuId in(?) ",
+            resultMap = [];
+        if(results.length){
+            if(results.length === 1){
+                resultMap[0] = results[0].menuId;
+            }else{
+                var newArr = [];
+                for(var i =0,len = results.length;i<len;i++){
+                    newArr[i] = "'" + results[i].menuId + "'";
+                }
+                resultMap[0] = newArr.join(",");
+            }
+            connection.query(sql2,resultMap,function(errs,results){
+                if(errs){
+                    responseData.status = "error";
+                    responseData.message = errs;
+                }else{
+                    responseData.status = "success";
+                    responseData.message = results;
+                }
+                res.json(responseData);
+            });
+        }
+
+    });
+});
+
+/**
  * 递归处理菜单相关数据
  * @param resultData
  * @param results
@@ -78,6 +130,7 @@ function getMenuList(resultData,results,pId){
         }
     }
 }
+
 
 
 module.exports = router;

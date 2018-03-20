@@ -2,6 +2,7 @@ var path = require("path");
 var conUtil = require(path.resolve("./public/js/util/conUtil"));
 var connection = conUtil.init();
 var UUID = require("node-uuid");
+var url = require("url");
 
 function loginLog(userId,userName,ip,msg){
     var sql = "insert into t_log values(?,?,?,?,?,?)";
@@ -28,5 +29,15 @@ function getClientIp(req){
     return ip;
 }
 
+/**
+ * 获取get请求上的参数
+ * @param req
+ * @returns {{}}
+ */
+function getQueryString(req){
+    return url.parse(req.url,true).query || {};
+}
+
 exports.loginLog = loginLog;
 exports.getClientIp = getClientIp;
+exports.getQueryString = getQueryString;
