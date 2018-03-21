@@ -4,7 +4,7 @@
 .api-header ul li a{display: block;padding: 0px 15px;border:1px solid #ccc;line-height: 30px;color:#777;border-radius: 2px;}
 .api-header ul li a:hover,.api-header ul li.active a{background: #0cb7eb;color:#fff;border-color:#0cb7eb;}
 
-.api-container{margin: 30px auto 50px;}
+.api-container{margin: 30px auto 50px;transform-style: preserve-3d;perspective: 1000px;}
 .ac-box{width: 500px;border:1px solid #ddd;background: #fff;display: inline-block;float: left;border-radius: 2px;min-height: 538px;}
 .ac-box:first-child{margin-right: 20px;}
 .ac-box h3{border-bottom: 1px solid #ddd;font-weight: bold;font-size: 16px;color:#0cb7eb;padding:5px 10px;line-height: 24px;}
@@ -27,3 +27,17 @@
 .ac-list{width: 50%;display: inline-block;margin-bottom: 10px;float: right;}
 .ac-list .el-select .el-input { width: 85px;}
 .ac-list .input-with-select .el-input-group__prepend { background-color: #fff;}
+
+/*增加初入页面时的旋转效果*/
+.ac-left{animation: leftbookxz 1s linear;}
+.ac-right{animation: rightbookxz 1s linear;}
+@keyframes leftbookxz{
+    0%{transform-origin:center;transform:rotateY(180deg);}
+    50%{transform-origin:center;transform:rotateY(90deg);}
+    100%{transform-origin:center;transform:rotateY(0deg);}
+}
+@keyframes rightbookxz{
+    0%{transform-origin:center;transform:rotateY(-180deg);}
+    50%{transform-origin:center;transform:rotateY(-90deg);}
+    100%{transform-origin:center;transform:rotateY(0deg);}
+}
