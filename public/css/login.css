@@ -6,3 +6,111 @@
 .alb-box .alb-group i.fa{font-size: 16px;display: inline-block;width: 16px;text-align: center}
 .alb-box .alb-btn{border-radius:3px;display: block;margin:0px 30px 20px 30px;width: calc(100% - 60px);height: 40px;background: #0cb7eb;border:1px solid #EDEDED;letter-spacing: 10px; font-size:16px;color:#fff;-webkit-transition: all 0.6s ease-in;transition: all 0.6s ease-in;}
 .alb-box .alb-btn:hover{border:1px solid #666699;}
+
+/*气泡动画*/
+.bubble-box{position: absolute;left: 0;bottom: 50px;width: 100%;}
+.bubble {
+    position:absolute; font-size:0; line-height:0;  border-radius:50%;
+    bottom:0px;
+    border-radius:50%;
+    box-shadow:0px 0px 2px rgba(255,255,255,0.6) inset,-1px 1px 2px -1px rgba(0,204,255,0.1);
+    transform:skew(0deg,2deg);
+    width:10px; height:10px;
+}
+.bubble1{width:38px; height:38px;left:40px;animation:bubbleRise 13s linear infinite; }
+.bubble2{width:22px; height:22px;left:80px; animation:bubbleRise 9s linear infinite;}
+.bubble3{width:10px; height:10px;left:120px; animation:bubbleRise 6s linear infinite;}
+.bubble4{width:14px; height:14px;left:160px; animation:bubbleRise 8s linear infinite;}
+.bubble5{width:12px; height:12px;left:200px; animation:bubbleRise 7s linear infinite;}
+.bubble6{width:36px; height:36px;left:260px; animation:bubbleRise 14s linear infinite;}
+.bubble7{width:24px; height:22px;left:220px; animation:bubbleRise 9s linear infinite;}
+.bubble8{width:28px; height:26px;left:320px; animation:bubbleRise 11s linear infinite;}
+.bubble9{width:18px; height:16px;left:450px; animation:bubbleRise 7s linear infinite;}
+.bubble10{width:8px; height:8px;left:360px; animation:bubbleRise 5s linear infinite;}
+.bubble11{width:40px; height:40px;left:380px; animation:bubbleRise 12s linear infinite;}
+.bubble12{width:60px; height:60px;left:350px; animation:bubbleRise 16s linear infinite;}
+.bubble13{width:30px; height:30px;left:490px; animation:bubbleRise 8s linear infinite;}
+.bubble14{width:18px; height:16px;right:160px; animation:bubbleRise 9s linear infinite;}
+.bubble15{width:40px; height:40px;right:260px; animation:bubbleRise 14s linear infinite;}
+.bubble16{width:50px; height:50px;right:120px; animation:bubbleRise 16s linear infinite;}
+.bubble17{width:35px; height:35px;right:200px; animation:bubbleRise 12s linear infinite;}
+.bubble18{width:22px; height:24px;right:380px; animation:bubbleRise 8s linear infinite;}
+.bubble19{width:12px; height:12px;right:60px; animation:bubbleRise 7s linear infinite;}
+.bubble20{width:21px; height:23px;right:320px; animation:bubbleRise 7s linear infinite;}
+
+@keyframes bubbleRise{
+    0%{transform:translate(0px,0px);opacity:0;border-color:rgba(255,255,255,0.6);}
+    10%{transform:translate(0px,0px);opacity:1;}
+    30%{transform:translate(-3px,-50px);}
+    50%{transform:translate(9px,-100px);}
+    75%{transform:translate(-1px,-150px) scale(1.2);}
+    98%{opacity:1;border-color:rgba(255,255,255,0.65);}
+    100%{transform:translate(0px,-200px) scale(1.4);opacity:0;border-color:rgba(255,255,255,0.6);}
+}
+
+/*水母动画*/
+.jellyfish1{left:100px;bottom:25px;}/*定位*/
+.jellyfish {
+    position:absolute;
+    -webkit-animation:jellyfishSwimming 4s linear infinite alternate;
+    -moz-animation:jellyfishSwimming 4s linear infinite alternate;
+    animation:jellyfishSwimming 4s linear infinite alternate;
+    opacity:0.5;
+}
+.jellyfish_head {/*水母头样式*/
+    position:absolute; left:0px; top:0px; display:block; height:15px; width:20px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.5);
+    border-radius:20px 20px 10px 10px/20px 20px 16px 16px;
+    box-shadow:0px 0px 4px rgba(255,255,255,0.5) inset,1px 1px 2px rgba(255,255,255,0.2) inset,3px 3px 1px rgba(255,255,255,0.2) inset,-1px -1px 1px rgba(255,255,255,0.1) inset;
+    animation:jellyfish_headChange 4s linear infinite alternate;
+}
+.jellyfish_head:after {/*水母头气泡*/
+    content:'';  display:block;  height:3px;  width:5px;  background:rgba(255,255,255,0.4);  position:absolute;  left:3px;  top:2px;  border-radius:5px/3px;
+    box-shadow:0px 0px 1px rgba(255,255,255,0.8) inset;
+    transform:rotate(-15deg);
+}
+.jellyfish_tail {/*水母主体样式*/
+    position:absolute;
+    left:2px;
+    top:15px;
+    display:block;
+    height:20px;
+    width:18px;
+    border:0.5px solid rgba(255,255,255,0.4);
+    border-top:none;
+    border-bottom:none;
+    border-radius:10px 10px 16px 6px/20px 20px 6px 6px;
+    box-shadow:0px 0px 3px rgba(255,255,255,0.3) inset,0px 4px 3px rgba(255,255,255,0.1) inset;
+    -webkit-transform-origin:50% 0%;
+    -webkit-animation:jellyfish_tailChange 4s linear infinite alternate;
+    -moz-transform-origin:50% 0%;
+    -moz-animation:jellyfish_tailChange 4s linear infinite alternate;
+}
+.jellyfish_tail_in {
+    position:absolute;
+    left:-0.5px;
+    top:0px;
+    display:block;
+    height:16px;
+    width:10px;
+    border-left:0.5px solid rgba(255,255,255,0.4);
+    border-radius:10px 20px 16px 10px/20px 20px 6px 20px;
+    box-shadow:3px 0px 3px rgba(255,255,255,0.2) inset;
+    -webkit-transform:rotate(14deg);
+    -moz-transform:rotate(14deg);
+}
+@keyframes jellyfishSwimming{
+    0%{transform:translate(0px,0px) rotate(-4deg) scale(0.8);}
+    20%{transform:translate(-1px,-3px) rotate(-6deg) scale(0.8);}
+    50%{transform:translate(-2px,-1px) rotate(-3deg) scale(0.8);}
+    70%{transform:translate(-1px,-3px) rotate(-6deg) scale(0.8);}
+    100%{transform:translate(0px,0px) rotate(-4deg) scale(0.8);}
+}
+@keyframes jellyfish_tailChange{
+    0%{transform:scale(0.8);}
+    5%{transform:scale(0.9,0.75);}
+    20%{transform:scale(0.7,1);}
+    50%{transform:scale(0.8);}
+    55%{transform:scale(0.9,0.75);}
+    70%{transform:scale(0.7,1);}
+    100%{transform:scale(0.8);}
+}
