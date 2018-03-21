@@ -48,12 +48,31 @@
                 </el-table>
             </template>
 
+        <!--删除的提示信息-->
         <el-dialog title="提示信息" :visible.sync="dialogVisible" width="30%"  custom-class="api-dialog-tips">
             <span>此操作将永久删除该记录，是否继续？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" @click="cancelHandler">取 消</el-button>
                 <el-button type="primary" @click="deleteHandler" size="mini">确 定</el-button>
             </span>
+        </el-dialog>
+        <!---->
+        <el-dialog title="收货地址" :visible.sync="dialogMenWinVisible">
+            <el-form>
+                <el-form-item label="活动名称">
+                    <el-input  auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="活动区域">
+                    <el-select placeholder="请选择活动区域">
+                        <el-option label="区域一" value="shanghai"></el-option>
+                        <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
         </el-dialog>
     </aside>
 </section>

@@ -83,23 +83,23 @@ router.get("/getResourceList",function(req,res,next){
  * 根据menuId删除菜单数据及下层数据
  */
 router.get("/delResourceById",function(req,res,next){
-    debugger;
     var reqObj = appUtil.getQueryString(req);
     var sql = "select menuId from t_menu  t2 where FIND_IN_SET(menuId,getChildLst(?))";
     connection.query(sql,[reqObj.menuId],function(errs,results){
-        var sql2 = "delete from t_menu where menuId in(?) ",
-            resultMap = [];
+        var menuIds="";
         if(results.length){
             if(results.length === 1){
-                resultMap[0] = results[0].menuId;
+                menuIds = results[0].menuId;
             }else{
                 var newArr = [];
                 for(var i =0,len = results.length;i<len;i++){
                     newArr[i] = "'" + results[i].menuId + "'";
                 }
-                resultMap[0] = newArr.join(",");
+                menuIds = newArr.join(",");
             }
-            connection.query(sql2,resultMap,function(errs,results){
+            var sql2 = "delete from t_menu where menuId in("+menuIds+")";
+            console.log("打印SQL：" + sql2);
+            connection.query(sql2,function(errs,results){
                 if(errs){
                     responseData.status = "error";
                     responseData.message = errs;

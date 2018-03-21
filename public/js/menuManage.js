@@ -6,6 +6,7 @@ $(function(){
         data:{
             tableData:[],
             dialogVisible:false,
+            dialogMenWinVisible:false, //新增和编辑窗口显示变量
             operateMenuId:"" //要操作的菜单id
         },
         created:function(){
@@ -25,12 +26,18 @@ $(function(){
         methods: {
             deleteHandler:function(){
                 this.$data.dialogVisible = false;
+                eleUtil.loading("正在执行，请稍后...");
                 $.ajax({
                     url:"/api/delResourceById",
                     type:"get",
                     data:{"menuId":this.$data.operateMenuId},
                     success:function(data){
-                        console.log(data);
+                        eleUtil.closeLoading();
+                        if(data.status === "error"){
+                            eleUtil.message(data.message,"error");
+                        }else{
+                            location.reload();
+                        }
                     }
                 });
             },
@@ -55,7 +62,8 @@ $(function(){
                                     'href':'javascript:;'
                                 },
                                 on: { click: function () {
-
+                                    alert("新增菜单");
+                                    _this.$data.dialogMenWinVisible = true;
                                 } }
                             }
                         )
