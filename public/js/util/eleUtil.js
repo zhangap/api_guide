@@ -9,7 +9,7 @@
             lock:true,
             text:"拼命加载中，请稍后...",
             spinner:"el-icon-loading",
-            background:"transparent"
+            background:"rgba(0,0,0,0.3)"
     };
 
     /**
