@@ -22,8 +22,10 @@ html,body{
     font-size:31px;
     color:#0cb7eb;
     font-weight:bold;
+    transition: all 1.5s;
+    cursor: pointer;
 }
-
+.logo:hover{transform:rotateY(360deg);}
 .bigMenu{
     position: absolute;
     top:0px;
@@ -71,19 +73,3 @@ section{
 }
 
 .api-dialog-tips .el-dialog__body{padding: 0px 20px;}
-
-.logo{
-    animation: lgxz 3s linear;
-    -moz-animation: lgxz 3s ease-in-out;	/* Firefox */
-    -webkit-animation: lgxz 3s ease-in-out;	/* Safari 和 Chrome */
-    -o-animation: lgxz 3s ease-in-out;	/* Opera */
-    animation-iteration-count: infinite;
-}
-/*给后台管理系统logo增加放大缩小动画效果*/
-@keyframes lgxz {
-    0% {opacity:0.2;transform: perspective(50px) scale(1);}
-    25% {opacity:0.4;transform:perspective(70px) scale(1.13);}
-    50% {opacity:0.6;transform:perspective(90px) scale(1.14);}
-    75% {opacity:0.8;transform:perspective(70px) scale(1.15);}
-    100% {opacity:1;transform:perspective(50px) scale(1.16)}
-}
