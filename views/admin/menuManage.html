@@ -57,21 +57,29 @@
             </span>
         </el-dialog>
         <!---->
-        <el-dialog title="收货地址" :visible.sync="dialogMenWinVisible">
-            <el-form>
-                <el-form-item label="活动名称">
+        <el-dialog title="新增菜单" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="25%">
+            <el-form label-position="labelPosition" label-width="80px">
+                <el-form-item label="菜单名称" size="mini">
                     <el-input  auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="活动区域">
-                    <el-select placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                <el-form-item label="菜单地址" size="mini">
+                    <el-input placeholder="请输入内容">
+                        <template slot="prepend" style="padding: 0px 10px;">/admin/</template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="上级菜单" size="mini">
+                    <el-select placeholder="请选择" size="mini" style="width:100px" popper-class="repeat-mini-select">
+                        <el-option label="Java知识" value="java"></el-option>
+                        <el-option label="产品文档" value="product"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="菜单描述" size="mini">
+                    <el-input type="textarea"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button @click="dialogFormVisible = false" size="mini">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false" size="mini">确 定</el-button>
             </div>
         </el-dialog>
     </aside>

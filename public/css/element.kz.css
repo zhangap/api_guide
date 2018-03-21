@@ -1,0 +1,7 @@
+.el-input--mini .el-input-group__append,.el-input--mini .el-input-group__prepend{padding: 0px 8px;}
+.el-input--mini .el-input__inner{padding: 0px 8px;}
+.el-input--mini .el-input__icon{width: 20px;}
+.repeat-mini-select.el-popper[x-placement^=bottom]{margin-top: 5px;}
+.repeat-mini-select .el-select-dropdown__list{padding: 3px 0px;}
+.repeat-mini-select .el-select-dropdown__item{padding: 0px 10px;height: 26px; line-height: 26px;}
+.repeat-mini-select .el-select-dropdown__item span{line-height: 26px !important;font-size: 12px;}
