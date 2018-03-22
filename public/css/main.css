@@ -70,6 +70,7 @@ section{
     right:0;
     bottom:0;
     padding: 15px 10px;
+    overflow:auto;
 }
 
 .api-dialog-tips .el-dialog__body{padding: 0px 20px;}

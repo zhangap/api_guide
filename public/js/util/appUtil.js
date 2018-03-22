@@ -31,7 +31,7 @@ function getClientIp(req){
 
 /**
  * 获取get请求上的参数
- * @param req
+ * @param req https://nodejs.org/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost
  * @returns {{}}
  */
 function getQueryString(req){

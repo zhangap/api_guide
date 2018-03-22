@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var path = require("path");
 var md5 = require("md5");
+var UUID = require("node-uuid");
 var conUtil = require(path.resolve("./public/js/util/conUtil"));
 var appUtil = require(path.resolve("./public/js/util/appUtil"));
 
@@ -111,6 +112,73 @@ router.get("/delResourceById",function(req,res,next){
             });
         }
 
+    });
+});
+
+/**
+ *根据menuId查询菜单对象
+ */
+router.get("/getResourceById",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "select * from t_menu where menuId =?";
+    connection.query(sql,[reqObj.menuId],function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            var menu = results[0];
+            menu.url = menu.url ? menu.url.split("/").splice(2).join("/") :"";
+            responseData.message = menu;
+        }
+        res.json(responseData);
+    });
+
+});
+
+/**
+ * 获取所有资源
+ */
+router.get("/getAllResources",function(req,res,next){
+    var sql = "select menuId, menuName from t_menu";
+    connection.query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            results.push({"menuId":"0","menuName":"ROOT"});
+            responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 保存菜单信息
+ */
+router.post("/saveMenu",function(req,res,next){
+    var mo = req.body,
+        sql = "",
+        msg = "菜单修改成功";
+        map =[];
+    if(mo.menuId){ //update
+        sql = "update t_menu set menuName=?, url=?,pId=?,memo=? where menuId =?";
+        map =[mo.menuName,mo.url,mo.pId,mo.memo,mo.menuId];
+    }else{
+        sql = "insert into t_menu values(?,?,?,?,?)";
+        map = [UUID.v1(),mo.menuName,mo.url,mo.pId,mo.memo];
+        msg = "菜单保存成功";
+    }
+    connection.query(sql,map,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = msg;
+        }
+        res.json(responseData);
     });
 });
 
