@@ -8,8 +8,8 @@
 .ac-box{width: 500px;border:1px solid #ddd;background: #fff;display: inline-block;float: left;border-radius: 2px;min-height: 538px;}
 .ac-box:first-child{margin-right: 20px;}
 .ac-box h3{border-bottom: 1px solid #ddd;font-weight: bold;font-size: 16px;color:#0cb7eb;padding:5px 10px;line-height: 24px;}
-.ac-box ul li{padding: 0px 10px;}
-.ac-box ul li:hover{box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.1);background: #f2fcff;}
+.ac-box ul li{padding: 0px 10px;transition: all 0.2s linear;}
+.ac-box ul li:hover{box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.1);background: #f2fcff;transform: scale(1.03,1.03);}
 .ac-box ul li .al-li-title{height: 30px;line-height: 30px;}
 .ac-box ul li .al-li-title h4{color:#666;display: inline-block;font-size: 15px;width: 70%;overflow: hidden; text-overflow: ellipsis;}
 .ac-box ul li .al-li-title .ali-right{color:#f77d00;}
