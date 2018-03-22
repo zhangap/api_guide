@@ -7,6 +7,32 @@
 .alb-box .alb-btn{border-radius:3px;display: block;margin:0px 30px 20px 30px;width: calc(100% - 60px);height: 40px;background: #0cb7eb;border:1px solid #EDEDED;letter-spacing: 10px; font-size:16px;color:#fff;-webkit-transition: all 0.6s ease-in;transition: all 0.6s ease-in;}
 .alb-box .alb-btn:hover{border:1px solid #666699;}
 
+#loginBtn{animation:loginbtn 1.8s linear;}
+@keyframes loginbtn {
+    0%{opacity: 0;transform: translateX(500px);}
+    25%{transform: translateX(375px);}
+    50%{transform: translateX(250px);}
+    75%{transform: translateX(125px);}
+    100%{transform: translateX(0px);}
+}
+
+#loginForm  .alb-group:nth-child(2)  .el-input-group{animation: usern 1.6s linear;}
+@keyframes usern{
+    0%{opacity:0;transform-origin: left bottom;transform: translate(-180px,-90px) rotateZ(-60deg);}
+    25%{transform-origin: left bottom;transform: translate(-135px,-77.5px) rotateZ(-45deg);}
+    50%{transform-origin: left bottom;transform: translate(-90px,-55px) rotateZ(-30deg);}
+    75%{transform-origin: left bottom;transform: translate(-45px,-22.5px) rotateZ(-15deg);}
+    100%{transform-origin: left bottom;transform: translate(0,0) rotateZ(0);}
+}
+#loginForm  .alb-group:nth-child(3)  .el-input-group{animation: pwdp 1.2s linear;}
+@keyframes pwdp{
+    0%{opacity:0;transform: translateY(240px) rotateX(360deg);}
+    25%{transform: translateY(180px) rotateX(270deg);}
+    50%{ transform: translateY(120px) rotateX(180deg);}
+    75%{transform: translateY(60px) rotateX(90deg);}
+    100%{transform: translateY(0) rotateX(0deg);}
+}
+
 /*气泡动画*/
 .bubble-box{position: absolute;left: 0;bottom: 50px;width: 100%;}
 .bubble {
