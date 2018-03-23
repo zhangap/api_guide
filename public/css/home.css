@@ -27,3 +27,15 @@
 .ac-list{width: 50%;display: inline-block;margin-bottom: 10px;float: right;}
 .ac-list .el-select .el-input { width: 85px;}
 .ac-list .input-with-select .el-input-group__prepend { background-color: #fff;}
+
+/*在线学习页面*/
+.api-ls-con{margin-top: 20px;font-size: 0; -webkit-text-size-adjust:none;/*解决其子集下两个display:inline-block之前的间距问题*/}
+.alc-box{width:245px;margin-right: 12px;display: inline-block;background: #fff;border:1px solid #ddd;margin-bottom: 12px;}
+.alc-box:nth-child(4n){margin-right: 0px;}
+.alc-box .alc-group-img{padding: 7px;height: 150px;border-bottom:1px solid #ddd;}
+.alc-box .alc-group-img img{width: 100%;height:100%;}
+.alc-box .alc-group-content{padding:5px 10px;}
+.alc-box .alc-group-content h3{max-height:44px;line-height: 22px;display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 2;  overflow: hidden;font-size: 15px;}
+.alc-box .alc-group-content p{max-height:80px;line-height: 20px;display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 4;  overflow: hidden;font-size: 12px;}
+.alc-box .alc-group-content .alc-group-icon{font-size: 12px;line-height: 20px;margin-top: 5px;}
+.alc-box .alc-group-content .alc-group-icon span i{margin-right: 5px;}
