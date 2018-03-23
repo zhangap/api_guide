@@ -14,11 +14,6 @@
     <aside class="content" id="content">
             <template>
                 <el-table :data="tableData" style="width: 100%" size="mini">
-                    <el-table-column prop="menuName" label="菜单id" width="180">
-                        <template slot-scope="scope">
-                            <span style="margin-left: 10px">{{ scope.row.menuId }}</span>
-                        </template>
-                    </el-table-column>
                     <el-table-column prop="menuName" label="菜单名" width="180">
                         <template slot-scope="scope">
                             <span style="margin-left: 10px">{{ scope.row.menuName }}</span>
@@ -31,7 +26,7 @@
                     </el-table-column>
                     <el-table-column prop="email" label="上级菜单">
                         <template slot-scope="scope">
-                            <p>{{ scope.row.pMenuName }}</p>
+                            <p>{{ scope.row.pMenuName || "ROOT"}}</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="state" label="菜单描述">
@@ -39,13 +34,25 @@
                             <p>{{ scope.row.memo }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="operate" label="操作" :render-header="renderHeader">
+                    <el-table-column prop="operate" label="操作" :render-header="renderHeader" width="180" align="center">
                         <template slot-scope="scope">
-                            <el-button size="mini">编辑</el-button>
-                            <el-button size="mini" type="danger" @click="deleteMenu(scope.row.menuId)">删除</el-button>
+                            <el-button size="mini" @click="editMeunHandler(scope.row.menuId)">编辑</el-button>
+                            <el-button size="mini" type="danger" @click="deleteMenuHandler(scope.row.menuId)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
+                <div class="block repeat-menu-page">
+                    <el-pagination  background
+                                    :current-page="page.currentPage"
+                                    :page-sizes="page.pageSizes"
+                                    :page-size="page.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total"
+                                    @size-change="sizeChangeHandler"
+                                    @current-change="currentChangeHandler"
+                    >
+                    </el-pagination>
+                </div>
             </template>
 
         <!--删除的提示信息-->
@@ -56,30 +63,29 @@
                 <el-button type="primary" @click="deleteHandler" size="mini">确 定</el-button>
             </span>
         </el-dialog>
-        <!---->
-        <el-dialog title="新增菜单" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="25%">
+        <!--菜单管理弹窗(新增、删除)-->
+        <el-dialog :title="winTitle" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="50%" :close-on-click-modal="false">
             <el-form label-position="labelPosition" label-width="80px">
-                <el-form-item label="菜单名称" size="mini">
-                    <el-input  auto-complete="off"></el-input>
+                <el-form-item label="菜单名称" >
+                    <el-input  auto-complete="off" v-model="menu.menuName"></el-input>
                 </el-form-item>
-                <el-form-item label="菜单地址" size="mini">
-                    <el-input placeholder="请输入内容">
+                <el-form-item label="菜单地址">
+                    <el-input placeholder="请输入内容" v-model="menu.url">
                         <template slot="prepend" style="padding: 0px 10px;">/admin/</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="上级菜单" size="mini">
-                    <el-select placeholder="请选择" size="mini" style="width:100px" popper-class="repeat-mini-select">
-                        <el-option label="Java知识" value="java"></el-option>
-                        <el-option label="产品文档" value="product"></el-option>
+                <el-form-item label="上级菜单">
+                    <el-select placeholder="请选择" style="width:50%" popper-class="repeat-mini-select"  v-model="menu.pId">
+                        <el-option v-for="menuItem in menuList" :label="menuItem.menuName" :value="menuItem.menuId"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="菜单描述" size="mini">
-                    <el-input type="textarea"></el-input>
+                <el-form-item label="菜单描述">
+                    <el-input type="textarea" v-model="menu.memo"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false" size="mini">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false" size="mini">确 定</el-button>
+                <el-button @click="closeMenuWinHandler">取 消</el-button>
+                <el-button type="primary" @click="submitMenuHandler">确 定</el-button>
             </div>
         </el-dialog>
     </aside>

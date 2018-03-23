@@ -61,3 +61,9 @@ SELECT menuId AS ID,pId AS 父ID ,menuName,url,memo,levels AS 父到子之间级
   ) src
 ORDER BY pId
 
+
+
+问题：
+1、element中封装问题如何解决？
+2、nodejs中错误和异常如何返回到前台？
+
