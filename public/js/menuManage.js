@@ -8,8 +8,6 @@ $(function(){
         memo:""
     };
 
-    console.log(eleUtil.page);
-
     var app1 = new Vue({
         el:"#content",
         data:{
@@ -23,20 +21,34 @@ $(function(){
             operateMenuId:"" //要操作的菜单id
         },
         created:function(){
-            var _this = this;
-            $.ajax({
-                url:"/api/getResourceList",
-                type:"get",
-                success:function(data){
-                    if(data.status === "success"){
-                        _this.$data.tableData = data.message;
-                    }else{
-                        eleUtil.message(data.message,"error");
-                    }
-                }
-            });
+            this.getResourceList();
         },
         methods: {
+            getResourceList:function(){
+                var _this = this;
+                $.ajax({
+                    url:"/api/getResourceList",
+                    type:"get",
+                    data:_this.$data.page ||eleUtil.page,
+                    success:function(data){
+                        if(data.status === "success"){
+                            _this.$data.tableData = data.message;
+                            _this.$data.page.currentPage = data.page.currentPage;
+                            _this.$data.page.total = data.page.total;
+                        }else{
+                            eleUtil.message(data.message,"error");
+                        }
+                    }
+                });
+            },
+            sizeChangeHandler:function(pSize){
+                this.$data.page.pageSize =pSize;
+                this.getResourceList();
+            },
+            currentChangeHandler:function(cPage){
+                this.$data.page.currentPage = cPage;
+                this.getResourceList();
+            },
             deleteHandler:function(){
                 this.$data.dialogVisible = false;
                 eleUtil.loading("正在执行，请稍后...");

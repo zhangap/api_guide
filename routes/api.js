@@ -53,7 +53,6 @@ router.post("/login",function(req,res,next){
 router.get("/menuList",function(req,res,next){
     // var sql = "select * from t_menu where FIND_IN_SET(menuId,getChildLst('0'))";
     var sql = "select * from t_menu";
-    debugger;
     query(sql,function(errors,results){
         var resultData = [];
         getMenuList(resultData,results,"0");
@@ -66,17 +65,10 @@ router.get("/menuList",function(req,res,next){
 /**
  * 获取资源列表
  */
-router.get("/getResourceList",function(req,res,next){
+router.get("/getResourceList",function(req,res){
     var sql = "select t1.menuId, t1.menuName, t1.url,t2.menuName as pMenuName,t1.memo from t_menu t1 left join t_menu t2 on t1.pid = t2.menuId";
-    query(sql,function(errs,results){
-        if(errs){
-            responseData.status = "error";
-            responseData.message = errs;
-        }else{
-            responseData.status = "success";
-            responseData.message = results;
-        }
-        res.json(responseData);
+    appUtil.queryByPage(sql,req,responseData,function(resData){
+        res.json(resData);
     });
 });
 

@@ -11,7 +11,8 @@ var pool = mysql.createPool({
     user:config.db.user,
     password:config.db.password,
     port:config.db.port,
-    database:config.db.database
+    database:config.db.database,
+    multipleStatements:true  //添加执行多条sql的功能
 });
 
 /**

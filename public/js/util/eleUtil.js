@@ -55,9 +55,14 @@
         ELEMENT.Message(def_opts);
     };
 
+    /**
+     * 分页配置
+     * @type {{pageSizes: [number,number,number,number], pageSize: number}}
+     */
     eleUtil.page ={
         pageSizes:[10, 20, 30, 40],
-        layout:"total, sizes, prev, pager, next, jumper",
-        pageSize:10
+        pageSize:10,
+        currentPage:1,
+        total:0
     }
 })(window);
