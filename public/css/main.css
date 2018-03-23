@@ -58,6 +58,8 @@ section{
     top:2px;
     bottom:0;
     border-right: solid 1px #0cb7eb;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .menu ul{
     border-right:none;

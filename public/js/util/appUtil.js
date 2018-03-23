@@ -1,13 +1,12 @@
 var path = require("path");
-var conUtil = require(path.resolve("./public/js/util/conUtil"));
-var connection = conUtil.init();
+var query = require(path.resolve("./public/js/util/mysqlPool"));
 var UUID = require("node-uuid");
 var url = require("url");
 
 function loginLog(userId,userName,ip,msg){
     var sql = "insert into t_log values(?,?,?,?,?,?)";
     var resultMap = [UUID.v1(),userId,userName,new Date(),ip,msg];
-    connection.query(sql,resultMap,function(errs,results){
+    query(sql,resultMap,function(errs,results){
         if(errs) console.error(errs);
     });
 }

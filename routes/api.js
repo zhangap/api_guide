@@ -3,7 +3,7 @@ var router = express.Router();
 var path = require("path");
 var md5 = require("md5");
 var UUID = require("node-uuid");
-var conUtil = require(path.resolve("./public/js/util/conUtil"));
+var query = require(path.resolve("./public/js/util/mysqlPool"));
 var appUtil = require(path.resolve("./public/js/util/appUtil"));
 
 var responseData; //返回格式
@@ -14,7 +14,6 @@ router.use(function(req,res,next){
     };
     next();
 });
-var connection = conUtil.init();
 
 /**
  * 登录
@@ -23,7 +22,7 @@ router.post("/login",function(req,res,next){
     var sql = "select * from t_user where username=?";
     var content = req.body;
     var ip = appUtil.getClientIp(req);
-    connection.query(sql,[content.username],function(errors,results){
+    query(sql,[content.username],function(errors,results){
         if(results.length){
             var user = results[0];
             if(user.password === md5(content.password)){
@@ -54,7 +53,8 @@ router.post("/login",function(req,res,next){
 router.get("/menuList",function(req,res,next){
     // var sql = "select * from t_menu where FIND_IN_SET(menuId,getChildLst('0'))";
     var sql = "select * from t_menu";
-    connection.query(sql,function(errors,results){
+    debugger;
+    query(sql,function(errors,results){
         var resultData = [];
         getMenuList(resultData,results,"0");
         console.log("resultData",resultData);
@@ -68,7 +68,7 @@ router.get("/menuList",function(req,res,next){
  */
 router.get("/getResourceList",function(req,res,next){
     var sql = "select t1.menuId, t1.menuName, t1.url,t2.menuName as pMenuName,t1.memo from t_menu t1 left join t_menu t2 on t1.pid = t2.menuId";
-    connection.query(sql,function(errs,results){
+    query(sql,function(errs,results){
         if(errs){
             responseData.status = "error";
             responseData.message = errs;
@@ -86,7 +86,7 @@ router.get("/getResourceList",function(req,res,next){
 router.get("/delResourceById",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
     var sql = "select menuId from t_menu  t2 where FIND_IN_SET(menuId,getChildLst(?))";
-    connection.query(sql,[reqObj.menuId],function(errs,results){
+    query(sql,[reqObj.menuId],function(errs,results){
         var menuIds="";
         if(results.length){
             if(results.length === 1){
@@ -100,7 +100,7 @@ router.get("/delResourceById",function(req,res,next){
             }
             var sql2 = "delete from t_menu where menuId in("+menuIds+")";
             console.log("打印SQL：" + sql2);
-            connection.query(sql2,function(errs,results){
+            query(sql2,function(errs,results){
                 if(errs){
                     responseData.status = "error";
                     responseData.message = errs;
@@ -121,7 +121,7 @@ router.get("/delResourceById",function(req,res,next){
 router.get("/getResourceById",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
     var sql = "select * from t_menu where menuId =?";
-    connection.query(sql,[reqObj.menuId],function(errs,results){
+    query(sql,[reqObj.menuId],function(errs,results){
         if(errs){
             responseData.status = "error";
             responseData.message = errs;
@@ -141,7 +141,7 @@ router.get("/getResourceById",function(req,res,next){
  */
 router.get("/getAllResources",function(req,res,next){
     var sql = "select menuId, menuName from t_menu";
-    connection.query(sql,function(errs,results){
+    query(sql,function(errs,results){
         if(errs){
             responseData.status = "error";
             responseData.message = errs;
@@ -160,7 +160,7 @@ router.get("/getAllResources",function(req,res,next){
 router.post("/saveMenu",function(req,res,next){
     var mo = req.body,
         sql = "",
-        msg = "菜单修改成功";
+        msg = "菜单修改成功",
         map =[];
     if(mo.menuId){ //update
         sql = "update t_menu set menuName=?, url=?,pId=?,memo=? where menuId =?";
@@ -170,7 +170,7 @@ router.post("/saveMenu",function(req,res,next){
         map = [UUID.v1(),mo.menuName,mo.url,mo.pId,mo.memo];
         msg = "菜单保存成功";
     }
-    connection.query(sql,map,function(errs,results){
+    query(sql,map,function(errs,results){
         if(errs){
             responseData.status = "error";
             responseData.message = errs;
