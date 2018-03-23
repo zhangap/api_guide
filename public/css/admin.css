@@ -1,4 +1,4 @@
-.api-user{border:1px solid #efefef;background:#f1fbff;padding: 0px 10px;border-radius: 2px;}
+.api-user{border:1px solid #efefef;background:#fff;padding: 0px 10px;border-radius: 2px;}
 .api-user .el-form-item{margin-bottom:2px;margin-right: 20px;}
 .api-user .el-form-item .el-input__inner{width: 160px;padding: 0px 8px;}
 .api-user .el-form-item .el-select .el-input__inner{width: 100px;}

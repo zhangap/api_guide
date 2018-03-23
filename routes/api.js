@@ -191,6 +191,32 @@ function getMenuList(resultData,results,pId){
     }
 }
 
+/**
+ * 角色模块-新增|更新
+ */
+router.post("/mergeRole",function(req,res,next){
+    var itemInfo = req.body;
+    var user = req.session.user;
+    var sql = "insert into t_role values (?,?,?,?,?,?);";
+    var params = [UUID.v1(),itemInfo.rolename,itemInfo.describe,'',new Date(),user.username];
+    if(itemInfo.roleid){
+        sql = "update t_role set rolename=?,describe=?,memo=?,createtime=?,createman=? where roleid=?";
+        params.shift();
+        params.push(itemInfo.roleid);
+    }
+    query(sql,params,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = msg;
+        }
+        res.json(responseData);
+    });
+
+});
+
 
 
 module.exports = router;

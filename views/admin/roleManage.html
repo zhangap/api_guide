@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <%- include ../default.html%>
     <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/admin.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -12,14 +13,44 @@
 <section>
     <%- include menu.html%>
     <aside class="content" id="content">
+        <el-form :inline="true" ref="formModel" :model="formModel"  class="demo-form-inline api-user">
+            <el-form-item label="角色名称" prop="roleName">
+                <el-input type="text" v-model="formModel.roleName" auto-complete="off" size="mini"></el-input>
+            </el-form-item>
+            <el-form-item >
+                <el-button type="primary" @click="submitForm" size="mini" icon="el-icon-search">查询</el-button>
+            </el-form-item>
+        </el-form>
         <template>
-            <el-table :data="tableData" style="width: 100%">
-
+            <el-table :data="tableData" style="width: 100%" class="aa-table">
+                    <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
+                    <el-table-column fixed prop="rolename" label="角色名称" width="180"></el-table-column>
+                    <el-table-column fixed prop="menus" label="角色权限" width="180"></el-table-column>
+                    <el-table-column fixed prop="createman" label="创建人"></el-table-column>
+                    <el-table-column fixed prop="createtime" label="创建时间"></el-table-column>
+                    <el-table-column fixed prop="describe" label="备注信息"></el-table-column>
+                    <el-table-column fixed prop="operate" label="操作" :render-header="renderHeader" width="180" align="center"></el-table-column>
             </el-table>
         </template>
+
+        <!-- 新增角色 修改角色 -->
+        <el-dialog title="新增角色" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="50%" :close-on-click-modal="false">
+            <el-form label-position="labelPosition" label-width="80px">
+                    <el-form-item label="角色名称" >
+                        <el-input  auto-complete="off" v-model="role.rolename"></el-input>
+                    </el-form-item>
+                    <el-form-item label="角色描述">
+                        <el-input type="textarea" v-model="role.describe"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="closeRoleDialog">取消</el-button>
+                    <el-button type="primary" @click="submitRoleDialog">确定</el-button>
+                </div>
+        </el-dialog>
     </aside>
 </section>
 </body>
 </html>
 <script src="/public/js/main.js"> </script>
-<script src="/public/js/userManage.js"></script>
+<script src="/public/js/roleManage.js"></script>
