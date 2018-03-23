@@ -22,10 +22,8 @@ html,body{
     font-size:31px;
     color:#0cb7eb;
     font-weight:bold;
-    transition: all 1.5s;
     cursor: pointer;
 }
-.logo:hover{transform:rotateY(360deg);}
 .bigMenu{
     position: absolute;
     top:0px;
