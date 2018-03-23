@@ -115,7 +115,6 @@ $(function(){
                 return createElement(
                     'span',
                     ["操作",
-
                         createElement('a', {
                                 'class': 'fa fa-plus-circle ml10 f18',
                                 attrs:{
@@ -125,6 +124,7 @@ $(function(){
                                 on: { click: function () {
                                     app1.$data.winTitle = "新增菜单";
                                     app1.$data.dialogMenWinVisible = true;
+                                    app1.$data.menu = menuObj;
                                     app1.getAllResources();
                                 } }
                             }

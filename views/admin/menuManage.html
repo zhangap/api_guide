@@ -34,7 +34,7 @@
                             <p>{{ scope.row.memo }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="operate" label="操作" :render-header="renderHeader">
+                    <el-table-column prop="operate" label="操作" :render-header="renderHeader" width="180" align="center">
                         <template slot-scope="scope">
                             <el-button size="mini" @click="editMeunHandler(scope.row.menuId)">编辑</el-button>
                             <el-button size="mini" type="danger" @click="deleteMenuHandler(scope.row.menuId)">删除</el-button>
