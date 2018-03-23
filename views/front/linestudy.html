@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>在线学习</title>
+    <meta charset="utf-8">
+    <%- include ../default.html%>
+    <link href="/public/css/home.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body style="background: #f6f6f6">
+    <header class="api-header">
+        <div class="api-w1024">
+            <a href="/" class="ah-logo">API开发指南</a>
+            <ul>
+                <li class="active"><a href="/list">分类查找</a></li>
+                <li><a href="/linestudy">在线学习</a></li>
+                <li><a href="#">在线考试</a></li>
+                <li><a href="/login">管理中心</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="api-w1024 api-container clearfix" id="linestudy">
+            <div class="clearfix">
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item>在线学习</el-breadcrumb-item>
+                    <el-breadcrumb-item>前端开发</el-breadcrumb-item>
+                    <el-breadcrumb-item>公共组件</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+
+            <div class="api-ls-con clearfix">
+                <div class="alc-box">
+                    <div class="alc-group-img">
+                        <img src="http://imgs.xueui.cn/wp-content/uploads/2018/03/201803191521480736-220x150.jpg" border="0"/>
+                    </div>
+                    <div class="alc-group-content">
+                        <h3>23款网页设计师必备：经典私藏英文字体</h3>
+                        <p>作为网页设计师，对待字体设计也许并没有其他的平面设计师那般自由。例如，你没有办法在网页中使用其他中文的字体，受限于技术的原因</p>
+                        <div class="">
+                            <i class="fa fa-user-o"></i><span>张三</span>
+                            <i class="fa fa-clock-o"></i><span>2018-03-20</span>
+                            <i class="fa fa-user"></i><span>1022浏览</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    <footer class="api-footer">
+        <p class="api-w1024">胜意前端开发组开发</p>
+    </footer>
+</body>
+</html>
+<script>
+    var app1 = new Vue({
+        el:"#linestudy",
+        data:{
+        },
+        methods:{
+
+        }
+    });
+</script>

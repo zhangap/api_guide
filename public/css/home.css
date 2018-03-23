@@ -27,3 +27,13 @@
 .ac-list{width: 50%;display: inline-block;margin-bottom: 10px;float: right;}
 .ac-list .el-select .el-input { width: 85px;}
 .ac-list .input-with-select .el-input-group__prepend { background-color: #fff;}
+
+/*在线学习页面*/
+.api-ls-con{margin-top: 20px;}
+.alc-box{width:240px;margin-right: 10px;display: inline-block;background: #fff;border:1px solid #ddd;}
+.alc-box:nth-child(4n){margin-right: 0px;}
+.alc-box .alc-group-img{padding: 10px;height: 150px;border-bottom:1px solid #ddd;}
+.alc-box .alc-group-img img{width: 100%;}
+.alc-box .alc-group-content{padding: 10px;}
+.alc-box .alc-group-content h3{max-height:44px;line-height: 22px;display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 2;  overflow: hidden;font-size: 15px;}
+.alc-box .alc-group-content p{max-height:80px;line-height: 20px;display: -webkit-box;  -webkit-box-orient: vertical;  -webkit-line-clamp: 4;  overflow: hidden;font-size: 12px;}

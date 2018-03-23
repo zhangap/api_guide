@@ -33,4 +33,11 @@ router.get("/list",function(req,res,next){
   res.render("front/list");
 });
 
+/**
+ * 在线学习
+ */
+router.get("/linestudy",function(req,res,next){
+    res.render("front/linestudy");
+});
+
 module.exports = router;
