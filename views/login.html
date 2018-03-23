@@ -15,7 +15,7 @@
     </header>
     <div class="api-logo-bg">
         <div class="alb-box clearfix">
-            <form id="loginForm" onsubmit="return false;">
+            <form id="loginForm" onsubmit="return false;" ref="loginForm">
                 <h3>后台管理系统</h3>
                 <div class="alb-group">
                     <el-input placeholder="请输入账号" name="username" v-model="user.username">
@@ -86,10 +86,10 @@
                 var user = this.$data.user;
                 if(!user.username){
                     eleUtil.message("请输入用户名");
-                    $("input[name='username']").parent().addClass('animated shake');
+                    this.animationTip("username");
                 }else if(!user.password){
                     eleUtil.message("请输入密码");
-                    $("input[name='password']").parent().addClass('animated shake');
+                    this.animationTip("password");
                 }else{
                     var _this = this;
                     eleUtil.loading("正在登陆，请稍后...");
@@ -105,9 +105,9 @@
                                 eleUtil.message(result.message);
                                 var code = result.statusCode;
                                 if(code === "10002"){
-                                	$("input[name='username']").parent().addClass('animated shake');
+                                    _this.animationTip("username");
                                 }else{
-                                	$("input[name='password']").parent().addClass('animated shake');
+                                    _this.animationTip("password");
                                 }
                             }
                         },
@@ -116,11 +116,17 @@
                         }
                     })
                 }
+            },
+            animationTip:function(field){
+                $(this.$refs.loginForm[field]).parent().css({
+                    animationName:'shake',
+                    animationDuration:'1s'
+                });
             }
         }
     });
     $(".el-input-group").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',function(){
-    	$(this).removeClass('animated shake');
+        $(this).css('animationName','none');
     });
 </script>
 </body>
