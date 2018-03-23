@@ -7,7 +7,7 @@
 
 /*登录页面动画*/
 
-#loginBtn{animation:loginbtn 1.8s linear;}
+#loginBtn{animation:loginbtn 0.8s linear;}
 @keyframes loginbtn {
     0%{opacity: 0;transform: translateX(500px);}
     25%{transform: translateX(375px);}
@@ -16,7 +16,7 @@
     100%{transform: translateX(0px);}
 }
 
-#loginForm  .alb-group:nth-child(2)  .el-input-group{animation: usern 1.6s linear;}
+#loginForm  .alb-group:nth-child(2)  .el-input-group{animation: usern 0.6s linear;}
 @keyframes usern{
     0%{opacity:0;transform-origin: left bottom;transform: translate(-180px,-90px) rotateZ(-60deg);}
     25%{transform-origin: left bottom;transform: translate(-135px,-77.5px) rotateZ(-45deg);}
@@ -24,7 +24,7 @@
     75%{transform-origin: left bottom;transform: translate(-45px,-22.5px) rotateZ(-15deg);}
     100%{transform-origin: left bottom;transform: translate(0,0) rotateZ(0);}
 }
-#loginForm  .alb-group:nth-child(3)  .el-input-group{animation: pwdp 1.2s linear;}
+#loginForm  .alb-group:nth-child(3)  .el-input-group{animation: pwdp 0.2s linear;}
 @keyframes pwdp{
     0%{opacity:0;transform: translateY(240px) rotateX(360deg);}
     25%{transform: translateY(180px) rotateX(270deg);}
