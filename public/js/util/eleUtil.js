@@ -54,4 +54,10 @@
         }
         ELEMENT.Message(def_opts);
     };
+
+    eleUtil.page ={
+        pageSizes:[10, 20, 30, 40],
+        layout:"total, sizes, prev, pager, next, jumper",
+        pageSize:10
+    }
 })(window);

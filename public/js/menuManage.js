@@ -8,6 +8,7 @@ $(function(){
         memo:""
     };
 
+    console.log(eleUtil.page);
 
     var app1 = new Vue({
         el:"#content",
@@ -17,6 +18,7 @@ $(function(){
             winTitle:"新增菜单", //窗口标题
             dialogMenWinVisible:false, //新增和编辑窗口显示变量
             menu:menuObj,
+            page:eleUtil.page,
             menuList:[],
             operateMenuId:"" //要操作的菜单id
         },
@@ -134,6 +136,7 @@ $(function(){
             }
         }
     });
+
 
 
 
