@@ -1,0 +1,5 @@
+/*后台管理页面logo动画*/
+.logo{
+    transition: all 1.5s;
+}
+.logo:hover{transform:rotateY(360deg);}
