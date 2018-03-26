@@ -192,6 +192,36 @@ function getMenuList(resultData,results,pId){
 }
 
 /**
+ * 获取文档类型
+ */
+router.get("/documentTypeList",function(req,res,next){
+    var sql = "select * from t_documenttype orderby ";
+    query(sql,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = "success";
+            var resultData = [];
+            getDocuTypeList(resultData,results,"0");
+            console.log("resultData",resultData);
+            responseData.data = resultData;
+            res.json(responseData);
+        }
+    });
+
+});
+function getDocuTypeList(resultData,results,pId){
+    for(var i =0,len = results.length;i<len;i++){
+        if(results[i].pId == pId){
+            var item = results[i];
+            item.children = [];
+            resultData.push(item);
+            getDocuTypeList(item.children,results,item.typeId);
+        }
+    }
+}
+/**
  * 角色模块-新增|更新
  */
 router.post("/mergeRole",function(req,res,next){
