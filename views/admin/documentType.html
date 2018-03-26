@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>欢迎使用后台管理系统</title>
+    <meta charset="utf-8">
+    <%- include ../default.html%>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/api-animation.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .custom-tree-node {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            padding-right: 8px;
+        }
+        .el-tree-node{
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+<%- include header.html%>
+<section>
+    <%- include menu.html%>
+    <aside class="content" id="content">
+        <el-tree
+            :data="documentType"
+            node-key="id"
+            default-expand-all
+            :expand-on-click-node="false">
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+                <span v-text="data.typeName"></span>
+                <span>
+                    <el-button-group>
+                        <el-button
+                            plain
+                            size="mini"
+                            icon="el-icon-circle-plus-outline"
+                            @click="appendType(node,data)">
+                        </el-button>
+                        <el-button
+                            plain
+                            size="mini"
+                            icon="el-icon-edit-outline"
+                            @click="editType(data)">
+                        </el-button>
+                        <el-button
+                            plain
+                            size="mini"
+                            icon="el-icon-delete"
+                            @click="removeType(node, data)">
+                        </el-button>
+                    </el-button-group>
+                </span>
+            </span>
+        </el-tree>
+
+    </aside>
+</section>
+</body>
+</html>
+<script src="/public/js/main.js"></script>
+<script src="/public/js/documentType.js"></script>
