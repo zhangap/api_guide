@@ -232,10 +232,10 @@ function getDocuTypeList(resultData,results,pId){
 router.post("/mergeRole",function(req,res,next){
     var itemInfo = req.body;
     var user = req.session.user;
-    var sql = "insert into t_role values(?,?,?,?,?,?)";
-    var params = [UUID.v1(),itemInfo.rolename,itemInfo.describe,'',new Date(),user.username];
+    var sql = "insert into t_role values(?,?,?,?,?)";
+    var params = [UUID.v1(),itemInfo.rolename,itemInfo.memo,new Date(),user.username];
     if(itemInfo.roleid){
-        sql = "update t_role set rolename=?,describe=?,memo=?,createtime=?,createman=? where roleid=?";
+        sql = "update t_role set rolename=?,memo=?,createtime=?,createman=? where roleid=?";
         params.shift();
         params.push(itemInfo.roleid);
     }
@@ -266,6 +266,34 @@ router.get("/getRoleList",function(req,res,next){
     sql += " order by createtime desc";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
+    });
+});
+
+/**
+ * 删除角色(可批量)
+ */
+router.get("/deleteRoleById",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var roleid = reqObj.roleId;
+    if(roleid.indexOf(",")>0){
+        let roles = roleid.split(",");
+        roles.forEach(element => {
+            element = `'${element}'`;
+        });
+        roleid = roles.join(",");
+    }else{
+        roleid = `'${roleid}'`;
+    }
+    var sql = `delete from t_role where roleid in (${roleid})`;
+    query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
     });
 });
 

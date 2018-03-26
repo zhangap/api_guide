@@ -8,8 +8,16 @@ $(function(){
             },
             role:{
                 rolename:"",
-                describe:""
+                memo:""
             },
+            _row:null,
+            rules:{
+                rolename:[{required: true, message: '请输入活动名称', trigger: 'blur'}],
+                memo:[{required: true, message: '请输入活动名称', trigger: 'blur'}]
+            },
+            editRoleId:'',
+            confirmVisible:false,
+            dialogTile:"新增角色",
             dialogMenWinVisible:false,
             page:$.extend(true,{},eleUtil.page)
         },
@@ -20,23 +28,29 @@ $(function(){
             submitForm:function(e){
                 this.getRoleList();
             },
-            closeRoleDialog:function(){
+            closeRoleDialog:function(name){
                 this.dialogMenWinVisible = false;
+                this.editRoleId = '';
+                this.$nextTick(function(){
+                    this.$refs[name].resetFields();
+                });
             },
-            submitRoleDialog:function(){
+            submitRoleDialog:function(name){
                 var _this = this;
-                var params = this.role;
-                if(!params.rolename||!params.describe){
-                    return ;
-                }          
-                $.post("/api/mergeRole",params).done(function(data){
-                    if(data.status === "success"){
-                        eleUtil.message(data.message,"success");
-                        _this.dialogMenWinVisible = false;
-                        _this.$refs.mergeForm.resetFields();
-                        _this.getRoleList();
-                    }else{
-                        eleUtil.message(data.message,"error");
+                var params = $.extend(true,{},this.role);
+                params.roleid = this.editRoleId;  
+                this.$refs[name].validate(function(validate){
+                    if(validate){
+                        $.post("/api/mergeRole",params).done(function(data){
+                            if(data.status === "success"){
+                                eleUtil.message(data.message,"success");
+                                _this.dialogMenWinVisible = false;
+                                _this.editRoleId = '';
+                                _this.getRoleList();
+                            }else{
+                                eleUtil.message(data.message,"error");
+                            }
+                        });
                     }
                 });
             },
@@ -52,6 +66,7 @@ $(function(){
                                     'href':'javascript:;'
                                 },
                                 on: { click: function () {
+                                    _this.dialogTile = "新增角色";
                                     _this.dialogMenWinVisible = true;
                                 } }
                             }
@@ -65,7 +80,9 @@ $(function(){
                     rolename:this.formModel.roleName
                 };
                 $.extend(true,poly,this.page);
+                eleUtil.loading();
                 $.get("/api/getRoleList",poly,function(data){
+                    eleUtil.closeLoading();
                     if(data.status === "success"){
                         _this.tableData = data.message;
                         _this.page.currentPage = data.page.currentPage;
@@ -83,6 +100,35 @@ $(function(){
                 this.page.currentPage = cPage;
                 this.getRoleList();
             },
+            editRoleHandler:function(row){
+                var _this = this;
+                this.dialogTile = "编辑角色"
+                this.dialogMenWinVisible = true;
+                this.role.rolename = row.rolename;
+                this.role.memo = row.memo;
+                this.editRoleId = row.roleId;
+            },
+            deleteRoleHandler:function(row){
+                var _this = this;
+                this.confirmVisible = true;
+                this._row = row;
+                return this;
+            },
+            cancelHandler:function(){
+                this.confirmVisible = false;
+            },
+            deleteHandler:function(){
+                var row = this._row,_this = this;
+                $.get("/api/deleteRoleById",row,function(data){
+                    _this._row = null;
+                    _this.confirmVisible = false;
+                    if(data.status === "success"){
+                        _this.getRoleList();
+                    }else{
+                        eleUtil.message(data.message,"error");
+                    }
+                });
+            }
         }
     });
 });
