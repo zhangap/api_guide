@@ -55,8 +55,7 @@ router.get("/menuList",function(req,res,next){
     var sql = "select * from t_menu";
     query(sql,function(errors,results){
         var resultData = [];
-        getMenuList(resultData,results,"0");
-        console.log("resultData",resultData);
+        getMenuList(resultData,results,"0","childs","menuId");
         res.json(resultData);
     });
 
@@ -132,15 +131,17 @@ router.get("/getResourceById",function(req,res,next){
  * 获取所有资源
  */
 router.get("/getAllResources",function(req,res,next){
-    var sql = "select menuId, menuName from t_menu";
+    var sql = "select menuId as id, menuName as label, pId from t_menu";
     query(sql,function(errs,results){
         if(errs){
             responseData.status = "error";
             responseData.message = errs;
         }else{
             responseData.status = "success";
-            results.push({"menuId":"0","menuName":"ROOT"});
-            responseData.message = results;
+            results.unshift({"id":"0","label":"ROOT","pId":"null"});
+            var treeList =[];
+            getMenuList(treeList,results,"null","children","id");
+            responseData.message = treeList;
         }
         res.json(responseData);
     });
@@ -179,17 +180,21 @@ router.post("/saveMenu",function(req,res,next){
  * @param resultData
  * @param results
  * @param pId
+ * @param childKey
  */
-function getMenuList(resultData,results,pId){
+function getMenuList(resultData,results,pId,childKey,id){
+    var key = childKey|| "childs",
+        id = id || "menuId";
     for(var i =0,len = results.length;i<len;i++){
         if(results[i].pId == pId){
             var item = results[i];
-            item.childs = [];
+            item[key] = [];
             resultData.push(item);
-            getMenuList(item.childs,results,item.menuId);
+            getMenuList(item[key],results,item[id],key,id);
         }
     }
 }
+
 
 /**
  * 获取文档类型

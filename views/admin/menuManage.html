@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <%- include ../default.html%>
     <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/core/treeSelect/vue-treeselect.min.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -75,9 +76,14 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="上级菜单">
-                    <el-select placeholder="请选择" style="width:50%" popper-class="repeat-mini-select"  v-model="menu.pId">
-                        <el-option v-for="menuItem in menuList" :label="menuItem.menuName" :value="menuItem.menuId"></el-option>
-                    </el-select>
+                    <template>
+                        <treeselect
+                                v-model="menu.pId"
+                                :multiple="false"
+                                :options="options"
+                                :show-count="true"
+                        ></treeselect>
+                    </template>
                 </el-form-item>
                 <el-form-item label="菜单描述">
                     <el-input type="textarea" v-model="menu.memo"></el-input>
@@ -93,4 +99,5 @@
 </body>
 </html>
 <script src="/public/js/main.js"> </script>
+<script src="/public/core/treeSelect/vue-treeselect.min.js"> </script>
 <script src="/public/js/menuManage.js"></script>
