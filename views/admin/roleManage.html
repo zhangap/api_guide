@@ -13,7 +13,7 @@
 <section>
     <%- include menu.html%>
     <aside class="content" id="content">
-        <el-form :inline="true" ref="formModel" :model="formModel"  class="demo-form-inline api-user">
+        <el-form :inline="true" ref="formModel" :model="formModel"  class="demo-form-inline api-user" v-cloak onsubmit="return false">
             <el-form-item label="角色名称" prop="roleName">
                 <el-input type="text" v-model="formModel.roleName" auto-complete="off" size="mini"></el-input>
             </el-form-item>
@@ -25,17 +25,31 @@
             <el-table :data="tableData" style="width: 100%" class="aa-table">
                     <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
                     <el-table-column fixed prop="rolename" label="角色名称" width="180"></el-table-column>
-                    <el-table-column fixed prop="menus" label="角色权限" width="180"></el-table-column>
+                    <el-table-column fixed prop="menus" label="角色权限" width="180" :showOverflowTooltip="true"></el-table-column>
                     <el-table-column fixed prop="createman" label="创建人"></el-table-column>
-                    <el-table-column fixed prop="createtime" label="创建时间"></el-table-column>
-                    <el-table-column fixed prop="describe" label="备注信息"></el-table-column>
-                    <el-table-column fixed prop="operate" label="操作" :render-header="renderHeader" width="180" align="center"></el-table-column>
+                    <el-table-column fixed prop="updatetime" label="创建时间"></el-table-column>
+                    <el-table-column fixed prop="describe" label="备注信息" :showOverflowTooltip="true"></el-table-column>
+                    <el-table-column fixed prop="operate" label="操作" :render-header="renderHeader" width="180" align="center">
+
+                    </el-table-column>
             </el-table>
+            <div class="block repeat-menu-page">
+                <el-pagination  background
+                                :current-page="page.currentPage"
+                                :page-sizes="page.pageSizes"
+                                :page-size="page.pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="page.total"
+                                @size-change="sizeChangeHandler"
+                                @current-change="currentChangeHandler"
+                >
+                </el-pagination>
+            </div>
         </template>
 
         <!-- 新增角色 修改角色 -->
-        <el-dialog title="新增角色" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="50%" :close-on-click-modal="false">
-            <el-form label-position="labelPosition" label-width="80px">
+        <el-dialog title="新增角色" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="50%" :close-on-click-modal="false" v-cloak>
+            <el-form label-position="labelPosition" label-width="80px" ref="mergeForm">
                     <el-form-item label="角色名称" >
                         <el-input  auto-complete="off" v-model="role.rolename"></el-input>
                     </el-form-item>

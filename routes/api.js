@@ -197,7 +197,7 @@ function getMenuList(resultData,results,pId){
 router.post("/mergeRole",function(req,res,next){
     var itemInfo = req.body;
     var user = req.session.user;
-    var sql = "insert into t_role values (?,?,?,?,?,?);";
+    var sql = "insert into t_role values(?,?,?,?,?,?)";
     var params = [UUID.v1(),itemInfo.rolename,itemInfo.describe,'',new Date(),user.username];
     if(itemInfo.roleid){
         sql = "update t_role set rolename=?,describe=?,memo=?,createtime=?,createman=? where roleid=?";
@@ -210,11 +210,28 @@ router.post("/mergeRole",function(req,res,next){
             responseData.message = errs;
         }else{
             responseData.status = "success";
-            responseData.message = msg;
+            responseData.message = "操作成功";
         }
         res.json(responseData);
     });
+});
 
+/**
+ * 获取角色列表(roleid为空查所有)
+ */
+router.get("/getRoleList",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "SELECT *,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%S') as updatetime from t_role where 1=1";
+    if(reqObj.roleid){
+        sql += " and roleid in ('"+reqObj.roleid+"')";
+    }
+    if(reqObj.rolename){
+        sql += " and rolename like '%"+reqObj.rolename+"%'";
+    }
+    sql += " order by createtime desc";
+    appUtil.queryByPage(sql,req,responseData,function(resData){
+        res.json(resData);
+    });
 });
 
 
