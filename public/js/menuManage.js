@@ -4,12 +4,15 @@ $(function(){
         menuId:"",
         menuName:"",
         url:"",
-        pId:"",
+        pId:null,
         memo:""
     };
 
     var app1 = new Vue({
         el:"#content",
+        components:{
+            "treeselect":window.VueTreeselect.Treeselect
+        },
         data:{
             tableData:[],
             dialogVisible:false,
@@ -17,11 +20,12 @@ $(function(){
             dialogMenWinVisible:false, //新增和编辑窗口显示变量
             menu:menuObj,
             page:eleUtil.page,
-            menuList:[],
+            options:[],
             operateMenuId:"" //要操作的菜单id
         },
         created:function(){
             this.getResourceList();
+            this.getAllResources();
         },
         methods: {
             getResourceList:function(){
@@ -86,7 +90,6 @@ $(function(){
                             eleUtil.message(data.message,"error");
                         }else{
                             app1.$data.menu = $.extend(true,{},data.message);
-                            app1.getAllResources();
                         }
                     }
                 });
@@ -120,7 +123,7 @@ $(function(){
                     type:"get",
                     success:function(data){
                         if(data.status === "success"){
-                            app1.$data.menuList = data.message;
+                            app1.$data.options = data.message;
                         }
                     }
                 })
@@ -139,7 +142,6 @@ $(function(){
                                     app1.$data.winTitle = "新增菜单";
                                     app1.$data.dialogMenWinVisible = true;
                                     app1.$data.menu = menuObj;
-                                    app1.getAllResources();
                                 } }
                             }
                         )
