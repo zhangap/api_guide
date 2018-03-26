@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎使用后台管理系统</title>
+    <%- include ../default.html%>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/admin.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<%- include header.html%>
+<section>
+    <%- include menu.html%>
+<aside class="content" id="content">
+    <el-form :inline="true" class="demo-form-inline  api-user">
+        <el-form-item label="用户名称">
+        <el-input placeholder="请输入用户名" size="mini" v-model="admin.name"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="queryLogs" size="mini">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <template>
+        <el-table :data="tableData" style="width: 100%"  class="aa-table" size="mini">
+            <el-table-column prop="loginTime" label="loginTime">
+            </el-table-column>
+            <el-table-column prop="ip" label="ip">
+            </el-table-column>
+            <el-table-column prop="result" label="查询结果">
+            </el-table-column>
+            <el-table-column prop="userName" label="查询人">
+            </el-table-column>
+        </el-table>
+        <div class="block repeat-menu-page">
+            <el-pagination  background
+                            :current-page="page.currentPage"
+                            :page-sizes="page.pageSizes"
+                            :page-size="page.pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="page.total"
+                            @size-change="sizeChangeHandler"
+                            @current-change="currentChangeHandler"
+            >
+            </el-pagination>
+        </div>
+    </template>
+
+</aside>
+</section>
+</body>
+</html>
+<script src="/public/js/main.js"> </script>
+<script src="/public/js/logs.js"></script>
