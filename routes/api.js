@@ -269,6 +269,25 @@ router.get("/getRoleList",function(req,res,next){
     });
 });
 
-
+/**
+ * 修改密码
+ */
+router.post("/changePwd",function (req,res,next) {
+    var gxsql="UPDATE t_user SET password =? WHERE username =? and password=?";
+    var User=req.session.user.username;
+    var content = req.body;
+    var newmdpwd=md5(content.newpwd);
+    var oldmdpwd=md5(content.oldpwd);
+    query(gxsql,[newmdpwd,User,oldmdpwd],function(errors,results){
+        if(results.changedRows){
+            responseData.status="success";
+            responseData.message="密码修改成功";
+        }else{
+            responseData.status="error";
+            responseData.message="请输入正确密码";
+        }
+        res.json(responseData);
+    })
+})
 
 module.exports = router;
