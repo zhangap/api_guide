@@ -49,6 +49,12 @@ router.get("/roleManage",function(req,res,next){
 router.get("/menuManage",function(req,res,next){
     res.render("admin/menuManage",responseData);
 });
+/**
+ * 文档类型
+ */
+router.get("/documentType",function(req,res,next){
+    res.render("admin/documentType",responseData);
+});
 
 
 module.exports = router;
