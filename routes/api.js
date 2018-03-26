@@ -318,4 +318,23 @@ router.post("/changePwd",function (req,res,next) {
     })
 })
 
+/**
+ * 获取查询日志
+ */
+router.get("/Logs",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var user=reqObj.admin;
+    var sql="select  * from t_log where 1=1 ";
+    if(!user){
+        sql += ` and userName like '%${user}%'`;
+    }else{
+        sql += ` and userName='${user}'`;
+    }
+    appUtil.queryByPage(sql,req,responseData,function(resData){
+        console.log(resData);
+        res.json(resData);
+    });
+
+})
+
 module.exports = router;
