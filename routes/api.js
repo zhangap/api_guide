@@ -19,7 +19,7 @@ router.use(function(req,res,next){
  * 登录
  */
 router.post("/login",function(req,res,next){
-    var sql = "select * from t_user where username=?";
+    var sql = "select * from t_user where username=? and state=1";
     var content = req.body;
     var ip = appUtil.getClientIp(req);
     query(sql,[content.username],function(errors,results){
@@ -310,6 +310,88 @@ router.get("/deleteRoleById",function(req,res,next){
         }else{
             responseData.status = "success";
             responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 获取用户列表
+ */
+router.get("/getUsersList",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "select * from  t_user where 1=1";
+    if(reqObj.username){
+        sql += ` and username like '%${reqObj.username}%'`;
+    } 
+    if(reqObj.userrole){
+        sql += ` and roleid = '${reqObj.userrole}'`;
+    }
+    if(reqObj.phone){
+        sql += ` and phone like '%${reqObj.phone}%'`;
+    }
+    if(reqObj.email){
+        sql += ` and email like '%${reqObj.email}%'`;
+    }
+    if(reqObj.state =="0"||reqObj.state =="1"){
+        sql += ` and state = ${reqObj.state}`;
+    }
+    sql += " order by updatetime desc";
+    appUtil.queryByPage(sql,req,responseData,function(resData){
+        res.json(resData);
+    });
+});
+
+/**
+ * 新增|修改 用户信息
+ */
+router.post("/mergeUser",function(req,res,next){
+    var dol = req.body,user = req.session.user;
+    var sql = "insert into t_user values(?,?,?,?,?,?,?,?,?)";
+    var mapValue = [UUID.v1(),dol.username,md5("123456"),dol.userrole,new Date(),dol.phone,dol.email,1,dol.memo];
+    if(dol.userId){
+        sql = "update t_user set username = ?,roleid=?,updateTime=?,phone=?,email=?,state=?,memo=? where userId=?";
+        mapValue.shift();
+        mapValue.push(dol.userId);
+        mapValue.slice(1,1);
+    }
+    query(sql,mapValue,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 删除用户信息
+ */
+router.get("/deleteUserById",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req),userId = reqObj.userId;
+    if(userId.indexOf(",")>0){
+        userId = userId.split(",");
+        var id = "";
+        userId.forEach(elelment=>{
+            id += "'"+elelment+"',";
+        });
+        id = id.slice(0,-1);
+        userId = id;
+    }else{
+        userId = `'${userId}'`;
+    }
+    console.log(userId);
+    var sql = `update t_user set state = ? where userId in (${userId})`;
+    query(sql,[0],function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
         }
         res.json(responseData);
     });

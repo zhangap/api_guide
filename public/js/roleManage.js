@@ -12,8 +12,8 @@ $(function(){
             },
             _row:null,
             rules:{
-                rolename:[{required: true, message: '请输入活动名称', trigger: 'blur'}],
-                memo:[{required: true, message: '请输入活动名称', trigger: 'blur'}]
+                rolename:[{required: true, message: '请输入名称', trigger: 'blur'}],
+                memo:[{required: true, message: '请输入描述', trigger: 'blur'}]
             },
             editRoleId:'',
             confirmVisible:false,
