@@ -16,7 +16,7 @@ $(function () {
             queryLogs:function() {
                 var _this=this;
                 $.ajax({
-                    url:"/api/Logs",
+                    url:"/api/logs",
                     type:"get",
                     data: $.extend(true,{},_this.page,{admin:_this.admin.name}),
                     success:function (data) {
