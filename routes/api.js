@@ -342,12 +342,7 @@ router.post("/changePwd",function (req,res,next) {
 router.get("/logs",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
     var username=reqObj.admin;
-    var sql="select  * from t_log where 1=1 ";
-    if(!username){
-        sql += ` and userName like '%${username}%'`;
-    }else{
-        sql += ` and userName='${username}'`;
-    }
+    var sql="select  * from t_log where userName like '%"+username+"%' ";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     });
