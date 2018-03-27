@@ -1,17 +1,36 @@
-var userform=[{
+var userform={
     username:"wuhan",
     userrole:"",
     phone:"",
     email:"",
     state:""
-}];
+};
 var app1 = new Vue({
     el:"#content",
     data:{
         userForm:userform,
-        tableData:[]
+        tableData:[],
+        page:$.extend(true,{},eleUtil.page)
     },
     methods:{
+        searchList:function(){
+            this.getUserList();
+        },
+        sizeChangeHandler:function(pSize){
+            this.page.pageSize =pSize;
+            this.getUserList();
+        },
+        currentChangeHandler:function(cPage){
+            this.page.currentPage = cPage;
+            this.getUserList();
+        },
+        getUserList:function(){
+            var _this = this;
+            var params = $.extend(true,{},userform,this.page);
+            $.get("/api/getUsersList",params,function(data){
+
+            });
+        },
         renderHeader:function(createElement, _self ) {
             return createElement(
                 'span',

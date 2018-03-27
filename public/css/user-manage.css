@@ -1,35 +1,28 @@
-.el-form .el-form-item:first-child .el-form-item__content{animation: contentxz1 1.2s linear;}
-@keyframes contentxz1 {
-    0% {opacity:0;transform-origin:left bottom;transform:translateY(-20px) rotateZ(-45deg);}
-    50% {opacity:1;transform-origin:left bottom;transform:translateY(-10px) rotateZ(-22.5deg);}
-    100% {transform-origin:left bottom;transform:translateY(0) rotateZ(0deg);}
-}
-.el-form .el-form-item:nth-child(2) .el-form-item__content{animation: contentxz2 0.8s linear;}
-@keyframes contentxz2{
-    0%{opacity:0;transform: translateY(-60px);}
-    50%{opacity:1;transform: translateY(-30px);}
-    100%{transform: translateY(0px);}
+.el-form{
+    border:1px solid #efefef;
+    background:#fff;
+    padding: 0px 10px;
+    border-radius: 2px;
+    margin-bottom: 5px;
 }
 
-.el-form .el-form-item:nth-child(3) .el-form-item__content{animation: contentxz3 1.2s linear;}
-@keyframes contentxz3{
-    0%{opacity:0;transform:translateY(-90px) rotateX(72deg);}
-    25%{opacity:1;transform:translateY(-72px) rotateX(144deg)}
-    50%{transform:translateY(-54px) rotateX(216deg)}
-    75%{transform:translateY(-36px) rotateX(288deg)}
-    100%{transform: translateY(-18)  rotateX(360deg);}
+.el-row .el-col .el-form-item{
+    clear: both;
+    margin-bottom: 5px;
 }
 
-.el-form .el-form-item:nth-child(4) .el-form-item__content{animation: contentxz4 1s linear;}
-@keyframes contentxz4{
-    0%{opacity:0;transform:translateY(-90px) skewX(45deg);}
-    50%{opacity:1;transform:translateY(-45px) skewX(45deg);}
-    100%{transform: translateY(0)  skewX(45deg);}
+.el-row .el-col .el-form-item .el-form-item__label{
+    width: 80px;
+    float: left;
+    padding: 0 5px;
 }
 
-.el-form .el-form-item:nth-child(5) .el-form-item__content{animation: contentxz5 1s linear;}
-@keyframes contentxz5{
-    0%{transform:scaleX(1.2);}
-    50%{transform:scaleX(0.6);}
-    100%{transform: scaleX(1);}
+.el-row .el-col .el-form-item .el-form-item__content{
+    margin-left: 90px;
+    position: relative;
+    min-height:28px;
+}
+
+.el-popper[x-placement^=bottom]{
+    margin-top: 0px;
 }
