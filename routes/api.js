@@ -81,7 +81,7 @@ router.get("/delResourceById",function(req,res,next){
         var menuIds="";
         if(results.length){
             if(results.length === 1){
-                menuIds = results[0].menuId;
+                menuIds = "'"+results[0].menuId+"'";
             }else{
                 var newArr = [];
                 for(var i =0,len = results.length;i<len;i++){
