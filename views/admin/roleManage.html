@@ -15,7 +15,7 @@
     <aside class="content" id="content">
         <el-form :inline="true" ref="formModel" :model="formModel"  class="demo-form-inline api-user" v-cloak onsubmit="return false">
             <el-form-item label="角色名称" prop="roleName">
-                <el-input type="text" v-model="formModel.roleName" auto-complete="off" size="mini"></el-input>
+                <el-input type="text" v-model="formModel.roleName" auto-complete="off" size="mini" ref='roleName'></el-input>
             </el-form-item>
             <el-form-item >
                 <el-button type="primary" @click="submitForm" size="mini" icon="el-icon-search">查询</el-button>
