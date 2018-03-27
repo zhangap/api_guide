@@ -24,9 +24,14 @@ $(function(){
         created:function(){
             this.getRoleList();
         },
+        mounted:function(){
+            $(this.$refs.roleName.$el).on('keyup',$.proxy(this.submitForm,this));
+        },
         methods:{
             submitForm:function(e){
-                this.getRoleList();
+                if((e.target.nodeName.toUpperCase()==="INPUT" && e.keyCode === 13)||!e.keyCode){
+                    this.getRoleList();
+                }
             },
             closeRoleDialog:function(name){
                 this.dialogMenWinVisible = false;

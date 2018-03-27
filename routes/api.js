@@ -208,7 +208,7 @@ router.get("/documentTypeList",function(req,res,next){
         }else{
             responseData.status = "success";
             var resultData = [];
-            getDocuTypeList(resultData,results,"0");
+            getMenuList(resultData,results,"0",'children','typeId');
             console.log("resultData",resultData);
             responseData.data = resultData;
             res.json(responseData);
@@ -216,16 +216,34 @@ router.get("/documentTypeList",function(req,res,next){
     });
 
 });
-function getDocuTypeList(resultData,results,pId){
-    for(var i =0,len = results.length;i<len;i++){
-        if(results[i].pId == pId){
-            var item = results[i];
-            item.children = [];
-            resultData.push(item);
-            getDocuTypeList(item.children,results,item.typeId);
-        }
+
+/**
+ * 保存文档类型
+ */
+router.post("/saveType",function(req,res,next){
+    var mo = req.body,
+        sql = "",
+        msg = "修改成功",
+        map =[];
+    if(mo.typeId){ //update
+        sql = "update t_documenttype set typeName=?, sortNum=?,pId=?,note=? where typeId =?";
+        map =[mo.typeId,mo.pId,mo.typeName,mo.sortNum,mo.note];
+    }else{
+        sql = "insert into t_documenttype values(?,?,?,?,?)";
+        map = [UUID.v1(),mo.pId,mo.typeName,mo.sortNum,mo.note];
+        msg = "保存成功";
     }
-}
+    query(sql,map,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = msg;
+        }
+        res.json(responseData);
+    });
+});
 /**
  * 角色模块-新增|更新
  */
@@ -331,7 +349,6 @@ router.get("/Logs",function(req,res,next){
         sql += ` and userName='${user}'`;
     }
     appUtil.queryByPage(sql,req,responseData,function(resData){
-        console.log(resData);
         res.json(resData);
     });
 

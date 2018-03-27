@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <%- include ../default.html%>
     <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
-    <link href="/public/css/admin.css" rel="stylesheet" type="text/css"/>
-    <!-- <link href="/public/css/user-manage.css" rel="stylesheet" type="text/css"/> -->
+    <!-- <link href="/public/css/admin.css" rel="stylesheet" type="text/css"/> -->
+    <link href="/public/css/user-manage.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -14,47 +14,67 @@
     <section>
         <%- include menu.html%>
         <aside class="content" id="content">
-            <el-form :inline="true" v-model="userForm" class="demo-form-inline api-user">
-                <el-form-item label="用户名称">
-                    <el-input v-model="userForm.username" placeholder="用户名称" size="mini"></el-input>
-                </el-form-item>
-                <el-form-item label="用户角色">
-                    <el-select v-model="userForm.userrole" placeholder="用户角色" size="mini" style="width:100px">
-                        <el-option label="管理员" value="admin"></el-option>
-                        <el-option label="普通用户" value="user"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="手机号">
-                    <el-input v-model="userForm.phone" placeholder="手机号" size="mini"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱">
-                    <el-input v-model="userForm.email" placeholder="邮箱" size="mini"></el-input>
-                </el-form-item>
-                <el-form-item label="状态">
-                    <el-input v-model="userForm.state" placeholder="状态" size="mini"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="" size="mini">查询</el-button>
-                </el-form-item>
+            <el-form :inline="false" v-model="userForm" class="demo-form-inline api-user">
+                <el-row :gutter="10">
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="用户名称">
+                            <el-input v-model="userForm.username" placeholder="用户名称" size="mini"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="用户角色">
+                            <el-select v-model="userForm.userrole" placeholder="用户角色" size="mini">
+                                <el-option label="管理员" value="admin"></el-option>
+                                <el-option label="普通用户" value="user"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="手机号">
+                            <el-input v-model="userForm.phone" placeholder="手机号" size="mini"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="邮箱">
+                            <el-input v-model="userForm.email" placeholder="邮箱" size="mini"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="状态">
+                            <el-select v-model="userForm.state" placeholder="状态" size="mini">
+                                    <el-option label="有效用户" value="1"></el-option>
+                                    <el-option label="注销用户" value="0"></el-option>
+                                </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col  :sm="8" :md="6" :lg="4">
+                        <el-form-item>
+                            <el-button type="primary" @click="searchList" size="mini">查询</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
             <template>
                 <el-table :data="tableData" style="width: 100%" size="mini" class="aa-table">
+                    <el-table-column fixed type="selection" label="" width="50"></el-table-column>
+                    <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
                     <el-table-column fixed prop="username" label="登录名" width="180"></el-table-column>
                     <el-table-column fixed prop="phone" label="手机号" width="180"></el-table-column>
                     <el-table-column fixed prop="email" label="邮箱"></el-table-column>
                     <el-table-column fixed prop="state" label="是否有效"></el-table-column>
                     <el-table-column fixed prop="memo" label="备注信息"></el-table-column>
-                    <el-table-column fixed prop="operate" label="操作" :render-header="renderHeader"></el-table-column>
+                    <el-table-column fixed prop="operate" label="操作" :render-header="renderHeader" width="180" align="center"></el-table-column>
                 </el-table>
             </template>
             <div class="block repeat-menu-page">
-                <el-pagination  background
-                        :current-page="4"
-                        :page-sizes="[10, 20, 30, 40]"
-                        :page-size="10"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="40">
-                </el-pagination>
+                    <el-pagination  background
+                    :current-page="page.currentPage"
+                    :page-sizes="page.pageSizes"
+                    :page-size="page.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="page.total"
+                    @size-change="sizeChangeHandler"
+                    @current-change="currentChangeHandler"></el-pagination>
             </div>
         </aside>
     </section>
