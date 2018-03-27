@@ -331,7 +331,6 @@ router.get("/Logs",function(req,res,next){
         sql += ` and userName='${user}'`;
     }
     appUtil.queryByPage(sql,req,responseData,function(resData){
-        console.log(resData);
         res.json(resData);
     });
 
