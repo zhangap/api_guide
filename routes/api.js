@@ -81,7 +81,7 @@ router.get("/delResourceById",function(req,res,next){
         var menuIds="";
         if(results.length){
             if(results.length === 1){
-                menuIds = results[0].menuId;
+                menuIds = "'"+results[0].menuId+"'";
             }else{
                 var newArr = [];
                 for(var i =0,len = results.length;i<len;i++){
@@ -402,11 +402,11 @@ router.get("/deleteUserById",function(req,res,next){
  */
 router.post("/changePwd",function (req,res,next) {
     var gxsql="UPDATE t_user SET password =? WHERE username =? and password=?";
-    var User=req.session.user.username;
+    var username=req.session.user.username;
     var content = req.body;
     var newmdpwd=md5(content.newpwd);
     var oldmdpwd=md5(content.oldpwd);
-    query(gxsql,[newmdpwd,User,oldmdpwd],function(errors,results){
+    query(gxsql,[newmdpwd,username,oldmdpwd],function(errors,results){
         if(results.changedRows){
             responseData.status="success";
             responseData.message="密码修改成功";
@@ -421,15 +421,10 @@ router.post("/changePwd",function (req,res,next) {
 /**
  * 获取查询日志
  */
-router.get("/Logs",function(req,res,next){
+router.get("/logs",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var user=reqObj.admin;
-    var sql="select  * from t_log where 1=1 ";
-    if(!user){
-        sql += ` and userName like '%${user}%'`;
-    }else{
-        sql += ` and userName='${user}'`;
-    }
+    var username=reqObj.admin;
+    var sql="select  * from t_log where userName like '%"+username+"%' ";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     });

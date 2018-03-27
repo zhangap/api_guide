@@ -14,7 +14,7 @@
     <%- include menu.html%>
     <aside class="content" id="content">
             <template>
-                <el-table :data="tableData" style="width: 100%" size="mini">
+                <el-table :data="tableData" size="mini" style="width: 100%">
                     <el-table-column prop="menuName" label="菜单名" width="180">
                         <template slot-scope="scope">
                             <span style="margin-left: 10px">{{ scope.row.menuName }}</span>
@@ -57,7 +57,7 @@
             </template>
 
         <!--删除的提示信息-->
-        <el-dialog title="提示信息" :visible.sync="dialogVisible" width="30%"  custom-class="api-dialog-tips">
+        <el-dialog title="提示信息" :visible.sync="dialogVisible" width="30%"  custom-class="api-dialog-tips" v-cloak>
             <span>此操作将永久删除该记录，是否继续？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" @click="cancelHandler">取 消</el-button>
@@ -65,9 +65,9 @@
             </span>
         </el-dialog>
         <!--菜单管理弹窗(新增、删除)-->
-        <el-dialog :title="winTitle" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="50%" :close-on-click-modal="false">
-            <el-form label-position="labelPosition" label-width="80px">
-                <el-form-item label="菜单名称" >
+        <el-dialog :title="winTitle" :visible.sync="dialogMenWinVisible"  custom-class="api-dialog-tips" width="50%" :close-on-click-modal="false" v-cloak>
+            <el-form label-position="labelPosition" label-width="80px" :rules="rules" :model="menu" ref="menu">
+                <el-form-item label="菜单名称" prop="menuName">
                     <el-input  auto-complete="off" v-model="menu.menuName"></el-input>
                 </el-form-item>
                 <el-form-item label="菜单地址">
@@ -75,7 +75,7 @@
                         <template slot="prepend" style="padding: 0px 10px;">/admin/</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="上级菜单">
+                <el-form-item label="上级菜单" prop="pId">
                     <template>
                         <treeselect
                                 v-model="menu.pId"
@@ -91,7 +91,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="closeMenuWinHandler">取 消</el-button>
-                <el-button type="primary" @click="submitMenuHandler">确 定</el-button>
+                <el-button type="primary" @click="submitMenuHandler('menu')">确 定</el-button>
             </div>
         </el-dialog>
     </aside>

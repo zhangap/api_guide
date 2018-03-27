@@ -21,7 +21,11 @@ $(function(){
             menu:menuObj,
             page:eleUtil.page,
             options:[],
-            operateMenuId:"" //要操作的菜单id
+            operateMenuId:"", //要操作的菜单id
+            rules: {
+                menuName: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+                pId: [{ required: true, message: '请选择上级菜单名称', trigger: 'blur'}]
+            }
         },
         created:function(){
             this.getResourceList();
@@ -97,25 +101,31 @@ $(function(){
             closeMenuWinHandler:function(){ //关闭弹出窗口
                 this.$data.dialogMenWinVisible = false
             },
-            submitMenuHandler:function(){ //提交菜单新增或修改操作
-                $.ajax({
-                    url:"/api/saveMenu",
-                    type:"post",
-                    data:this.$data.menu,
-                    success:function(data){
-                        if(data.status === "success"){
-                            eleUtil.message(data.message,"success");
-                            app1.$data.dialogMenWinVisible = false;
-                            setTimeout(function(){
-                                location.reload();
-                            },500);
-                        }else{
-                            eleUtil.message(data.message,"error");
-                        }
+            submitMenuHandler:function(name){ //提交菜单新增或修改操作
+                var _this=this;
+                _this.$refs[name].validate(function(valid){
+                    if (valid) {
+                        $.ajax({
+                            url:"/api/saveMenu",
+                            type:"post",
+                            data:_this.$data.menu,
+                            success:function(data){
+                                if(data.status === "success"){
+                                    eleUtil.message(data.message,"success");
+                                    app1.$data.dialogMenWinVisible = false;
+                                    setTimeout(function(){
+                                        location.reload();
+                                    },500);
+                                }else{
+                                    eleUtil.message(data.message,"error");
+                                }
+                            }
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
                     }
                 });
-
-
             },
             getAllResources:function(){
                 $.ajax({
