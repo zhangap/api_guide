@@ -55,6 +55,12 @@ router.get("/menuManage",function(req,res,next){
 router.get("/documentType",function(req,res,next){
     res.render("admin/documentType",responseData);
 });
+/**
+ * 日志查询
+ */
+router.get("/logs",function(req,res,next){
+    res.render("admin/logs",responseData);
+});
 
 
 module.exports = router;
