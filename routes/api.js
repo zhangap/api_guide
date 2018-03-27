@@ -339,14 +339,14 @@ router.post("/changePwd",function (req,res,next) {
 /**
  * 获取查询日志
  */
-router.get("/Logs",function(req,res,next){
+router.get("/logs",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var user=reqObj.admin;
+    var username=reqObj.admin;
     var sql="select  * from t_log where 1=1 ";
-    if(!user){
-        sql += ` and userName like '%${user}%'`;
+    if(!username){
+        sql += ` and userName like '%${username}%'`;
     }else{
-        sql += ` and userName='${user}'`;
+        sql += ` and userName='${username}'`;
     }
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
