@@ -320,11 +320,11 @@ router.get("/deleteRoleById",function(req,res,next){
  */
 router.post("/changePwd",function (req,res,next) {
     var gxsql="UPDATE t_user SET password =? WHERE username =? and password=?";
-    var User=req.session.user.username;
+    var username=req.session.user.username;
     var content = req.body;
     var newmdpwd=md5(content.newpwd);
     var oldmdpwd=md5(content.oldpwd);
-    query(gxsql,[newmdpwd,User,oldmdpwd],function(errors,results){
+    query(gxsql,[newmdpwd,username,oldmdpwd],function(errors,results){
         if(results.changedRows){
             responseData.status="success";
             responseData.message="密码修改成功";
