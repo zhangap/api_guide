@@ -84,7 +84,7 @@
             </template>
             <!-- 新增用户 修改用户 -->
             <el-dialog :title="dialogTile" :visible.sync="dialogMenWinVisible"  custom-class="add-dialog" width="50%" :close-on-click-modal="false" v-cloak @close="closeUserDialog('newUser')">
-                    <el-form :label-position="'left'" label-width="80px" ref="newUser" :model="newUser" size="mini" :rules="rules" :show-message="false" :status-icon="true" class="demo-form-inline api-user">
+                    <el-form :label-position="'left'" label-width="80px" ref="newUser" :model="newUser" size="mini" :rules="rules" :show-message="true" :status-icon="true" class="demo-form-inline api-user">
                         <el-row :gutter="10">
                             <el-col :sm="12" :md="12" :lg="6">
                                 <el-form-item label="用户名称" prop="username">

@@ -1,14 +1,14 @@
 .el-form{
     border:1px solid #efefef;
     background:#fff;
-    padding: 0px 10px;
+    padding: 5px 5px;
     border-radius: 2px;
     margin-bottom: 5px;
 }
 
 .el-row .el-col .el-form-item{
     clear: both;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .el-row .el-col .el-form-item .el-form-item__label{
@@ -32,5 +32,5 @@
 }
 
 .add-dialog .el-form{
-    padding:10px 5px;
+    padding:15px 5px;
 }

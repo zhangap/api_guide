@@ -20,7 +20,26 @@ var app1 = new Vue({
         dialogMenWinVisible:false,
         dialogTile:'新增用户',
         rules:{
-            username:[{ required: true, message: '请输入用户名称', trigger: 'blur' }],
+            username:[{validator:function(rule,value,callback){
+                if(!value){
+                    return callback(Error('用户名不能为空'));
+                }
+                if(!(/^[\u4e00-\u9fa5·0-9A-z]+$/.test(value))){
+                    return callback(Error('用户名有非法字符'));
+                }
+                var params = $.extend(true,{username:value},eleUtil.page);
+                $.get("/api/getUsersList",params,function(data){
+                   var hasSame = false;
+                   if(data.status === "success"){
+                        data.message.forEach(function(elem){
+                            if(elem.username === value)  hasSame = true;
+                        });
+                        hasSame?callback(new Error("已有同名用户")):callback();
+                   }else{
+                       callback(new Error("验证失败"));
+                   }
+                });
+            },trigger:"blur",required: true}],
             userrole:[{ required: true, message: '请选择角色名称', trigger: 'change' }],
             phone:[{ required: true, message: '请输入联系方式', trigger: 'blur' }],
             email:[{ required: true, message: '请输入电子邮箱', trigger: 'blur' }],
