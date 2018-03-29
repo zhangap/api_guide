@@ -17,6 +17,8 @@ var app1 = new Vue({
             email:"",
             memo:""
         },
+        editUserId:"",
+        roleList:[],
         dialogMenWinVisible:false,
         dialogTile:'新增用户',
         rules:{
@@ -27,6 +29,7 @@ var app1 = new Vue({
                 if(!(/^[\u4e00-\u9fa5·0-9A-z]+$/.test(value))){
                     return callback(Error('用户名有非法字符'));
                 }
+                if(app1.$data.editUserId) return callback();
                 var params = $.extend(true,{username:value},eleUtil.page);
                 $.get("/api/getUsersList",params,function(data){
                    var hasSame = false;
@@ -46,12 +49,12 @@ var app1 = new Vue({
             memo:[{ required: true, message: '请输入电子邮箱', trigger: 'blur' }]
         },
         page:$.extend(true,{},eleUtil.page),
-        editUserId:"",
         confirmVisible:false,
         _row:[]
     },
     created:function(){
         this.getUserList();
+        this.getRoleList();
     },
     methods:{
         searchList:function(){
@@ -113,6 +116,14 @@ var app1 = new Vue({
                 }
             });
         },
+        getRoleList:function(){
+            var _this = this;
+            $.get("/api/getRoleList",function(response){
+                if(response.status === "success"){
+                    _this.roleList = response.message;
+                }
+            });
+        },
         formatState:function(row, column, cellValue){
             return cellValue == "1"?"有效":"无效";
         },
@@ -133,7 +144,7 @@ var app1 = new Vue({
         },
         editUserHandler:function(row){
             this.dialogTile = "编辑用户";
-            this.editUserId = row.userid;
+            this.editUserId = row.userId;
             var user = this.newUser;
             for(var key in user){
                 if(user.hasOwnProperty(key)){

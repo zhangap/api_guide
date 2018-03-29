@@ -282,9 +282,23 @@ router.get("/getRoleList",function(req,res,next){
         sql += " and rolename like '%"+reqObj.rolename+"%'";
     }
     sql += " order by createtime desc";
-    appUtil.queryByPage(sql,req,responseData,function(resData){
-        res.json(resData);
-    });
+    if(!reqObj.pageSize){
+        query(sql,function(errs,results){
+            if(errs){
+                responseData.status = "error";
+                responseData.message = errs;
+            }
+            else{
+                responseData.status = "success";
+                responseData.message = results;
+            }
+            res.json(responseData);
+        });
+    }else{
+        appUtil.queryByPage(sql,req,responseData,function(resData){
+            res.json(resData);
+        });
+    }
 });
 
 /**
@@ -320,23 +334,23 @@ router.get("/deleteRoleById",function(req,res,next){
  */
 router.get("/getUsersList",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var sql = "select * from  t_user where 1=1";
+    var sql = "select t1.*,t2.rolename from  t_user t1 LEFT JOIN t_role t2 on t1.roleId = t2.roleId where 1=1";
     if(reqObj.username){
-        sql += ` and username like '%${reqObj.username}%'`;
+        sql += ` and t1.username like '%${reqObj.username}%'`;
     } 
     if(reqObj.userrole){
-        sql += ` and roleid = '${reqObj.userrole}'`;
+        sql += ` and t1.roleid = '${reqObj.userrole}'`;
     }
     if(reqObj.phone){
-        sql += ` and phone like '%${reqObj.phone}%'`;
+        sql += ` and t1.phone like '%${reqObj.phone}%'`;
     }
     if(reqObj.email){
-        sql += ` and email like '%${reqObj.email}%'`;
+        sql += ` and t1.email like '%${reqObj.email}%'`;
     }
     if(reqObj.state =="0"||reqObj.state =="1"){
-        sql += ` and state = ${reqObj.state}`;
+        sql += ` and t1.state = ${reqObj.state}`;
     }
-    sql += " order by updatetime desc";
+    sql += " order by t1.updatetime desc";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     });
@@ -352,8 +366,8 @@ router.post("/mergeUser",function(req,res,next){
     if(dol.userId){
         sql = "update t_user set username = ?,roleid=?,updateTime=?,phone=?,email=?,state=?,memo=? where userId=?";
         mapValue.shift();
+        mapValue.splice(1,1);
         mapValue.push(dol.userId);
-        mapValue.slice(1,1);
     }
     query(sql,mapValue,function(errs,results){
         if(errs){
