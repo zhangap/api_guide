@@ -248,15 +248,37 @@ router.post("/saveType",function(req,res,next){
  * 角色模块-新增|更新
  */
 router.post("/mergeRole",function(req,res,next){
-    var itemInfo = req.body;
+    var itemInfo = JSON.parse(req.body.pms),uid = UUID.v1();
     var user = req.session.user;
-    var sql = "insert into t_role values(?,?,?,?,?)";
-    var params = [UUID.v1(),itemInfo.rolename,itemInfo.memo,new Date(),user.username];
-    if(itemInfo.roleid){
-        sql = "update t_role set rolename=?,memo=?,createtime=?,createman=? where roleid=?";
-        params.shift();
-        params.push(itemInfo.roleid);
+    var sql = "insert into t_role values(?,?,?,?,?);";
+    var sqlv = "insert into t_rolemenu values ";
+    var pId = itemInfo.pId;
+    pId.forEach(function(element){
+        sqlv += "(?,?),";
+    }); 
+    sqlv = sqlv.slice(0,sqlv.length-1)+";";
+    sql += sqlv;
+    var params = [uid,itemInfo.rolename,itemInfo.memo,new Date(),user.username];
+    if(!itemInfo.roleid){
+        pId.forEach(function(element){
+            params.push(uid,element);
+         }); 
     }
+    if(itemInfo.roleid){
+        sql = "update t_role set rolename=?,memo=?,createtime=?,createman=? where roleid=?;";
+        sql += "delete from t_rolemenu where roleid=?;insert into t_rolemenu values";
+        pId.forEach(function(element){
+            sql += "(?,?),";
+        }); 
+        params.shift();
+        params.push(itemInfo.roleid,itemInfo.roleid);
+        pId.forEach(function(element){
+            params.push(itemInfo.roleid,element);
+         }); 
+         sql = sql.slice(0,sql.length-1)+";";
+    }
+    console.log(itemInfo);
+    console.log(params);
     query(sql,params,function(errs,results){
         if(errs){
             responseData.status = "error";
@@ -274,14 +296,16 @@ router.post("/mergeRole",function(req,res,next){
  */
 router.get("/getRoleList",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var sql = "SELECT *,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%S') as updatetime from t_role where 1=1";
+    var sql = `select a.*,group_concat(b.menuName) as menuName,group_concat(b.menuId) as menuId from (SELECT t1.*,t2.menuid as tmpmid,DATE_FORMAT(t1.createtime,'%Y-%m-%d %H:%i:%S') as updatetime 
+    from t_role t1 LEFT JOIN t_rolemenu t2 on (t1.roleId = t2.roleid) ) a LEFT JOIN t_menu b on a.tmpmid = b.menuId where 1=1
+    GROUP BY a.roleid`;
     if(reqObj.roleid){
-        sql += " and roleid in ('"+reqObj.roleid+"')";
+        sql += " and a.roleid in ('"+reqObj.roleid+"')";
     }
     if(reqObj.rolename){
-        sql += " and rolename like '%"+reqObj.rolename+"%'";
+        sql += " and a.rolename like '%"+reqObj.rolename+"%'";
     }
-    sql += " order by createtime desc";
+    sql += " order by a.createtime desc";
     if(!reqObj.pageSize){
         query(sql,function(errs,results){
             if(errs){

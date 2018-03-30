@@ -1,6 +1,9 @@
 $(function(){
     var app1 = new Vue({
         el:"#content",
+        components:{
+            "treeselect":window.VueTreeselect.Treeselect
+        },
         data:{
             tableData:[],
             formModel:{
@@ -8,12 +11,35 @@ $(function(){
             },
             role:{
                 rolename:"",
-                memo:""
+                memo:"",
+                pId:null
             },
+            options:[],
             _row:null,
             rules:{
-                rolename:[{required: true, message: '请输入名称', trigger: 'blur'}],
-                memo:[{required: true, message: '请输入描述', trigger: 'blur'}]
+                rolename:[{required: true, trigger: 'blur',validator:function(rule,value,callback){
+                    if(!value){
+                        return callback(Error('角色不能为空'));
+                    }
+                    if(!(/^[\u4e00-\u9fa5·0-9A-z]+$/.test(value))){
+                        return callback(Error('名称有非法字符'));
+                    }
+                    if(app1.$data.editRoleId) return callback();
+                    var params = $.extend(true,{username:value},eleUtil.page);
+                    $.get("/api/getRoleList",params,function(data){
+                       var hasSame = false;
+                       if(data.status === "success"){
+                            data.message.forEach(function(elem){
+                                if(elem.rolename === value)  hasSame = true;
+                            });
+                            hasSame?callback(new Error("角色名重复")):callback();
+                       }else{
+                           callback(new Error("验证失败"));
+                       }
+                    });
+                }}],
+                memo:[{required: true, message: '请输入描述', trigger: 'blur'}],
+                pId:[{required: true, message: '请选择权限', trigger: 'blur'}]
             },
             editRoleId:'',
             confirmVisible:false,
@@ -23,6 +49,7 @@ $(function(){
         },
         created:function(){
             this.getRoleList();
+            this.getAllMenus();
         },
         mounted:function(){
             $(this.$refs.roleName.$el).on('keyup',$.proxy(this.submitForm,this));
@@ -35,10 +62,11 @@ $(function(){
             },
             closeRoleDialog:function(name){
                 this.dialogMenWinVisible = false;
-                this.editRoleId = '';
-                this.$nextTick(function(){
-                    this.$refs[name].resetFields();
-                });
+                this.$data.editRoleId = '';
+                this.$data.role.pId = null;
+                this.$data.role.rolename = '';
+                this.$data.role.memo = '';
+                this.$refs[name].resetFields();
             },
             submitRoleDialog:function(name){
                 var _this = this;
@@ -46,7 +74,7 @@ $(function(){
                 params.roleid = this.editRoleId;  
                 this.$refs[name].validate(function(validate){
                     if(validate){
-                        $.post("/api/mergeRole",params).done(function(data){
+                        $.post("/api/mergeRole",{pms:JSON.stringify(params)}).done(function(data){
                             if(data.status === "success"){
                                 eleUtil.message(data.message,"success");
                                 _this.dialogMenWinVisible = false;
@@ -111,6 +139,7 @@ $(function(){
                 this.dialogMenWinVisible = true;
                 this.role.rolename = row.rolename;
                 this.role.memo = row.memo;
+                this.role.pId = row.menuId?row.menuId.split(","):null;
                 this.editRoleId = row.roleId;
             },
             deleteRoleHandler:function(row){
@@ -133,7 +162,17 @@ $(function(){
                         eleUtil.message(data.message,"error");
                     }
                 });
+            },
+            getAllMenus:function(){
+                var _this = this;
+                $.get("/api/getAllResources",function(data){
+                    if(data.status === "success"){
+                        var vdm = data.message[0]?data.message[0].children:[];
+                        _this.options = vdm;
+                    }
+                });
             }
         }
     });
+    window.appx =app1;
 });
