@@ -186,6 +186,13 @@ var app1 = new Vue({
                             'href':'javascript:;',
                             on: { click: function () {
                                  _this.dialogTile = "新增用户";
+                                 _this.newUser = {
+                                    username:"",
+                                    userrole:"",
+                                    phone:"",
+                                    email:"",
+                                    memo:""
+                                 };
                                  _this.dialogMenWinVisible = true;
                             } }
                         }

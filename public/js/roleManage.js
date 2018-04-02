@@ -100,6 +100,11 @@ $(function(){
                                 },
                                 on: { click: function () {
                                     _this.dialogTile = "新增角色";
+                                    _this.$data.role = {
+                                        rolename:"",
+                                        memo:"",
+                                        pId:null
+                                    };
                                     _this.dialogMenWinVisible = true;
                                 } }
                             }
