@@ -179,5 +179,4 @@ $(function(){
             }
         }
     });
-    window.appx =app1;
 });

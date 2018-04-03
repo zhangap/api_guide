@@ -408,6 +408,101 @@ router.post("/mergeUser",function(req,res,next){
 });
 
 /**
+ * 新增|修改 标签管理信息
+ */
+router.post("/mergeTag",function(req,res,next){
+    var dol = req.body,user = req.session.user;
+    var sql = "insert into t_tag values (?,?,?,?);",mapParams = [UUID.v1()];
+    if(!dol.id){
+        mapParams[mapParams.length] = dol.classify?dol.classify:"0";
+        mapParams.push(dol.tagName,dol.memo);
+    }else{
+        sql = "update t_tag set parentId=?,tagName=?,memo=? where id=?;";
+        mapParams.shift();
+        mapParams[mapParams.length] = dol.classify;
+        mapParams.push(dol.tagName,dol.memo,dol.id);
+    }
+    query(sql,mapParams,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 获取标签列表
+ */
+router.get("/getTagList",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "SELECT t1.*,t2.tagName as parentName from t_tag t1 LEFT JOIN t_tag t2 ON t1.parentId = t2.id where 1=1";
+    if(reqObj.classify){
+        sql += " and (t1.id='"+reqObj.classify+"' or t1.parentId='"+reqObj.classify+"')";
+    }
+    if(reqObj.tagName){
+        sql += " and t1.tagName like '%"+reqObj.tagName+"%'";
+    }
+    if(reqObj.id){
+        sql += " and t1.id= '"+reqObj.id+"'";
+    }
+    if(reqObj.parentId){
+        sql += " and t1.parentId= '"+reqObj.parentId+"'";
+    }
+    sql += " order by t2.id desc";
+    if(!reqObj.pageSize){
+        query(sql,function(errs,results){
+            if(errs){
+                responseData.status = "error";
+                responseData.message = errs;
+            }
+            else{
+                responseData.status = "success";
+                responseData.message = results;
+            }
+            res.json(responseData);
+        });
+    }else{
+        appUtil.queryByPage(sql,req,responseData,function(resData){
+            res.json(resData);
+        });
+    }
+});
+
+/**
+ * 删除标签
+ */
+router.get("/deleteTagById",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req),userId = reqObj.userId;
+    var tagId = reqObj.tagId;
+    if(tagId.indexOf(",")>0){
+        tagId = tagId.split(",");
+        var id = "";
+        tagId.forEach(elelment=>{
+            id += "'"+elelment+"',";
+        });
+        id = id.slice(0,-1);
+        tagId = id;
+    }else{
+        tagId = `'${tagId}'`;
+    }
+    var sql = `delete from t_tag where id in (${tagId})`;
+    query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
  * 删除用户信息
  */
 router.get("/deleteUserById",function(req,res,next){
@@ -423,7 +518,6 @@ router.get("/deleteUserById",function(req,res,next){
     }else{
         userId = `'${userId}'`;
     }
-    console.log(userId);
     var sql = `update t_user set state = ? where userId in (${userId})`;
     query(sql,[0],function(errs,results){
         if(errs){
@@ -456,7 +550,7 @@ router.post("/changePwd",function (req,res,next) {
         }
         res.json(responseData);
     })
-})
+});
 
 /**
  * 获取查询日志

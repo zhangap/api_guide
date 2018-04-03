@@ -61,6 +61,12 @@ router.get("/documentType",function(req,res,next){
 router.get("/logs",function(req,res,next){
     res.render("admin/logs",responseData);
 });
+/**
+ * 标签管理
+ */
+router.get("/tagManage",function(req,res,next){
+    res.render("admin/tagManage",responseData);
+});
 
 
 module.exports = router;
