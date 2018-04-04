@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>欢迎使用后台管理系统</title>
+    <meta charset="utf-8">
+    <%- include ../default.html%>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/user-manage.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/wangEditor/wangEditor.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/highlight/css/default.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        .el-row{
+            margin-bottom: 10px;
+        }
+        #editor .w-e-text-container{
+            height: 520px !important;
+        }
+    </style>
+</head>
+<body>
+    <%- include header.html%>
+    <section>
+        <%- include menu.html%>
+        <aside class="content" id="content">
+            <el-form :inline="false" v-model="formModel" class="demo-form-inline api-user">
+                <el-row :gutter="20">
+                    <el-col :sm="24" :md="24" :lg="24">
+                        <el-input  auto-complete="off" v-model="formModel.title" placeholder="请输入文章标题"></el-input>
+                    </el-col>    
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :sm="24" :md="24" :lg="24">
+                        <div id="editor"></div>
+                    </el-col>   
+                </el-row>
+                <el-row :gutter="20">
+
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :sm="24" :md="24" :lg="24" style="text-align:center;">
+                        <el-button type="danger" plain>存为草稿</el-button>
+                        <el-button type="primary" plain>保存发布</el-button>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </aside>
+    </section>
+    <script src="/public/plugins/wangEditor/wangEditor.js"></script>
+    <script src="/public/js/main.js"> </script>
+    <script src="/public/js/articlePublish.js"></script>
+</body>
+</html>
