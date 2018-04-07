@@ -52,12 +52,25 @@ router.post("/login",function(req,res,next){
  */
 router.get("/menuList",function(req,res,next){
     // var sql = "select * from t_menu where FIND_IN_SET(menuId,getChildLst('0'))";
+    var user = req.session.user;
     var sql = "select * from t_menu";
-    query(sql,function(errors,results){
-        var resultData = [];
-        getMenuList(resultData,results,"0","childs","menuId");
-        res.json(resultData);
-    });
+    if(user.username === "superAdmin"){ //如果是超级管理员，拥有所有的角色
+        query(sql,function(errors,results){
+            var resultData = [];
+            getMenuList(resultData,results,"0","childs","menuId");
+            res.json(resultData);
+        });
+    }else{
+        sql = "select t1.menuId, t2.menuName,t2.pId,t2.url from (select * from t_rolemenu where " +
+            "roleid = (select roleId  from t_user where userId =?) and menuId != '0') t1 left join t_menu t2" +
+            " on t1.menuId = t2.menuId order by menuId";
+        query(sql,[user.userId],function(errs,results){
+            var resultData = [];
+            getMenuList(resultData,results,"0","childs","menuId");
+            res.json(resultData);
+        });
+    }
+
 
 });
 
@@ -252,35 +265,13 @@ router.post("/saveType",function(req,res,next){
 router.post("/mergeRole",function(req,res,next){
     var itemInfo = JSON.parse(req.body.pms),uid = UUID.v1();
     var user = req.session.user;
-    var sql = "insert into t_role values(?,?,?,?,?);";
-    var sqlv = "insert into t_rolemenu values ";
-    var pId = itemInfo.pId;
-    pId.forEach(function(element){
-        sqlv += "(?,?),";
-    }); 
-    sqlv = sqlv.slice(0,sqlv.length-1)+";";
-    sql += sqlv;
-    var params = [uid,itemInfo.rolename,itemInfo.memo,new Date(),user.username];
-    if(!itemInfo.roleid){
-        pId.forEach(function(element){
-            params.push(uid,element);
-         }); 
-    }
-    if(itemInfo.roleid){
+
+    var sql = "insert into t_role values(?,?,?,?,?)",
+        params = [uid,itemInfo.rolename,itemInfo.memo,new Date(), user.username];
+    if(itemInfo.roleid){ //update
         sql = "update t_role set rolename=?,memo=?,createtime=?,createman=? where roleid=?;";
-        sql += "delete from t_rolemenu where roleid=?;insert into t_rolemenu values";
-        pId.forEach(function(element){
-            sql += "(?,?),";
-        }); 
-        params.shift();
-        params.push(itemInfo.roleid,itemInfo.roleid);
-        pId.forEach(function(element){
-            params.push(itemInfo.roleid,element);
-         }); 
-         sql = sql.slice(0,sql.length-1)+";";
+        params = [itemInfo.rolename,itemInfo.memo,new Date(),user.username,itemInfo.roleid];
     }
-    console.log(itemInfo);
-    console.log(params);
     query(sql,params,function(errs,results){
         if(errs){
             responseData.status = "error";
@@ -298,16 +289,13 @@ router.post("/mergeRole",function(req,res,next){
  */
 router.get("/getRoleList",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var sql = `select a.*,group_concat(b.menuName) as menuName,group_concat(b.menuId) as menuId from (SELECT t1.*,t2.menuid as tmpmid,DATE_FORMAT(t1.createtime,'%Y-%m-%d %H:%i:%S') as updatetime 
-    from t_role t1 LEFT JOIN t_rolemenu t2 on (t1.roleId = t2.roleid) ) a LEFT JOIN t_menu b on a.tmpmid = b.menuId where 1=1
-    GROUP BY a.roleid`;
-    if(reqObj.roleid){
-        sql += " and a.roleid in ('"+reqObj.roleid+"')";
-    }
+    var sql = "select a.*, DATE_FORMAT(a.createtime,'%Y-%m-%d %H:%i:%S') updatetime from t_role a ";
     if(reqObj.rolename){
-        sql += " and a.rolename like '%"+reqObj.rolename+"%'";
+        sql += " where rolename like '%"+reqObj.rolename+"%'";
+    }else{
+        sql += " order by a.createtime desc";
     }
-    sql += " order by a.createtime desc";
+
     if(!reqObj.pageSize){
         query(sql,function(errs,results){
             if(errs){
@@ -332,18 +320,8 @@ router.get("/getRoleList",function(req,res,next){
  */
 router.get("/deleteRoleById",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var roleid = reqObj.roleId;
-    if(roleid.indexOf(",")>0){
-        let roles = roleid.split(",");
-        roles.forEach(element => {
-            element = `'${element}'`;
-        });
-        roleid = roles.join(",");
-    }else{
-        roleid = `'${roleid}'`;
-    }
-    var sql = `delete from t_role where roleid in (${roleid})`;
-    query(sql,function(errs,results){
+    var sql = `delete from t_role where roleid=?`;
+    query(sql,[reqObj.roleId],function(errs,results){
         if(errs){
             responseData.status = "error";
             responseData.message = errs;
@@ -352,7 +330,7 @@ router.get("/deleteRoleById",function(req,res,next){
             responseData.message = results;
         }
         res.json(responseData);
-    });
+    })
 });
 
 /**
@@ -563,6 +541,52 @@ router.get("/logs",function(req,res,next){
         res.json(resData);
     });
 
+});
+
+/**
+ * 根据roleId获取已经授权的资源集合
+ */
+router.get("/getHasSetResources",function (req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "select menuId as id  from t_rolemenu where roleid = ? and type = '0';";
+    query(sql,[reqObj.roleId],function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = results;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
+    })
+});
+
+//给角色设置已经授权的资源集合
+router.post("/setResources",function(req,res,next){
+    var cResources = JSON.parse(req.body.cResources) || [];
+    var hResources = JSON.parse(req.body.hResources) || [];
+    var roleId = req.body.roleId;
+    var sql = "delete from t_rolemenu where roleid = '"+roleId+"'";
+    var sql2 = "insert into t_rolemenu values";
+    var values = [];
+    cResources.forEach(function(item){
+        values.push("('"+UUID.v4()+"','"+roleId+"','"+item+"','0')");
+    });
+    hResources.forEach(function(item){
+        values.push("('"+UUID.v4()+"','"+roleId+"','"+item+"','1')");
+    });
+    sql2 += values.join(",");
+    console.log("设置资源SQL:" + sql2);
+    query([sql,sql2].join(";"),function(errs){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = "授权失败!";
+        }else{
+            responseData.status = "success";
+            responseData.message = "授权成功!";
+        }
+        res.json(responseData);
+    })
 })
 
 module.exports = router;

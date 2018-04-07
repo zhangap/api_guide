@@ -11,10 +11,11 @@ $(function(){
             },
             role:{
                 rolename:"",
-                memo:"",
-                pId:null
+                memo:""
             },
+            menuList:[],
             options:[],
+            defaultExpandAll:true,
             _row:null,
             rules:{
                 rolename:[{required: true, trigger: 'blur',validator:function(rule,value,callback){
@@ -42,26 +43,42 @@ $(function(){
                 pId:[{required: true, message: '请选择权限', trigger: 'blur'}]
             },
             editRoleId:'',
+            checkedResources:[],//选中的资源节点
             confirmVisible:false,
             dialogTile:"新增角色",
             dialogMenWinVisible:false,
+            dialogRoleVisible:false,
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
             page:$.extend(true,{},eleUtil.page)
         },
         created:function(){
             this.getRoleList();
-            this.getAllMenus();
+            this.getMenuList();
         },
         mounted:function(){
             $(this.$refs.roleName.$el).on('keyup',$.proxy(this.submitForm,this));
         },
         methods:{
+            getMenuList:function(){
+                var _this = this;
+                $.ajax({
+                    url:"/api/getAllResources",
+                    type:"get",
+                    success:function(data){
+                        _this.$data.menuList = data.message;
+                    }
+                })
+            },
             submitForm:function(e){
                 if((e.target.nodeName.toUpperCase()==="INPUT" && e.keyCode === 13)||!e.keyCode){
                     this.getRoleList();
                 }
             },
             closeRoleDialog:function(name){
-                this.dialogMenWinVisible = false;
+                this.$data.dialogMenWinVisible = false;
                 this.$data.editRoleId = '';
                 this.$data.role.pId = null;
                 this.$data.role.rolename = '';
@@ -102,8 +119,7 @@ $(function(){
                                     _this.dialogTile = "新增角色";
                                     _this.$data.role = {
                                         rolename:"",
-                                        memo:"",
-                                        pId:null
+                                        memo:""
                                     };
                                     _this.dialogMenWinVisible = true;
                                 } }
@@ -139,17 +155,14 @@ $(function(){
                 this.getRoleList();
             },
             editRoleHandler:function(row){
-                var _this = this;
-                this.dialogTile = "编辑角色"
-                this.dialogMenWinVisible = true;
+                this.$data.dialogTile = "编辑角色1";
+                this.$data.dialogMenWinVisible = true;
                 this.role.rolename = row.rolename;
                 this.role.memo = row.memo;
-                this.role.pId = row.menuId?row.menuId.split(","):null;
                 this.editRoleId = row.roleId;
             },
             deleteRoleHandler:function(row){
-                var _this = this;
-                this.confirmVisible = true;
+                this.$data.confirmVisible = true;
                 this._row = row;
                 return this;
             },
@@ -157,25 +170,58 @@ $(function(){
                 this.confirmVisible = false;
             },
             deleteHandler:function(){
-                var row = this._row,_this = this;
-                $.get("/api/deleteRoleById",row,function(data){
+                var _this = this;
+                $.get("/api/deleteRoleById?roleId="+this._row.roleId,function(data){
                     _this._row = null;
                     _this.confirmVisible = false;
                     if(data.status === "success"){
-                        _this.getRoleList();
+                        eleUtil.message("删除角色成功!","success");
+                        setTimeout(function(){
+                            _this.getRoleList();
+                        },200);
                     }else{
                         eleUtil.message(data.message,"error");
                     }
                 });
             },
-            getAllMenus:function(){
-                var _this = this;
-                $.get("/api/getAllResources",function(data){
-                    if(data.status === "success"){
-                        var vdm = data.message[0]?data.message[0].children:[];
-                        _this.options = vdm;
+            setResourcesHandler:function(row){
+                this.$data.editRoleId = row.roleId;
+                this.$data.dialogRoleVisible = true;
+                this.getHasSetResoureces();
+            },
+            closeSetResourcesDialog:function(){
+                this.$data.dialogRoleVisible = false;
+                this.$data.editRoleId = '';
+            },
+            getHasSetResoureces:function(){  //获取已经设置的资源，用于回显
+                var _this =this;
+                $.ajax({
+                    type:"get",
+                    url:"/api/getHasSetResources?roleId=" + this.$data.editRoleId,
+                    success:function(data){
+                        if(data.status === "success"){
+                            _this.$refs.tree.setCheckedNodes(data.message);
+                        }
                     }
-                });
+                })
+
+            },
+            submitSetResources:function(tree){ //提交设置的资源
+                var arr1 = this.$refs.tree.getCheckedKeys(),
+                    arr2 = this.$refs.tree.getHalfCheckedKeys();
+                var _this = this;
+                $.ajax({
+                    type:"post",
+                    url:"/api/setResources",
+                    data:{roleId:this.$data.editRoleId,"cResources":JSON.stringify(arr1),"hResources":JSON.stringify(arr2)},
+                    success:function(data){
+                        if(data.status === "success"){
+                            _this.$data.dialogRoleVisible = false;
+                        }else{
+                            appUtil.message(data.message,"error");
+                        }
+                    }
+                })
             }
         }
     });
