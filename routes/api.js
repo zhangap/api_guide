@@ -588,6 +588,40 @@ router.post("/setResources",function(req,res,next){
         }
         res.json(responseData);
     })
-})
+});
+
+/**
+ * 图片上传服务
+ */
+router.post("/upload-img",function(req,res,next){
+    var reqObj = req.body;
+    console.log(reqObj);
+});
+
+/**
+ * 文章发布及修改
+ */
+router.post("/publishArticle",function(req,res,next){
+    var reqobj = req.body,user = req.session.user;
+    var sql = "insert into t_article values (?,?,?,?,?,?,?);",
+    mapValue = [UUID.v1(),user.userId,reqobj.title,new Date(),reqobj.tag,reqobj.content,reqobj.publish];
+    if(reqobj.id){
+       sql = "update t_article set title=?,updatetime=?,tag=?,content=?,publish=? where id=?;"; 
+       mapValue.shift();
+       mapValue.shift();
+       mapValue.push(reqobj.id);
+    }
+    query(sql,mapValue,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+
+});
 
 module.exports = router;

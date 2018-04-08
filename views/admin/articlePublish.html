@@ -60,8 +60,8 @@
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :sm="24" :md="24" :lg="24" style="text-align:center;">
-                        <el-button type="danger" plain>存为草稿</el-button>
-                        <el-button type="primary" plain>保存发布</el-button>
+                        <el-button type="danger" plain @click="publishWen(0)">存为草稿</el-button>
+                        <el-button type="primary" plain @click="publishWen(1)">保存发布</el-button>
                     </el-col>
                 </el-row>
             </el-form>
