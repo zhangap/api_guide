@@ -170,6 +170,7 @@ router.post("/saveMenu",function(req,res,next){
         sql = "",
         msg = "菜单修改成功",
         map =[];
+    mo.url = mo.url ? "/admin/"+mo.url : mo.url;
     if(mo.menuId){ //update
         sql = "update t_menu set menuName=?, url=?,pId=?,memo=? where menuId =?";
         map =[mo.menuName,mo.url,mo.pId,mo.memo,mo.menuId];
