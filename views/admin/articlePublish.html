@@ -15,6 +15,12 @@
         #editor .w-e-text-container{
             height: 520px !important;
         }
+        .el-tabs{
+            min-height: 75px;
+        }
+        .el-tag+.el-tag{
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -34,7 +40,23 @@
                     </el-col>   
                 </el-row>
                 <el-row :gutter="20">
-
+                    <el-col :sm="24" :md="24" :lg="24">
+                        <template>
+                            <el-tabs v-model="activeName" @tab-click="handleTabClick">
+                                <el-tab-pane v-for="(vo,index) in tagList" :label="vo.tagName" :name="vo.id" :key="index">
+                                    <template>
+                                        <el-checkbox v-for="(co,index1) in vo.children" v-model="co.checked" :key="index1" @change="changeCheckState(co)">{{co.tagName}}</el-checkbox>
+                                    </template>
+                                </el-tab-pane>
+                            </el-tabs>
+                        </template>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :sm="24" :md="24" :lg="24">
+                        <span class="el-tag">已选择的标签(最多5个):</span>
+                        <el-tag v-for="(tag,index) in checkdTags" :key="tag.name" closable type="success"  @close="closeCheckdedTag(tag)">{{tag.tagName}}</el-tag>
+                    </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :sm="24" :md="24" :lg="24" style="text-align:center;">
