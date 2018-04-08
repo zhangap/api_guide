@@ -624,4 +624,67 @@ router.post("/publishArticle",function(req,res,next){
 
 });
 
+/**
+ * 获取数据字典列表
+ */
+router.get("/getClassList",function(req,res){
+    var reqObj = appUtil.getQueryString(req);
+    var sql = "select  * from t_class";
+    if(reqObj.type){
+        sql += " where type ='"+reqObj.type+"'";
+    }
+    sql += " order by type";
+    appUtil.queryByPage(sql,req,responseData,function(resData){
+        res.json(resData);
+    })
+});
+
+/**
+ *
+ */
+router.post("/saveClass",function(req,res){
+    let item = JSON.parse(req.body.cItem);
+    let sql = "insert into t_class values(?,?,?,?,?);";
+    let params =[UUID.v1(),item.type,item.id,item.name,item.memo];
+    let msg = "新增成功";
+    if(item.uuid){
+        sql = "update t_class set type=?,id=?,name=?,memo=? where uuid=?";
+        params = [item.type,item.id,item.name,item.memo,item.uuid];
+        msg = "修改成功";
+    }
+    query(sql,params,function(errs,result){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message= msg;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 删除数据字典数据
+ */
+router.post("/deleteClass",function(req,res){
+    let ids = JSON.parse(req.body.ids);
+    let params = [];
+    ids.forEach(function(item,i){
+        params[i] = "'"+item+"'";
+    });
+    let sql = "delete from t_class where uuid in("+params.join(",")+")";
+    query(sql,function(errs,rsults){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = results;
+        }else{
+            responseData.status = "success";
+            responseData.message = "删除成功";
+        }
+        res.json(responseData);
+    });
+});
+
+
 module.exports = router;

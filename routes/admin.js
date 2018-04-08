@@ -74,5 +74,12 @@ router.get("/articlePublish",function(req,res,next){
     res.render("admin/articlePublish",responseData);
 });
 
+/**
+ * 数据字典表管理
+ */
+router.get("/classManage",function(req,res,next){
+    res.render("admin/classManage",responseData);
+});
+
 
 module.exports = router;
