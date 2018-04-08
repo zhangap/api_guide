@@ -4,7 +4,10 @@ $(function(){
         el:"#content",
         data:{
             formModel:{
-                title:""
+                title:"",
+                content:"",
+                tag:"",
+                publish:"1"
             },
             tagList:[],
             activeName:"",
@@ -15,7 +18,7 @@ $(function(){
         },
         mounted:function(){
             wdr = new wangEditor("#editor");
-	        wdr.customConfig.uploadImgServer = '/upload-img'
+	        wdr.customConfig.uploadImgServer = '/api/upload-img'
         	wdr.customConfig.uploadImgHooks ={};
 			wdr.create();
         },
@@ -44,7 +47,6 @@ $(function(){
                 this.tagList = arr;
             },
             handleTabClick:function(e){
-
             },
             closeCheckdedTag:function(tag){
                 for(var k = this.checkdTags.length-1;k>=0;k--){
@@ -71,6 +73,45 @@ $(function(){
                         }
                     }
                 }
+            },
+            publishWen:function(flag){
+                var _this = this,tagid = [];
+                this.checkdTags.forEach(function(element){
+                    tagid.push(element.id);
+                });
+                var content = wdr.txt.html();
+                var params = $.extend(true,{},this.formModel);
+                params.content = content;
+                params.publish = flag;
+                params.tag = tagid.join(",");
+                if(!params.title){
+                    eleUtil.message("文章的标题不能为空","error");
+                    return ;
+                }
+                if(!params.content){
+                    eleUtil.message("文章的内容不能为空","error");
+                    return ;
+                }
+                if(!params.tag){
+                    eleUtil.message("文章的标签不能为空","error");
+                    return ;
+                }                
+                eleUtil.loading("正在提交数据...");
+                $.post("/api/publishArticle",params)
+                 .done(function(res){
+                    eleUtil.closeLoading();
+                    if(res.status == "success"){
+                        _this.checkdTags = [];
+                        _this.formModel.title = '';
+                        wdr.txt.clear();
+                    }else{
+                        eleUtil.message("发布失败","error"); 
+                    }
+                })
+                 .fail(function(a,b,c){
+                    eleUtil.closeLoading();
+                    eleUtil.message("发布失败","error");
+                });
             }
         }
     });
