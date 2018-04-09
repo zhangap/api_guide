@@ -734,15 +734,15 @@ router.get("/getPlanList",function(req,res){
         sql += " and userId='"+reqObj.userId+"' ";
     }
     if(reqObj.startTime){
-        sql += " and startTime='"+reqObj.startTime+"' ";
+        sql += " and startTime >='"+reqObj.startTime+"' ";
     }
     if(reqObj.endTime){
-        sql += " and endTime='"+reqObj.endTime+"' ";
+        sql += " and endTime <='"+reqObj.endTime+"' ";
     }
     if(reqObj.state){
         sql += " and state='"+reqObj.state+"' ";
     }
-     sql += " order by startTime, userId";
+     sql += " order by startTime desc, userId";
    appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     });
