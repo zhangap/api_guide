@@ -29,7 +29,7 @@
             </el-form-item>
         </el-form>
         <template>
-            <el-table :data="tableData" style="width: 100%" class="aa-table">
+            <el-table :data="tableData" style="width: 100%" class="aa-table"  @select="selectRow" @select-all="selectAll" ref="list">
                     <el-table-column fixed type="selection" label="" width="50"></el-table-column>
                     <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
                     <el-table-column fixed prop="title" label="标题" width="250"></el-table-column>
@@ -37,9 +37,9 @@
                     <el-table-column fixed prop="tag" label="文章标签" :show-overflow-tooltip="true" :formatter="foramtTags" align="center"></el-table-column>
                     <el-table-column fixed prop="operate" label="操作"  width="240" align="center">
                         <template slot-scope="scope">
-                            <el-button size="mini" @click="editHandler(scope.row)">编辑</el-button>
-                            <el-button size="mini" @click="publish2Secrect(scope.row)">{{scope.row.publish==1?"私密":"发布"}}</el-button>
-                            <el-button size="mini" type="danger" @click="deleteRoleHandler(scope.row)">删除</el-button>
+                            <el-button size="mini" @click="editItemHandler(scope.row)">编辑</el-button>
+                            <el-button size="mini" @click="publish2Secret(scope.row)">{{scope.row.publish==1?"私密":"公开"}}</el-button>
+                            <el-button size="mini" type="danger" @click="deleteItemHandler(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
             </el-table>
@@ -56,6 +56,14 @@
                 </el-pagination>
             </div>
         </template>
+        <!-- 确认提示框 -->
+        <el-dialog title="提示信息" :visible.sync="confirmVisible" width="30%"  custom-class="api-dialog-tips" v-cloak>
+            <span>{{confirmMessage}}</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="mini" @click="cancelHandler">取 消</el-button>
+                <el-button type="primary" @click="confirmHandler" size="mini">确 定</el-button>
+            </span>
+        </el-dialog>
     </aside>
 </section>
 <script src="/public/js/main.js"> </script>

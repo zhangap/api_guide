@@ -645,8 +645,9 @@ router.post("/publishArticle",function(req,res,next){
  * 获取文章列表
  */
 router.get("/getArticleList",function(req,res,next){
-    var reqObj = appUtil.getQueryString(req);
+    var reqObj = appUtil.getQueryString(req),user = req.session.user;
     var sqlStr = "SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d %H:%i:%S') updatetime2  from t_article t1 LEFT JOIN t_user t2 ON t1.author = t2.userId where 1=1";
+    sqlStr += " and t1.author = '"+user.userId+"'";
     if(reqObj.title){
         sqlStr += ` and t1.title like '%${reqObj.title}%'`;
     }
@@ -656,6 +657,48 @@ router.get("/getArticleList",function(req,res,next){
     sqlStr += ' order by t1.updateTime desc';
     appUtil.queryByPage(sqlStr,req,responseData,function(resData){
         res.json(resData);
+    });
+});
+
+/**
+ * 删除文章(可批量)
+ */
+router.post("/deleteArticleById",function(req,res,next){
+    var reqObj = req.body,id = reqObj.id,idStr = '';
+    id = id.split(",");
+    id.forEach(elelment=>{
+        idStr += "'"+elelment+"',";
+    });
+    idStr = idStr.substr(0,idStr.length-1);
+    var sqlStr = `delete from t_article where id in (${idStr})`;
+    query(sqlStr,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 公开或私密文章
+ */
+router.post("/public2Secret",function(req,res,next){
+    var reqObj = req.body;
+    var sql = "update t_article set publish=? where id=?;";
+    var mapValaue = [reqObj.publish,reqObj.id];
+    query(sql,mapValaue,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
     });
 });
 
