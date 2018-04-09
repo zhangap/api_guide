@@ -75,6 +75,13 @@ router.get("/articlePublish",function(req,res,next){
 });
 
 /**
+ * 标签管理
+ */
+router.get("/articleManage",function(req,res,next){
+    res.render("admin/articleManage",responseData);
+});
+
+/**
  * 数据字典表管理
  */
 router.get("/classManage",function(req,res,next){

@@ -5,6 +5,9 @@ var md5 = require("md5");
 var UUID = require("node-uuid");
 var query = require(path.resolve("./public/js/util/mysqlPool"));
 var appUtil = require(path.resolve("./public/js/util/appUtil"));
+var fs = require("fs");
+var multer = require("multer");
+var upload = multer({dest:"uploads/"});
 
 var responseData; //返回格式
 router.use(function(req,res,next){
@@ -366,10 +369,10 @@ router.get("/getUsersList",function(req,res,next){
  */
 router.post("/mergeUser",function(req,res,next){
     var dol = req.body,user = req.session.user;
-    var sql = "insert into t_user values(?,?,?,?,?,?,?,?,?)";
-    var mapValue = [UUID.v1(),dol.username,md5("123456"),dol.userrole,new Date(),dol.phone,dol.email,1,dol.memo];
+    var sql = "insert into t_user values(?,?,?,?,?,?,?,?,?,?)";
+    var mapValue = [UUID.v1(),dol.username,md5("123456"),dol.realName,dol.userrole,new Date(),dol.phone,dol.email,1,dol.memo];
     if(dol.userId){
-        sql = "update t_user set username = ?,roleid=?,updateTime=?,phone=?,email=?,state=?,memo=? where userId=?";
+        sql = "update t_user set username = ?,realName=?,roleid=?,updateTime=?,phone=?,email=?,state=?,memo=? where userId=?";
         mapValue.shift();
         mapValue.splice(1,1);
         mapValue.push(dol.userId);
@@ -593,9 +596,23 @@ router.post("/setResources",function(req,res,next){
 /**
  * 图片上传服务
  */
-router.post("/upload-img",function(req,res,next){
-    var reqObj = req.body;
-    console.log(reqObj);
+router.post("/upload-img",upload.array('file'),function(req,res,next){
+    // 图片会放在uploads目录并且没有后缀，需要自己转存，用到fs模块
+    var file = null,newpath = null,fileUrl = [];
+    for (var i = 0; i < req.files.length; i++) {    
+        file = req.files[i]; 
+        newpath = file.path + "."+ file.mimetype.split("/")[1];
+        fileUrl.push("/" + newpath);
+        fs.rename(file.path,newpath, function(err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+    res.json({
+        errno:"0",
+        data:fileUrl
+    });
 });
 
 /**
@@ -622,6 +639,24 @@ router.post("/publishArticle",function(req,res,next){
         res.json(responseData);
     });
 
+});
+
+/**
+ * 获取文章列表
+ */
+router.get("/getArticleList",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sqlStr = "SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d %H:%i:%S') updatetime2  from t_article t1 LEFT JOIN t_user t2 ON t1.author = t2.userId where 1=1";
+    if(reqObj.title){
+        sqlStr += ` and t1.title like '%${reqObj.title}%'`;
+    }
+    if(reqObj.date){
+        sqlStr += ` and t1.updateTime <'${reqObj.date}'`;
+    }
+    sqlStr += ' order by t1.updateTime desc';
+    appUtil.queryByPage(sqlStr,req,responseData,function(resData){
+        res.json(resData);
+    });
 });
 
 /**
