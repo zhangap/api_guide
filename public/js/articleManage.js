@@ -1,4 +1,5 @@
 $(function(){
+   var wdr = null;
    var app1 = new Vue({
         el:"#content",
         data:{
@@ -13,13 +14,28 @@ $(function(){
             confirmVisible:false,
             secrecRow:null,
             deleteRow:[],
-            page:$.extend(true,{},eleUtil.page)
+            dialogArticleVisible:false,
+            page:$.extend(true,{},eleUtil.page),
+            editModel:{
+                title:"",
+                content:"",
+                tag:"",
+                publish:"1"
+            },
+            activeName:"",
+            checkdTags:[],
+            editRow:null
         },
         created:function(){
             this.getTagList();
             this.getArticleList();
         },
-        mounted:function(){   
+        mounted:function(){ 
+            wdr = new wangEditor("#editor");
+            wdr.customConfig.uploadImgServer = '/api/upload-img';
+            wdr.customConfig.uploadFileName = 'file';
+        	wdr.customConfig.uploadImgHooks ={};
+			wdr.create();  
         },
         methods:{
             submitForm:function(){
@@ -40,9 +56,24 @@ $(function(){
                 var _this = this;
                 $.get("/api/getTagList",function(response){
                     if(response.status == "success"){
-                       _this.$data.tagList = response.message;
+                        _this.filterTagList(response.message||[]);
                     }
                 });
+            },
+            filterTagList:function(data){
+                var arr = data.filter(function(currentValue,index,arr){
+                    return currentValue.parentId == "0";
+                });
+                arr.forEach(function(element){
+                    element.children = [];
+                    data.forEach(function(n,index){
+                        if(n.parentId == element.id) element.children.push(data.slice(index,index+1)[0]);
+                    });
+                });
+                if(arr.length){
+                    this.activeName = arr[0].id;
+                }
+                this.tagList = arr;
             },
             sizeChangeHandler:function(pSize){
                 this.page.pageSize =pSize;
@@ -52,13 +83,16 @@ $(function(){
                 this.page.currentPage = cPage;
                 this.getArticleList();
             },
-            foramtTags:function(row, column, cellValue){
-                var cellkeys = [],cellValue = cellValue.split(',');
+            formatTags:function(row, column, cellValue){
+                var cellkeys = [],cellValue = cellValue.split(','),child = null;
                 for(var m = 0,l = cellValue.length;m < l;m++ ){
                     for(var n = 0,k = this.tagList.length;n<k;n++){
-                        if(cellValue[m] == this.tagList[n].id){
-                            cellkeys.push(this.tagList[n].tagName);
-                            break;
+                        child = this.tagList[n].children;
+                        for(var p =0,w = child.length;p<w;p++){
+                            if(cellValue[m] == child[p].id){
+                                cellkeys.push(child[p].tagName);
+                                break;
+                            }
                         }
                     }
                 }
@@ -84,8 +118,24 @@ $(function(){
                 this.secrecRow = row;
                 this.confirmType = 2;
             },
-            editItemHandler:function(){
-
+            editItemHandler:function(row){
+                this.editRow = row;
+                this.filterItemTags();
+                this.$data.editModel.title = row.title;
+                wdr.txt.html(this.$data.editRow.content);
+                this.dialogArticleVisible = true;
+            },
+            filterItemTags:function(){
+                var id = this.$data.editRow.tag,child = null;
+                for(var m=0,l=this.tagList.length;m<l;m++){
+                    child = this.tagList[m].children;
+                    for(var n=0,k=child.length;n<k;n++){
+                        if(id.indexOf(child[n].id)>=0){
+                            child[n].checked = true;
+                            this.checkdTags.push(child[n]);
+                        }
+                    }
+                }
             },
             deleteItemHandler:function(row){
                 this.confirmMessage = '确定删除这篇文章吗？删除后将不能回复！';
@@ -156,6 +206,40 @@ $(function(){
                     ids.push(element.id);
                 });
                 this.$data.deleteRow = ids;
+            },
+            handleTabClick:function(){},
+            changeCheckState:function(vo){
+                if(vo.checked && this.checkdTags.length<5){
+                    this.checkdTags.push(vo);
+                }else{
+                    for(var k = this.checkdTags.length-1;k>=0;k--){
+                        if(this.checkdTags[k].id == vo.id){
+                            this.checkdTags.splice(k,1);
+                        }
+                    }
+                }
+            },
+            closeCheckdedTag:function(tag){
+                for(var k = this.checkdTags.length-1;k>=0;k--){
+                    if(tag.id == this.checkdTags[k].id){
+                        this.checkdTags.splice(k,1);
+                    }
+                }
+                for(var m =0,l = this.tagList.length;m < l;m++){
+                    for(var n = 0,t = this.tagList[m].children.length;n < t;n++){
+                        if(this.tagList[m].children[n].id == tag.id){
+                            this.tagList[m].children[n].checked = false;
+                            break;
+                        }
+                    }
+                }
+            },
+            goback:function(){
+                this.checkdTags = [];
+                this.dialogArticleVisible =false;
+            },
+            publishWen:function(){
+
             }
         }
    });

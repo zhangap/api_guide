@@ -129,11 +129,11 @@ $(function(){
             },
             sizeChangeHandler:function(pSize){
                 this.page.pageSize =pSize;
-                this.getRoleList();
+                this.getTagList();
             },
             currentChangeHandler:function(cPage){
                 this.page.currentPage = cPage;
-                this.getRoleList();
+                this.getTagList();
             },
             editTagHandler:function(row){
                 var _this = this;
