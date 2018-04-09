@@ -12,6 +12,7 @@ var app1 = new Vue({
         tableData:[],
         newUser:{
             username:"",
+            realName:"",
             userrole:"",
             phone:"",
             email:"",
@@ -46,7 +47,8 @@ var app1 = new Vue({
             userrole:[{ required: true, message: '请选择角色名称', trigger: 'change' }],
             phone:[{ required: true, message: '请输入联系方式', trigger: 'blur' }],
             email:[{ required: true, message: '请输入电子邮箱', trigger: 'blur' }],
-            memo:[{ required: true, message: '请输入电子邮箱', trigger: 'blur' }]
+            memo:[{ required: true, message: '请输入电子邮箱', trigger: 'blur' }],
+            realName:[{ required: true, message: '请输入真实姓名', trigger: 'blur' }]
         },
         page:$.extend(true,{},eleUtil.page),
         confirmVisible:false,

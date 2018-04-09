@@ -369,10 +369,10 @@ router.get("/getUsersList",function(req,res,next){
  */
 router.post("/mergeUser",function(req,res,next){
     var dol = req.body,user = req.session.user;
-    var sql = "insert into t_user values(?,?,?,?,?,?,?,?,?)";
-    var mapValue = [UUID.v1(),dol.username,md5("123456"),dol.userrole,new Date(),dol.phone,dol.email,1,dol.memo];
+    var sql = "insert into t_user values(?,?,?,?,?,?,?,?,?,?)";
+    var mapValue = [UUID.v1(),dol.username,md5("123456"),dol.realName,dol.userrole,new Date(),dol.phone,dol.email,1,dol.memo];
     if(dol.userId){
-        sql = "update t_user set username = ?,roleid=?,updateTime=?,phone=?,email=?,state=?,memo=? where userId=?";
+        sql = "update t_user set username = ?,realName=?,roleid=?,updateTime=?,phone=?,email=?,state=?,memo=? where userId=?";
         mapValue.shift();
         mapValue.splice(1,1);
         mapValue.push(dol.userId);
