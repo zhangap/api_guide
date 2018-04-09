@@ -646,8 +646,17 @@ router.post("/publishArticle",function(req,res,next){
  */
 router.get("/getArticleList",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var sqlStr = "";
-    res.json({});
+    var sqlStr = "SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d %H:%i:%S') updatetime2  from t_article t1 LEFT JOIN t_user t2 ON t1.author = t2.userId where 1=1";
+    if(reqObj.title){
+        sqlStr += ` and t1.title like '%${reqObj.title}%'`;
+    }
+    if(reqObj.date){
+        sqlStr += ` and t1.updateTime <'${reqObj.date}'`;
+    }
+    sqlStr += ' order by t1.updateTime desc';
+    appUtil.queryByPage(sqlStr,req,responseData,function(resData){
+        res.json(resData);
+    });
 });
 
 /**
