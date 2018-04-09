@@ -642,6 +642,15 @@ router.post("/publishArticle",function(req,res,next){
 });
 
 /**
+ * 获取文章列表
+ */
+router.get("/getArticleList",function(req,res,next){
+    var reqObj = appUtil.getQueryString(req);
+    var sqlStr = "";
+    res.json({});
+});
+
+/**
  * 获取数据字典列表
  */
 router.get("/getClassList",function(req,res){
