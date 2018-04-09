@@ -88,5 +88,20 @@ router.get("/classManage",function(req,res,next){
     res.render("admin/classManage",responseData);
 });
 
+/**
+ * 执行计划
+ */
+router.get("/planManage",function(req,res,next){
+    res.render("admin/planManage",responseData);
+});
+/**
+ * 查询页面
+ */
+router.get("/planList",function(req,res,next){
+    responseData.from = "query"; //标记是查询页面
+    res.render("admin/planManage",responseData);
+});
+
+
 
 module.exports = router;
