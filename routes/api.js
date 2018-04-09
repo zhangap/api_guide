@@ -5,6 +5,9 @@ var md5 = require("md5");
 var UUID = require("node-uuid");
 var query = require(path.resolve("./public/js/util/mysqlPool"));
 var appUtil = require(path.resolve("./public/js/util/appUtil"));
+var fs = require("fs");
+var multer = require("multer");
+var upload = multer({dest:"uploads/"});
 
 var responseData; //返回格式
 router.use(function(req,res,next){
@@ -593,9 +596,23 @@ router.post("/setResources",function(req,res,next){
 /**
  * 图片上传服务
  */
-router.post("/upload-img",function(req,res,next){
-    var reqObj = req.body;
-    console.log(reqObj);
+router.post("/upload-img",upload.array('file'),function(req,res,next){
+    // 图片会放在uploads目录并且没有后缀，需要自己转存，用到fs模块
+    var file = null,newpath = null,fileUrl = [];
+    for (var i = 0; i < req.files.length; i++) {    
+        file = req.files[i]; 
+        newpath = file.path + "."+ file.mimetype.split("/")[1];
+        fileUrl.push("/" + newpath);
+        fs.rename(file.path,newpath, function(err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+    res.json({
+        errno:"0",
+        data:fileUrl
+    });
 });
 
 /**

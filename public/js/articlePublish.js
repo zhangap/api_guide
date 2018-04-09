@@ -18,7 +18,8 @@ $(function(){
         },
         mounted:function(){
             wdr = new wangEditor("#editor");
-	        wdr.customConfig.uploadImgServer = '/api/upload-img'
+            wdr.customConfig.uploadImgServer = '/api/upload-img';
+            wdr.customConfig.uploadFileName = 'file';
         	wdr.customConfig.uploadImgHooks ={};
 			wdr.create();
         },
