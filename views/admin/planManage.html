@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>执行计划</title>
+    <meta charset="utf-8">
+    <%- include ../default.html%>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/user-manage.css" rel="stylesheet" type="text/css"/>
+    <style>
+        .timeInput{
+            width:100px;
+        }
+        .el-date-editor input{
+            padding-left:24px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include header.html%>
+    <section>
+        <%- include menu.html%>
+        <aside class="content" id="content">
+            <el-form :inline="false" class="demo-form-inline api-user">
+                <el-row :gutter="2">
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="项目名称">
+                            <el-select  placeholder="请选择项目名称" clearable  size="mini" v-model="planForm.projectId">
+                                <el-option v-for="(vo,index) in projectList" :label="vo.projectName" :value="vo.projectId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="责任人">
+                            <el-select  placeholder="请选择责任人" clearable  size="mini" v-model="planForm.userId">
+                                <el-option v-for="(vo,index) in userList" :label="vo.realName" :value="vo.userId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="开始日期">
+                            <el-date-picker size="mini" v-model="planForm.startTime"  style="width:120px;" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="结束日期">
+                            <el-date-picker size="mini" v-model="planForm.endTime"  style="width:120px;" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item label="状态">
+                            <el-select clearable   placeholder="状态" size="mini" v-model="planForm.state">
+                                <el-option v-for="(vo,index) in stateList" :label="vo.name" :value="vo.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-form-item >
+                            <el-button type="primary" @click="searchList" size="mini" style="padding:7px 10px;">查询</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <% if (locals.from !== "query") { %>
+                <el-row>
+                    <el-col :sm="6" :md="6" :lg="6">
+                            <el-button size="mini" type="primary" icon="el-icon-plus" @click="addHandler">添加</el-button>
+                            <el-button size="mini" type="warning" icon="el-icon-plus" @click="editHandler">修改</el-button>
+                            <el-button size="mini" type="success" icon="el-icon-edit" @click="saveHandler">保存</el-button>
+                            <el-button size="mini" type="danger"  icon="el-icon-delete" @click="delHandler">删除</el-button>
+                    </el-col>
+                </el-row>
+                <% } %>
+
+            </el-form>
+            <template>
+                <el-table :data="tableData" style="width: 100%"  size="mini"  border class="aa-table"  @current-change="handleCurrentChange">
+                    <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
+                    <el-table-column fixed prop="projectName" label="项目名称" width="150">
+                        <template slot-scope="scope">
+                            <el-select v-if="scope.row.edit"  size="mini" v-model="scope.row.projectId" filterable placeholder="请选择">
+                                <el-option
+                                        v-for="item in projectList"
+                                        :key="item.projectId"
+                                        :label="item.projectName"
+                                        :value="item.projectId">
+                                </el-option>
+                            </el-select>
+                            <div v-else class="cell">{{scope.row.projectId | fmtProject}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed prop="projectSub" label="子项目名称" width="200">
+                        <template slot-scope="scope">
+                            <el-input v-if="scope.row.edit"  v-model="scope.row.projectSub" size="mini"></el-input>
+                            <div v-else class="cell">{{scope.row.projectSub}}</div>
+                        </template>
+
+                    </el-table-column>
+                    <el-table-column  prop="level" label="优先级" width="120">
+                        <template slot-scope="scope">
+                            <el-select v-if="scope.row.edit" size="mini" v-model="scope.row.level" filterable placeholder="请选择">
+                                <el-option
+                                        v-for="item in levelList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                            <div v-else class="cell">{{scope.row.level | fmtClass('levelList')}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="userName" label="责任人" width="100">
+                        <template slot-scope="scope">
+                            <el-select v-if="scope.row.edit" size="mini" v-model="scope.row.userId" filterable placeholder="请选择">
+                                <el-option
+                                        v-for="item in userList"
+                                        :key="item.userId"
+                                        :label="item.realName"
+                                        :value="item.userId">
+                                </el-option>
+                            </el-select>
+                            <div v-else class="cell">{{scope.row.userId | fmtPerson}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="detail" label="需求明细" width="300">
+                        <template slot-scope="scope">
+                            <el-input  v-if="scope.row.edit" type="textarea" v-model="scope.row.detail" size="mini"></el-input>
+                            <div v-else class="cell">{{scope.row.detail}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="startTime" label="计划开始时间" width="130">
+                        <template slot-scope="scope">
+                            <el-date-picker v-if="scope.row.edit" size="mini" v-model="scope.row.startTime" style="width:110px;" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                            <div v-else class="cell">{{scope.row.startTime}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="endTime" label="计划结束时间" width="130">
+                        <template slot-scope="scope">
+                            <el-date-picker v-if="scope.row.edit" size="mini" v-model="scope.row.endTime" style="width:110px;"  type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+                            <div v-else class="cell">{{scope.row.endTime}}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="state"  label="状态" width="120">
+                            <% if (locals.from !== "query") { %>
+                                <template slot-scope="scope">
+                                        <el-select  v-if="scope.row.edit" size="mini" v-model="scope.row.state" filterable placeholder="请选择">
+                                            <el-option
+                                                    v-for="item in stateList"
+                                                    :key="item.id"
+                                                    :label="item.name"
+                                                    :value="item.id">
+                                            </el-option>
+                                        </el-select>
+                                        <div v-else class="cell">{{scope.row.state | fmtClass('stateList')}}</div>
+                                </template>
+                            <% } %>
+                            <% if (locals.from === "query") { %>
+                                <template slot-scope="scope">
+                                    <el-select  size="mini" v-model="scope.row.state" filterable placeholder="请选择" @change="updateState(scope.row)">
+                                        <el-option
+                                                v-for="item in stateList"
+                                                :key="item.id"
+                                                :label="item.name"
+                                                :value="item.id">
+                                        </el-option>
+                                    </el-select>
+                                </template>
+                            <% } %>
+                    </el-table-column>
+                    <el-table-column  prop="memo" label="备注" width="400">
+                        <template slot-scope="scope">
+                            <el-input v-if= "scope.row.edit" v-model="scope.row.memo" size="mini"></el-input>
+                            <div v-else class="cell">{{scope.row.memo}}</div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="block repeat-menu-page">
+                        <el-pagination  background
+                        :current-page="page.currentPage"
+                        :page-sizes="page.pageSizes"
+                        :page-size="page.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="page.total"
+                        @size-change="sizeChangeHandler"
+                        @current-change="currentChangeHandler"></el-pagination>
+                </div>
+            </template>
+            <!--删除的提示信息-->
+            <el-dialog title="提示信息" :visible.sync="confirmVisible" width="30%"  custom-class="api-dialog-tips" v-cloak>
+                <span>此操作将永久删除该记录，是否继续？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button size="mini" @click="cancelHandler">取 消</el-button>
+                    <el-button type="primary" @click="executeDelete" size="mini">确 定</el-button>
+                </span>
+            </el-dialog>
+        </aside>
+    </section>
+</body>
+</html>
+<script src="/public/js/main.js"> </script>
+<script src="/public/js/planManage.js"></script>

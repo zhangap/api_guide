@@ -633,7 +633,7 @@ router.get("/getClassList",function(req,res){
     if(reqObj.type){
         sql += " where type ='"+reqObj.type+"'";
     }
-    sql += " order by type";
+    sql += " order by type,sxh";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     })
@@ -644,12 +644,12 @@ router.get("/getClassList",function(req,res){
  */
 router.post("/saveClass",function(req,res){
     let item = JSON.parse(req.body.cItem);
-    let sql = "insert into t_class values(?,?,?,?,?);";
-    let params =[UUID.v1(),item.type,item.id,item.name,item.memo];
+    let sql = "insert into t_class values(?,?,?,?,?,?);";
+    let params =[UUID.v1(),item.type,item.id,item.name,item.sxh,item.memo];
     let msg = "新增成功";
     if(item.uuid){
-        sql = "update t_class set type=?,id=?,name=?,memo=? where uuid=?";
-        params = [item.type,item.id,item.name,item.memo,item.uuid];
+        sql = "update t_class set type=?,id=?,name=?,sxh=?,memo=? where uuid=?";
+        params = [item.type,item.id,item.name,item.sxh,item.memo,item.uuid];
         msg = "修改成功";
     }
     query(sql,params,function(errs,result){
@@ -681,6 +681,145 @@ router.post("/deleteClass",function(req,res){
         }else{
             responseData.status = "success";
             responseData.message = "删除成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 获取所有的计划
+ */
+router.get("/getPlanList",function(req,res){
+    let reqObj = appUtil.getQueryString(req);
+    let sql = "select uuid,projectId, projectSub, level,userId,detail, DATE_FORMAT(startTime,'%Y-%m-%d') startTime, DATE_FORMAT(endTime,'%Y-%m-%d') endTime, state,memo from t_plan where 1=1 ";
+    if(reqObj.projectId){
+        sql += " and projectId ='"+reqObj.projectId+"'";
+    }
+    if(reqObj.userId){
+        sql += " and userId='"+reqObj.userId+"' ";
+    }
+    if(reqObj.startTime){
+        sql += " and startTime='"+reqObj.startTime+"' ";
+    }
+    if(reqObj.endTime){
+        sql += " and endTime='"+reqObj.endTime+"' ";
+    }
+    if(reqObj.state){
+        sql += " and state='"+reqObj.state+"' ";
+    }
+     sql += " order by startTime, userId";
+   appUtil.queryByPage(sql,req,responseData,function(resData){
+        res.json(resData);
+    });
+});
+
+/**
+ * 获取项目列表
+ */
+router.get("/getProjectList",function(req,res){
+    let sql = "select projectId,projectName from t_project";
+    query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 获取数据字典
+ */
+router.get("/getClassListByType",function(req,res){
+    let reqObj = appUtil.getQueryString(req);
+    let sql = "select id,name from t_class where type = ? order by sxh;";
+    query(sql,[reqObj.type],function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 保存
+ */
+router.post("/savePlan",function(req,res){
+    let sd = JSON.parse(req.body.saveData);
+    let sql = "insert into  t_plan values(?,?,?,?,?,?,?,?,?,?)";
+    let params = [UUID.v1(),sd.projectId,sd.projectSub,sd.level,sd.userId,sd.detail,sd.startTime,sd.endTime,sd.state,sd.memo];
+    if(sd.uuid){//update
+        sql = "update t_plan set projectId=?,projectSub=?,level=?,userId=?,detail=?,startTime=?,endTime=?,state=?,memo=? where uuid = ?";
+        params = [sd.projectId,sd.projectSub,sd.level,sd.userId,sd.detail,sd.startTime,sd.endTime,sd.state,sd.memo,sd.uuid];
+    }
+    query(sql,params,function(errs){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "计划保存成功";
+        }
+        res.json(responseData);
+    });
+
+});
+
+/**
+ * 获取用户集合
+ */
+router.get("/getUserList",function(req,res){
+    let sql = "select userId, realName from t_user where state = '1'";
+    query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message =results;
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 删除计划
+ */
+router.get("/delPlanById",function(req,res){
+    let reqObj = appUtil.getQueryString(req);
+    let sql = "delete from t_plan where uuid =?";
+    query(sql,[reqObj.uuid],function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "计划删除成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 更新计划状态
+ */
+router.get("/updateState",function(req,res){
+    let reqObj = appUtil.getQueryString(req);
+    let sql = "update t_plan set state =? where uuid = ?";
+    query(sql,[reqObj.state,reqObj.uuid],function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = "状态更新失败";
+        }else{
+            responseData.status = "success";
+            responseData.message = "状态更新成功";
         }
         res.json(responseData);
     });

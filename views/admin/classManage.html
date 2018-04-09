@@ -50,6 +50,12 @@
                             <div v-else class="cell">{{scope.row.name}}</div>
                         </template>
                     </el-table-column>
+                    <el-table-column fixed prop="name"label="顺序号" width="120">
+                        <template slot-scope="scope">
+                            <el-input v-if="scope.row.edit == true"  v-model="scope.row.sxh" size="mini"></el-input>
+                            <div v-else class="cell">{{scope.row.sxh}}</div>
+                        </template>
+                    </el-table-column>
                     <el-table-column fixed prop="memo" class-name="edit memo"  label="备注" width="200">
                         <template slot-scope="scope">
                             <el-input v-if="scope.row.edit == true"  v-model="scope.row.memo" size="mini"></el-input>
