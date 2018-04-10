@@ -15,7 +15,7 @@
         <aside class="content" id="content">
             <el-form :inline="false" v-model="formModel" class="demo-form-inline api-user query-api">
                 <el-row :gutter="2">
-                    <el-col :sm="8" :md="6" :lg="4">
+                    <el-col :sm="8" :md="6" :lg="6">
                         <el-form-item label="标签分类">
                             <el-select v-model="formModel.classify" placeholder="标签分类" size="mini">
                                 <el-option label="不限" value=""></el-option>
@@ -23,15 +23,15 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :sm="8" :md="6" :lg="4">
-                        <el-form-item label="标签名称">
+                    <el-col :sm="8" :md="6" :lg="6">
+                        <el-form-item label="标签名称" class="max254">
                             <el-input v-model="formModel.tagName" placeholder="标签名称" size="mini" ref="tagName"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col  :sm="8" :md="8" :lg="4">
+                    <el-col  :sm="8" :md="8" :lg="8">
                         <el-form-item>
-                            <el-button type="primary" @click="searchList" size="mini" style="padding:7px 10px;">查询</el-button>
-                            <el-button type="danger" @click="batchDelete" size="mini" style="padding:7px 10px;">批量删除</el-button>
+                            <el-button type="primary" @click="searchList" size="mini" style="padding:7px 10px;" icon="el-icon-search">查询</el-button>
+                            <el-button type="danger" @click="batchDelete" size="mini" style="padding:7px 10px;" icon="el-icon-circle-close-outline">批量删除</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>

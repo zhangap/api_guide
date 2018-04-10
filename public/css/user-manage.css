@@ -10,6 +10,10 @@
     margin-bottom: 2px;
 }
 
+.query-api .max254{
+    max-width: 254px;
+}
+
 .el-row .el-col .el-form-item{
     clear: both;
     margin-bottom: 15px;
