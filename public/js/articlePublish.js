@@ -102,9 +102,10 @@ $(function(){
                  .done(function(res){
                     eleUtil.closeLoading();
                     if(res.status == "success"){
-                        _this.checkdTags = [];
+                        _this.resetTagState();
                         _this.formModel.title = '';
                         wdr.txt.clear();
+                        eleUtil.message("文章已发布成功，可在【文章管理】中查看","success");
                     }else{
                         eleUtil.message("发布失败","error"); 
                     }
@@ -113,6 +114,12 @@ $(function(){
                     eleUtil.closeLoading();
                     eleUtil.message("发布失败","error");
                 });
+            },
+            resetTagState:function(){
+                this.checkdTags.forEach(function(e){
+                    e.checked = false;
+                });
+                this.checkdTags = [];
             }
         }
     });

@@ -7,7 +7,7 @@
     <link href="/public/css/main.css" rel="stylesheet" type="text/css"/>
     <link href="/public/css/admin.css" rel="stylesheet" type="text/css"/>
     <link href="/public/plugins/wangEditor/wangEditor.min.css" rel="stylesheet" type="text/css"/>
-    <!-- <link href="/public/plugins/highlight/css/default.css" rel="stylesheet" type="text/css"/> -->
+    <link href="/public/plugins/highlight/css/default.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .el-row{
             margin-bottom: 10px;
@@ -21,6 +21,9 @@
         .el-tag+.el-tag{
             margin-left: 10px;
         }
+        h1{
+            font-size:2em !important;
+        }
     </style>
     <style type="text/css">
         .el-date-editor.el-input--prefix .el-input__inner{padding: 0 30px;}
@@ -32,7 +35,7 @@
 <section>
     <%- include menu.html%>
     <aside class="content" id="content">
-        <div v-show="!dialogArticleVisible">
+        <div v-show="!dialogArticleVisible && !preView">
         <el-form :inline="true" ref="formModel" :model="formModel"  class="demo-form-inline api-user" v-cloak onsubmit="return false">
             <el-form-item label="标题关键字" prop="title">
                 <el-input type="text" v-model="formModel.title" auto-complete="off" size="mini" ref='roleName' placeholder="标题关键字"></el-input>
@@ -52,10 +55,11 @@
                     <el-table-column fixed prop="title" label="标题" width="250"></el-table-column>
                     <el-table-column fixed prop="updatetime2" label="创建时间" width="160"></el-table-column>
                     <el-table-column fixed prop="tag" label="文章标签" :show-overflow-tooltip="true" :formatter="formatTags" align="center"></el-table-column>
-                    <el-table-column fixed prop="operate" label="操作"  width="240" align="center">
+                    <el-table-column fixed prop="operate" label="操作"  width="300" align="center">
                         <template slot-scope="scope">
-                            <el-button size="mini" @click="editItemHandler(scope.row)">编辑</el-button>
-                            <el-button size="mini" @click="publish2Secret(scope.row)">{{scope.row.publish==1?"私密":"公开"}}</el-button>
+                            <el-button size="mini"  @click="preViewItemHandler(scope.row)">预览</el-button>
+                            <el-button size="mini" type="primary" @click="editItemHandler(scope.row)">编辑</el-button>
+                            <el-button size="mini" type="warning" @click="publish2Secret(scope.row)">{{scope.row.publish==1?"私密":"公开"}}</el-button>
                             <el-button size="mini" type="danger" @click="deleteItemHandler(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -84,7 +88,7 @@
         </div>
         <!-- 编辑文章 -->
         <div v-show="dialogArticleVisible">
-            <el-form :inline="false" v-model="editModel" class="demo-form-inline api-user" style="padding-top:10px;">
+            <el-form :inline="false" v-model="editModel" class="demo-form-inline api-user" style="padding-top:10px;" v-cloak>
                     <el-row :gutter="20">
                         <el-col :sm="24" :md="24" :lg="24">
                             <el-input  auto-complete="off" v-model="editModel.title" placeholder="请输入文章标题"></el-input>
@@ -122,9 +126,22 @@
                     </el-row>
             </el-form>
         </div>
+        <!-- 预览文章 -->
+        <div v-show="preView">
+            <el-row :gutter="20">
+                <el-col :sm="24" :md="24" :lg="24" style="text-align: right;padding-right: 46px;">
+                    <!-- <el-button type="primary" icon="el-icon-back"  @click="preViewBack" size="mini" title="返回" style="float: right;">返回</el-button> -->
+                    <a href="javascript:void(0)"  @click="preViewBack" style="color: dodgerblue;">文章列表</a>
+                </el-col>
+                <el-col :sm="24" :md="24" :lg="24">
+                    <div id="pre"></div>
+                </el-col>
+            </el-row>
+        </div>
     </aside>
 </section>
 <script src="/public/plugins/wangEditor/wangEditor.js"></script>
+<script src="/public/plugins/highlight/highlight.pack.js"></script>
 <script src="/public/js/main.js"> </script>
 <script src="/public/js/articleManage.js"></script>
 </body>

@@ -24,7 +24,8 @@ $(function(){
             },
             activeName:"",
             checkdTags:[],
-            editRow:null
+            editRow:null,
+            preView:false
         },
         created:function(){
             this.getTagList();
@@ -239,7 +240,40 @@ $(function(){
                 this.dialogArticleVisible =false;
             },
             publishWen:function(){
-
+                var _this = this,tagid = [];
+                this.checkdTags.forEach(function(element){
+                    tagid.push(element.id);
+                });
+                var params = {
+                    id:this.editRow.id,
+                    title:this.editModel.title,
+                    content:wdr.txt.html(),
+                    publish:this.editRow.publish,
+                    tag:tagid.join(",")
+                };
+                if(!params.title||!params.content||!params.tag){
+                    eleUtil.message("标题、内容及标签不能为空","error");
+                    return;
+                }
+                $.post("/api/publishArticle",params)
+                .done(function(res){
+                    if(res.status == "success"){
+                        _this.$data.editRow = null;
+                        _this.goback();
+                        _this.getArticleList();
+                    }
+                });
+            },
+            preViewItemHandler:function(row){
+                this.preView = true;
+                $("#pre").html(row.content);
+                $('pre code').each(function(i, block) {
+                    hljs.highlightBlock(block);
+                });
+            },
+            preViewBack:function(){
+                this.preView = false;
+                $("#pre").empty();
             }
         }
    });
