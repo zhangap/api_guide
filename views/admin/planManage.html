@@ -32,7 +32,7 @@
                     </el-col>
                     <el-col :sm="8" :md="6" :lg="4">
                         <el-form-item label="责任人">
-                            <el-select  placeholder="请选择责任人" clearable  size="mini" v-model="planForm.userId">
+                            <el-select  placeholder="请选择责任人" clearable  size="mini" v-model="planForm.userId" @change="searchList">
                                 <el-option v-for="(vo,index) in userList" :label="vo.realName" :value="vo.userId"></el-option>
                             </el-select>
                         </el-form-item>
@@ -73,7 +73,7 @@
 
             </el-form>
             <template>
-                <el-table :data="tableData" style="width: 100%"  size="mini"  border class="aa-table"  @current-change="handleCurrentChange">
+                <el-table :data="tableData" style="width: 100%"  size="mini"  border class="aa-table"  @current-change="handleCurrentChange" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.3)">
                     <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
                     <el-table-column fixed prop="projectName" label="项目名称" width="150">
                         <template slot-scope="scope">

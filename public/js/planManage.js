@@ -20,6 +20,7 @@ var app1 = new Vue({
         editNum:0,
         page:$.extend(true,{},eleUtil.page),
         confirmVisible:false,
+        loading:true
     },
     created:function(){
         this.getPlanList();
@@ -170,11 +171,13 @@ var app1 = new Vue({
         },
         getPlanList:function(){
             var _this = this;
+            this.loading = true;
             $.ajax({
                 type:"get",
                 url:"/api/getPlanList",
                 data:$.extend(true,{},this.$data.page,planForm),
                 success:function(data){
+                    _this.loading = false;
                     if(data.status ==="success"){
                         for(var i =0,len = data.message.length;i<len;i++){
                             data.message[i].edit = false;
@@ -183,9 +186,11 @@ var app1 = new Vue({
                         _this.page.currentPage = data.page.currentPage;
                         _this.page.total = data.page.total;
                     }
-
+                },
+                fail:function(a,b,c){
+                    _this.loading = false;
                 }
-            })
+            });
         },
         getProjectList:function(){
             var _this = this;
