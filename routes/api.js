@@ -10,6 +10,17 @@ var multer = require("multer");
 var upload = multer({dest:"uploads/"});
 var excel = require("../public/js/util/xlsxUtil");
 
+/* GET home page. */
+router.get('/*', function(req, res, next) {
+    var user = req.session.user;
+    if(user){
+        next();
+    }else{
+        req.session.originalUrl = req.originalUrl;
+        res.redirect("/login");
+    }
+});
+
 var responseData; //返回格式
 router.use(function(req,res,next){
     responseData = {
@@ -770,21 +781,22 @@ router.post("/deleteClass",function(req,res){
  */
 router.get("/getPlanList",function(req,res){
     let reqObj = appUtil.getQueryString(req);
+    let conditions = JSON.parse(reqObj.conditions);
     let sql = "select uuid,projectId, projectSub, level,userId,detail, DATE_FORMAT(startTime,'%Y-%m-%d') startTime, DATE_FORMAT(endTime,'%Y-%m-%d') endTime, state,memo from t_plan where 1=1 ";
-    if(reqObj.projectId){
-        sql += " and projectId ='"+reqObj.projectId+"'";
+    if(conditions.projectId){
+        sql += " and projectId ='"+conditions.projectId+"'";
     }
-    if(reqObj.userId){
-        sql += " and userId='"+reqObj.userId+"' ";
+    if(conditions.userId){
+        sql += " and userId='"+conditions.userId+"' ";
     }
-    if(reqObj.startTime){
-        sql += " and startTime >='"+reqObj.startTime+"' ";
+    if(conditions.startTime){
+        sql += " and startTime >='"+conditions.startTime+"' ";
     }
-    if(reqObj.endTime){
-        sql += " and endTime <='"+reqObj.endTime+"' ";
+    if(conditions.endTime){
+        sql += " and endTime <='"+conditions.endTime+"' ";
     }
-    if(reqObj.state){
-        sql += " and state='"+reqObj.state+"' ";
+    if(conditions.state.length){
+        sql += " and state in("+conditions.state.join(",")+")";
     }
      sql += " order by startTime desc, userId";
    appUtil.queryByPage(sql,req,responseData,function(resData){

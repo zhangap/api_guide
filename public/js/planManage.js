@@ -3,7 +3,7 @@ var planForm = {
     userId:"",
     startTime:"",
     endTime:"",
-    state:""
+    state:[]
 };
 
 var app1 = new Vue({
@@ -71,7 +71,7 @@ var app1 = new Vue({
                 detail:"",
                 startTime:eleUtil.formatDate(new Date(),"yyyy-MM-dd"),
                 endTime:eleUtil.formatDate(new Date(),"yyyy-MM-dd"),
-                state:"",
+                state:"5",
                 memo:"",
                 edit:true
             };
@@ -175,7 +175,7 @@ var app1 = new Vue({
             $.ajax({
                 type:"get",
                 url:"/api/getPlanList",
-                data:$.extend(true,{},this.$data.page,planForm),
+                data:$.extend(true,{},this.$data.page,{conditions:JSON.stringify(planForm)}),
                 success:function(data){
                     _this.loading = false;
                     if(data.status ==="success"){
