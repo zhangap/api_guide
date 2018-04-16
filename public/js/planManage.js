@@ -227,7 +227,17 @@ var app1 = new Vue({
                     }
                 }
             })
+        },
+        downHandler:function(){
+            var _this = this;
+            var data = $.extend(true,{},this.$data.page,planForm);
+            eleUtil.loading({target:".el-table"});
+            $.get("/api/exportPlanList",data,function(res){
+                eleUtil.closeLoading();
+                if(res.status =="success"){
+                    window.open(res.message);
+                }
+            });
         }
-
     }
 });

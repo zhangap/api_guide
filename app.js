@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/public",express.static("public"));
 app.use("/uploads",express.static("uploads"));
+app.use("/downloads",express.static("downloads"));
 //使用sesssion中间件
 app.use(session({
     secret :  'secret', // 对session id 相关的cookie 进行签名

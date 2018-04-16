@@ -62,11 +62,12 @@
                 </el-row>
                 <% if (locals.from !== "query") { %>
                 <el-row>
-                    <el-col :sm="6" :md="6" :lg="6">
+                    <el-col :sm="24" :md="24" :lg="24">
                             <el-button size="mini" type="primary" icon="el-icon-plus" @click="addHandler">添加</el-button>
                             <el-button size="mini" type="warning" icon="el-icon-plus" @click="editHandler">修改</el-button>
                             <el-button size="mini" type="success" icon="el-icon-edit" @click="saveHandler">保存</el-button>
                             <el-button size="mini" type="danger"  icon="el-icon-delete" @click="delHandler">删除</el-button>
+                            <el-button size="mini" type="primary"  icon="el-icon-download" @click="downHandler">导出</el-button>
                     </el-col>
                 </el-row>
                 <% } %>

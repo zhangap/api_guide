@@ -8,6 +8,7 @@ var appUtil = require(path.resolve("./public/js/util/appUtil"));
 var fs = require("fs");
 var multer = require("multer");
 var upload = multer({dest:"uploads/"});
+var excel = require("../public/js/util/xlsxUtil");
 
 var responseData; //返回格式
 router.use(function(req,res,next){
@@ -900,6 +901,56 @@ router.get("/updateState",function(req,res){
             responseData.message = "状态更新成功";
         }
         res.json(responseData);
+    });
+});
+/**
+ * 导出计划
+ */
+router.get("/exportPlanList",function(req,res,next){
+    let reqObj = appUtil.getQueryString(req);
+    let sql = `select t1.uuid,t3.projectName, projectSub, t4.name as dealLevel,t5.name as taskState,t2.realName,detail, DATE_FORMAT(startTime,'%Y-%m-%d') startTime, DATE_FORMAT(endTime,'%Y-%m-%d') endTime, t1.state,t1.memo from 
+            t_plan t1 LEFT JOIN t_user t2 ON t1.userId = t2.userId  LEFT JOIN t_project t3 ON t1.projectId = t3.projectId LEFT JOIN t_class t4 ON t1.level = t4.id and t4.type='level'
+            LEFT JOIN t_class t5 ON t1.state = t5.id and t5.type='status' where 1=1 `;
+    if(reqObj.projectId){
+        sql += " and t1.projectId ='"+reqObj.projectId+"'";
+    }
+    if(reqObj.userId){
+        sql += " and t1.userId='"+reqObj.userId+"' ";
+    }
+    if(reqObj.startTime){
+        sql += " and t1.startTime >='"+reqObj.startTime+"' ";
+    }
+    if(reqObj.endTime){
+        sql += " and t1.endTime <='"+reqObj.endTime+"' ";
+    }
+    if(reqObj.state){
+        sql += " and t1.state='"+reqObj.state+"' ";
+    }
+    sql += " order by t1.startTime desc";
+    query(sql,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = "导出失败";
+        }else{
+            var hds = [
+                {header:'任务号', key:'uuid', width:40},
+                {header:'责任人', key:'realName', width:15},
+                {header:'工程名称', key:'projectName', width:25},
+                {header:'任务类型', key:'projectSub', width:20},
+                {header:'紧急程度', key:'dealLevel', width:20},
+                {header:'开始时间', key:'startTime', width:15},
+                {header:'结束时间', key:'endTime', width:15},
+                {header:'任务状态', key:'taskState', width:15},
+                {header:'详细说明', key:'detail', width:50},
+                {header:'备注', key:'memo', width:50}
+            ];
+            var [pros,filename]= excel.commonExport(hds,results);
+            pros.then(function(arg){
+                responseData.status = "success";
+                responseData.message = "/downloads/"+filename;
+                res.json(responseData);
+            });
+        }
     });
 });
 
