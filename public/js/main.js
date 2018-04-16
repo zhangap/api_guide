@@ -34,6 +34,7 @@ $(function(){
     var app2=new Vue({
         el:"#header",
         data:{
+            isOpen:true,
             dialogFormVisible:false,
             user:{
                 oldpwd:"",
@@ -91,6 +92,21 @@ $(function(){
             resetForm:function (formName) {
                 this.$data.dialogFormVisible=false;
                 this.$refs[formName].resetFields();
+            },
+            switchMenu(){
+                this.isOpen = ! this.isOpen;
+                var iLeft1 = 0,
+                    iLeft2 = 202;
+                if(!this.isOpen){
+                    iLeft1 = -200;
+                    iLeft2 = 2;
+                }
+                $(".menu").animate({
+                    left:iLeft1
+                });
+                $(".content").animate({
+                    left:iLeft2
+                });
             }
         }
     });

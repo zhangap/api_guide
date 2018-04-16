@@ -9,6 +9,17 @@ var fs = require("fs");
 var multer = require("multer");
 var upload = multer({dest:"uploads/"});
 
+/* GET home page. */
+router.get('/*', function(req, res, next) {
+    var user = req.session.user;
+    if(user){
+        next();
+    }else{
+        req.session.originalUrl = req.originalUrl;
+        res.redirect("/login");
+    }
+});
+
 var responseData; //返回格式
 router.use(function(req,res,next){
     responseData = {

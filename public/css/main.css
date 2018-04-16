@@ -53,16 +53,22 @@ section{
     position: absolute;
     left:0;
     right:250px;
-    top:2px;
+    top:0px;
     bottom:0;
-    border-right: solid 1px #0cb7eb;
+    border-right: solid 2px #0cb7eb;
+    border-top: 2px solid #0cb7eb;
     overflow-x: hidden;
     overflow-y: auto;
 }
 .menu ul{
     border-right:none;
 }
-
+.switchMenu{
+    position: absolute;
+    left:220px;
+    height:60px;
+    cursor: pointer;
+}
 .content{
     position: absolute;
     left:202px;
