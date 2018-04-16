@@ -115,7 +115,7 @@ $(function(){
                 var _this = this;
                 var poly = {};
                 $.extend(true,poly,this.formModel,this.page);
-                eleUtil.loading();
+                eleUtil.loading({target:".el-table"});
                 $.get("/api/getTagList",poly,function(data){
                     eleUtil.closeLoading();
                     if(data.status === "success"){

@@ -28,7 +28,7 @@
     /**
      * @description 解除锁屏
      */
-    eleUtil.closeLoading = function(){
+    eleUtil.closeLoading = function(){   
         loading.close();
     };
 

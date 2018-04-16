@@ -45,7 +45,9 @@ $(function(){
             getArticleList:function(){
                 var _this = this;
                 var params = $.extend(true,{},this.formModel,this.page);
+                eleUtil.loading({target:".el-table"});
                 $.get("/api/getArticleList",params,function(res){
+                    eleUtil.closeLoading();
                     if(res.status == "success"){
                         _this.$data.tableData = res.message;
                         _this.page.currentPage = res.page.currentPage;

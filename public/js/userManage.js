@@ -106,7 +106,7 @@ var app1 = new Vue({
         getUserList:function(){
             var _this = this;
             var params = $.extend(true,{},userform,this.page);
-            eleUtil.loading();
+            eleUtil.loading({target:".el-table"});
             $.get("/api/getUsersList",params,function(data){
                 eleUtil.closeLoading();
                 if(data.status === "success"){

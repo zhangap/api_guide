@@ -134,7 +134,7 @@ $(function(){
                     rolename:this.formModel.roleName
                 };
                 $.extend(true,poly,this.page);
-                eleUtil.loading();
+                eleUtil.loading({target:".el-table"});
                 $.get("/api/getRoleList",poly,function(data){
                     eleUtil.closeLoading();
                     if(data.status === "success"){
