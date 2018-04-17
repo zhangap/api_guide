@@ -101,6 +101,12 @@ router.get("/planList",function(req,res,next){
     responseData.from = "query"; //标记是查询页面
     res.render("admin/planManage",responseData);
 });
+/**
+ * 留言管理
+ */
+router.get("/messageManage",function(req,res,next){
+    res.render("admin/messageManage",responseData);
+});
 
 
 

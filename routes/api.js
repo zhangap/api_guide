@@ -966,5 +966,76 @@ router.get("/exportPlanList",function(req,res,next){
     });
 });
 
+/**
+ * 获取留言管理列表
+ */
+router.get("/getMessageList",function(req,res,next){
+    let reqObj = appUtil.getQueryString(req);
+    let sql = "SELECT t1.*,t2.username,t3.title,DATE_FORMAT(t1.createTime,'%Y-%m-%d %H:%i:%S') time2 from t_message t1 LEFT JOIN t_user t2 ON t1.userId = t2.userId LEFT JOIN t_article t3 ON t1.articleId = t3.id WHERE 1=1 ";
+    if(reqObj.keyWord){
+        sql += ` and (t2.username like '%${reqObj.keyWord}%' or t1.content like '%${reqObj.keyWord}%') `;
+    }
+    if(reqObj.dates){
+        let arr = reqObj.dates.split(',');
+        if(arr[0]){
+            sql += ` and t1.createTime >='${arr[0]}'`;
+        }
+        if(arr[1]){
+            sql += ` and t1.createTime <='${arr[1]}'`;
+        }
+    }
+    sql += " order by t1.createTime desc";
+    appUtil.queryByPage(sql,req,responseData,function(resData){
+        res.json(resData);
+    }); 
+});
+
+/**
+ * 删除留言
+ */
+router.post("/deleteMessageById",function(req,res,next){
+    var reqObj = req.body,id = reqObj.uid,idStr = '';
+    id = id.split(",");
+    id.forEach(elelment=>{
+        idStr += "'"+elelment+"',";
+    });
+    idStr = idStr.substr(0,idStr.length-1);
+    var sqlStr = `delete from t_message where uid in (${idStr})`;
+    query(sqlStr,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 单表记录删除公用服务(可批量)
+ */
+router.post("/singleTableDeleteByKey",function(req,res,next){
+    var reqObj = req.body,id = reqObj.id,keyName = reqObj.keyName,tableName = reqObj.tableName,idStr = '';
+    id = id.split(",");
+    id.forEach(elelment=>{
+        idStr += "'"+elelment+"',";
+    });
+    idStr = idStr.substr(0,idStr.length-1);
+    var sqlStr = `delete from ${tableName} where ${keyName} in (${idStr});`;
+    query(sqlStr,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+
+});
+
 
 module.exports = router;
