@@ -945,7 +945,6 @@ router.get("/exportPlanList",function(req,res,next){
             responseData.message = "导出失败";
         }else{
             var hds = [
-                {header:'任务号', key:'uuid', width:40},
                 {header:'责任人', key:'realName', width:15},
                 {header:'工程名称', key:'projectName', width:25},
                 {header:'任务类型', key:'projectSub', width:20},
@@ -954,12 +953,13 @@ router.get("/exportPlanList",function(req,res,next){
                 {header:'结束时间', key:'endTime', width:15},
                 {header:'任务状态', key:'taskState', width:15},
                 {header:'详细说明', key:'detail', width:50},
-                {header:'备注', key:'memo', width:50}
+                {header:'备注', key:'memo', width:50},
+                {header:'任务号', key:'uuid', width:40}
             ];
             var [pros,filename]= excel.commonExport(hds,results);
             pros.then(function(arg){
                 responseData.status = "success";
-                responseData.message = "/downloads/"+filename;
+                responseData.message = filename;
                 res.json(responseData);
             });
         }

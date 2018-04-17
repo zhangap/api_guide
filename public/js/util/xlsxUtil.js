@@ -16,12 +16,11 @@ function commonExport(headers = [],list){
         //{id:"0001",userName:"jix"}
         sheet.columns = headers;
         sheet.addRows(list);
-        //sheet.commit();
         var filename = UUID.v1()+".xlsx";
         var dir = path.resolve("./downloads");
         if(!fs.existsSync(dir)) fs.mkdirSync(dir);
         var pathName = path.join(dir,filename);
-        return [workBook.xlsx.writeFile(pathName).then(()=>{}).catch(()=>{}),filename];
+        return [workBook.xlsx.writeFile(pathName).then(()=>{}).catch(()=>{}),"/downloads/"+filename];
     }catch(e){
         console.log("导出错误:" + e.message);
     }
