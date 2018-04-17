@@ -55,6 +55,8 @@
                     <el-table-column fixed prop="title" label="标题" width="250"></el-table-column>
                     <el-table-column fixed prop="updatetime2" label="创建时间" width="160"></el-table-column>
                     <el-table-column fixed prop="tag" label="文章标签" :show-overflow-tooltip="true" :formatter="formatTags" align="center"></el-table-column>
+                    <el-table-column fixed prop="readCount" label="浏览数" width="100" align="center"></el-table-column>
+                    <el-table-column fixed prop="collectCount" label="收藏数" width="100" align="center"></el-table-column>
                     <el-table-column fixed prop="operate" label="操作"  width="300" align="center">
                         <template slot-scope="scope">
                             <el-button size="mini"  @click="preViewItemHandler(scope.row)">预览</el-button>
