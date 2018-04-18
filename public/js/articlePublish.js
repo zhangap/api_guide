@@ -1,5 +1,14 @@
 $(function(){
     var wdr = null;
+    function filterDocumentData(data){
+        $.each(data,function(i,n){
+            if(n.children.length == 0){
+                delete n.children;
+            }else{
+                filterDocumentData(n.children);
+            }
+        });
+    }
     var app1 = new Vue({
         el:"#content",
         data:{
@@ -7,14 +16,21 @@ $(function(){
                 title:"",
                 content:"",
                 tag:"",
-                publish:"1"
+                publish:"1",
+                classType:[]
             },
             tagList:[],
             activeName:"",
-            checkdTags:[]
+            checkdTags:[],
+            options:[],
+            props:{
+                label:"typeName",
+                value:"typeId"
+            }
         },
         created:function(){
             this.getTagList();
+            this.getDocumentType();
         },
         mounted:function(){
             wdr = new wangEditor("#editor");
@@ -85,6 +101,10 @@ $(function(){
                 params.content = content;
                 params.publish = flag;
                 params.tag = tagid.join(",");
+                if(!params.classType.length){
+                    eleUtil.message("文章的分类不能为空","error");
+                    return ;
+                }
                 if(!params.title){
                     eleUtil.message("文章的标题不能为空","error");
                     return ;
@@ -96,7 +116,8 @@ $(function(){
                 if(!params.tag){
                     eleUtil.message("文章的标签不能为空","error");
                     return ;
-                }                
+                }    
+                params.classType = params.classType.join(",");            
                 eleUtil.loading("正在提交数据...");
                 $.post("/api/publishArticle",params)
                  .done(function(res){
@@ -104,6 +125,7 @@ $(function(){
                     if(res.status == "success"){
                         _this.resetTagState();
                         _this.formModel.title = '';
+                        _this.formModel.classType = [];
                         wdr.txt.clear();
                         eleUtil.message("文章已发布成功，可在【文章管理】中查看","success");
                     }else{
@@ -120,6 +142,25 @@ $(function(){
                     e.checked = false;
                 });
                 this.checkdTags = [];
+            },
+            handleChange:function(value){
+                console.log(value);
+            },
+            getDocumentType:function () {
+                var _this = this;
+                $.ajax({
+                    url:'/api/documentTypeList',
+                    type:'get',
+                    success:function(res){
+                        if(res.status === 'success'){
+                            var list = res.data;
+                            filterDocumentData(list);
+                            _this.$data.options = list;
+                        }else{
+                            eleUtil.message(res.message,'error');
+                        }
+                    }
+                });
             }
         }
     });

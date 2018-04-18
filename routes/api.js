@@ -632,13 +632,15 @@ router.post("/upload-img",upload.array('file'),function(req,res,next){
  */
 router.post("/publishArticle",function(req,res,next){
     var reqobj = req.body,user = req.session.user;
-    var sql = "insert into t_article values (?,?,?,?,?,?,?);",
-    mapValue = [UUID.v1(),user.userId,reqobj.title,new Date(),reqobj.tag,reqobj.content,reqobj.publish];
+    var sql = "insert into t_article values (?,?,?,?,?,?,?,?,?,?,?);";
+    var docType = reqobj.classType.split(',');
+    docType = docType.pop();
+    var mapValue = [UUID.v1(),user.userId,reqobj.title,new Date(),reqobj.tag,reqobj.content,reqobj.publish,docType,0,0,0];
     if(reqobj.id){
-       sql = "update t_article set title=?,updatetime=?,tag=?,content=?,publish=? where id=?;"; 
+       sql = "update t_article set title=?,updatetime=?,tag=?,content=?,publish=?,docType=? where id=?;"; 
        mapValue.shift();
        mapValue.shift();
-       mapValue.push(reqobj.id);
+       mapValue.splice(6,3,reqobj.id);
     }
     query(sql,mapValue,function(errs,results){
         if(errs){

@@ -1,5 +1,31 @@
 $(function(){
    var wdr = null;
+   var _docList = [];
+   function filterDocumentData(data){
+        $.each(data,function(i,n){
+            if(n.children.length == 0){
+                delete n.children;
+            }else{
+                _docList =  _docList.concat(n.children.slice());
+                filterDocumentData(n.children);
+            }
+        });
+    }
+    function recuriveTree(id,data){
+        var ret = [],one = null;
+        for(var i=0,l=data.length;i<l;i++){
+            if(data[i]["typeId"] == id){
+                one = data[i];
+                break;
+            }
+        }
+        ret.unshift(one.typeId);
+        if(one["pId"]=="0"){
+            return ret;
+        }else{
+            return recuriveTree(one.pId,data).concat(ret);
+        }
+    } 
    var app1 = new Vue({
         el:"#content",
         data:{
@@ -20,16 +46,23 @@ $(function(){
                 title:"",
                 content:"",
                 tag:"",
-                publish:"1"
+                publish:"1",
+                classType:[]
             },
             activeName:"",
             checkdTags:[],
             editRow:null,
-            preView:false
+            preView:false,
+            options:[],
+            props:{
+                label:"typeName",
+                value:"typeId"
+            }
         },
         created:function(){
             this.getTagList();
             this.getArticleList();
+            this.getDocumentType();
         },
         mounted:function(){ 
             wdr = new wangEditor("#editor");
@@ -124,6 +157,8 @@ $(function(){
             editItemHandler:function(row){
                 this.editRow = row;
                 this.filterItemTags();
+                var _doc = recuriveTree(row.docType,_docList);
+                this.editModel.classType = _doc;
                 this.$data.editModel.title = row.title;
                 wdr.txt.html(this.$data.editRow.content);
                 this.dialogArticleVisible = true;
@@ -253,8 +288,11 @@ $(function(){
                     publish:this.editRow.publish,
                     tag:tagid.join(",")
                 };
-                if(!params.title||!params.content||!params.tag){
-                    eleUtil.message("标题、内容及标签不能为空","error");
+                if(this.$data.editModel.classType.length>0){
+                    params.classType = this.$data.editModel.classType.join(",");
+                }
+                if(!params.classType||!params.title||!params.content||!params.tag){
+                    eleUtil.message("分类、标题、内容及标签不能为空","error");
                     return;
                 }
                 $.post("/api/publishArticle",params)
@@ -276,6 +314,26 @@ $(function(){
             preViewBack:function(){
                 this.preView = false;
                 $("#pre").empty();
+            },
+            handleChange:function(value){
+                console.log(value);
+            },
+            getDocumentType:function () {
+                var _this = this;
+                $.ajax({
+                    url:'/api/documentTypeList',
+                    type:'get',
+                    success:function(res){
+                        if(res.status === 'success'){
+                            var list = res.data;
+                            _docList = list.slice();
+                            filterDocumentData(list);
+                            _this.$data.options = list;
+                        }else{
+                            eleUtil.message(res.message,'error');
+                        }
+                    }
+                });
             }
         }
    });

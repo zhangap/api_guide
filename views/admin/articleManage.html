@@ -24,6 +24,7 @@
         h1{
             font-size:2em !important;
         }
+        .el-cascader-menus.el-popper{z-index: 99999 !important;}
     </style>
     <style type="text/css">
         .el-date-editor.el-input--prefix .el-input__inner{padding: 0 30px;}
@@ -92,7 +93,10 @@
         <div v-show="dialogArticleVisible">
             <el-form :inline="false" v-model="editModel" class="demo-form-inline api-user" style="padding-top:10px;" v-cloak>
                     <el-row :gutter="20">
-                        <el-col :sm="24" :md="24" :lg="24">
+                        <el-col :sm="8" :md="6" :lg="4">
+                            <el-cascader placeholder="请选择文章分类" expand-trigger="hover" :options="options" v-model="editModel.classType" :props="props" @change="handleChange"></el-cascader>     
+                        </el-col> 
+                        <el-col :sm="16" :md="18" :lg="20">
                             <el-input  auto-complete="off" v-model="editModel.title" placeholder="请输入文章标题"></el-input>
                         </el-col>    
                     </el-row>

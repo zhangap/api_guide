@@ -24,6 +24,7 @@
         h1{
             font-size:2em !important;
         }
+        .el-cascader-menus.el-popper{z-index: 99999 !important;}
     </style>
 </head>
 <body>
@@ -33,7 +34,10 @@
         <aside class="content" id="content">
             <el-form :inline="false" v-model="formModel" class="demo-form-inline api-user">
                 <el-row :gutter="20">
-                    <el-col :sm="24" :md="24" :lg="24">
+                    <el-col :sm="8" :md="6" :lg="4">
+                        <el-cascader placeholder="请选择文章分类" expand-trigger="hover" :options="options" v-model="formModel.classType" :props="props" @change="handleChange"></el-cascader>     
+                    </el-col> 
+                    <el-col :sm="16" :md="18" :lg="20">
                         <el-input  auto-complete="off" v-model="formModel.title" placeholder="请输入文章标题"></el-input>
                     </el-col>    
                 </el-row>
