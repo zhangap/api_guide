@@ -1039,5 +1039,4 @@ router.post("/singleTableDeleteByKey",function(req,res,next){
 
 });
 
-
 module.exports = router;

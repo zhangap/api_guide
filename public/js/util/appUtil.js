@@ -44,10 +44,15 @@ function getQueryString(req){
  * @param responseData responseData对象
  * @param callback 回调函数
  */
-function queryByPage(sql,req,responseData,callback){
-    var reqObj = getQueryString(req),
-        currentPage = parseInt(reqObj.currentPage,10),
-        pageSize = parseInt(reqObj.pageSize,10);
+function queryByPage(sql,req,responseData,callback,verbs="GET"){
+    var reqObj = null;
+    if(verbs ==="GET"){
+        reqObj = getQueryString(req);
+    }else{
+        reqObj = req;
+    } 
+    var currentPage = parseInt(reqObj.currentPage,10);
+    var pageSize = parseInt(reqObj.pageSize,10);
     var sql1 = "select * from ("+sql+") t limit ?,?";
     var sql2 = "select count(1) as num from ("+sql+") t";
     query([sql1,sql2].join(";"),[(currentPage-1)*pageSize,pageSize],function(errs,results){

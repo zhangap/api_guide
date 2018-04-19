@@ -37,10 +37,12 @@ app.use(session({
 var index = require('./routes/index');
 var api = require('./routes/api');
 var admin = require("./routes/admin");
+var freeApi = require("./routes/freeApi");
 
 app.use('/', index);
 app.use('/api', api);
 app.use('/admin', admin);
+app.use('/freeApi',freeApi); //非登录接口
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
