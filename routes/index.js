@@ -40,4 +40,13 @@ router.get("/linestudy",function(req,res,next){
     res.render("front/linestudy");
 });
 
+/**
+ * 查看文章
+ */
+router.get("/article/:id",function(req,res,next){
+  var aid = req.params.id;
+  res.render("front/article",{id:aid});
+});
+
+
 module.exports = router;

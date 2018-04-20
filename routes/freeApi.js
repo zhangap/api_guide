@@ -79,4 +79,50 @@ function getMenuList(resultData,results,pId,childKey,id){
     }
 }
 
+/**
+ * 查看文章明细
+ */
+router.get("/article/:id",function(req,res,next){
+    let articleid = req.params.id;
+    let sql = "SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y年%m月%d日 %H:%i:%S') time2 from t_article t1 LEFT JOIN t_user t2 ON t1.author = t2.userId WHERE t1.publish=1";
+    if(articleid){
+        sql += ` and t1.id ='${articleid}'`;
+    }
+    query(sql,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = results.length>0?"success":"error";
+            responseData.message = results.length>0?results[0]:{};
+            res.json(responseData);
+        }
+    });
+});
+
+/**
+ * 更新文章的统计量字段
+ */
+router.post("/updateArticleCountField",function(req,res,next){
+    let reqObj = req.body;
+    let fid = reqObj.fieldName,id = reqObj.id;
+    if(fid && id){
+        let sql = `update t_article set ${fid} = ${fid}+1 where id='${id}';`;
+        query(sql,function(errors,results){
+            if(errors){
+                responseData.status = "error";
+                responseData.message = errors;
+            }else{
+                responseData.status = "success";
+                responseData.message = results;
+                res.json(responseData);
+            }
+        });
+    }else{
+        responseData.status = "error";
+        responseData.message = "参数错误";
+        res.json(responseData);
+    }  
+});
+
 module.exports = router;

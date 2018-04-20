@@ -167,6 +167,11 @@ $(function(){
                 this.$data.page.sortField = field;
                 this.$data.page.sortOrder = order;
                 this.getArticleList();
+            },
+            openArticle:function(row){
+                var id = row.id;
+                //console.log(row);
+                window.open("/article/"+id);
             }
         }
     });

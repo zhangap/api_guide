@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <%- include ../default.html%>
+    <link href="/public/css/home.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/css/article.css" rel="stylesheet" type="text/css"/>
+</head>
+<body style="background: #f6f6f6">
+    <header class="api-header">
+        <div class="api-w1024">
+            <a href="/" class="ah-logo">API开发指南</a>
+            <ul>
+                <li><a href="/list">分类查找</a></li>
+                <li><a href="/linestudy">在线学习</a></li>
+                <li><a href="#">在线考试</a></li>
+                <li><a href="/login">管理中心</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="article-container clearfix" id="article">
+        <input type="hidden" value="<%=id%>" id="aid">
+        <div class="main">
+            <div class="article">
+                <h1 class="article-title">{{d.title}}</h1>
+                <div class="article-bar">
+                    <span class="time">{{d.time2}}</span>
+                    <span class="read"><i class="fa fa-eye" style="margin:0 3px;"></i>{{d.readCount+1}}</span>
+                </div>
+                <div class="article-content" v-html="d.content"></div>
+            </div>
+        </div>
+        <aside>
+            <div class="user-info right_column">
+                <dl class="info_bar clearfix">
+                    <dt><i style="font-size: 20px;">v</i>etech</dt>
+                    <dd>
+                        <h1>{{d.realName}}</h1>
+                    </dd>
+                </dl>
+                <div class="info_num_box clearfix">
+                    <dl>
+                        <dt>文章</dt>
+                        <dd>121</dd>
+                    </dl>
+                    <dl>
+                        <dt>评论</dt>
+                        <dd>89</dd>
+                    </dl>
+                    <dl>
+                        <dt>收藏</dt>
+                        <dd>{{d.collectCount}}</dd>
+                    </dl>
+                </dl>
+            </div>
+        </aside>
+    </div>
+    <script type="text/javascript" src="/public/js/front/article.js"></script>
+</body>
+</html>
