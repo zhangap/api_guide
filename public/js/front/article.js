@@ -3,7 +3,9 @@ $(function(){
     var app = new Vue({
         el:"#article",
         data:{
-            d:{},
+            d:{
+                tag:""
+            },
             statistic:{},
             artTags:[],
             tagStyle:['','success','info','warning','danger'],
@@ -51,6 +53,7 @@ $(function(){
             },
             filterTagList:function(list){
                 var tags = this.$data.d.tag||"";
+                if(!tags) return ;
                 tags = tags.split(",");
                 var zTag = tags.map(function(value,index){
                     return list.find(function(dd){
