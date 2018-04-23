@@ -26,6 +26,11 @@
                 <h1 class="article-title">{{d.title}}</h1>
                 <div class="article-bar">
                     <span class="time">{{d.time2}}</span>
+                    <div class="arc-class">
+                        <el-breadcrumb separator="/">
+                            <el-breadcrumb-item v-for="(d,k) in arcClassList" :key="k">{{d.typeName}}</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
                     <span class="read"><i class="fa fa-eye" style="margin:0 3px;"></i>{{d.readCount+1}}</span>
                 </div>
                 <div class="article-content" v-html="d.content"></div>
@@ -42,17 +47,20 @@
                 <div class="info_num_box clearfix">
                     <dl>
                         <dt>文章</dt>
-                        <dd>121</dd>
+                        <dd>{{statistic.artNum||1}}</dd>
                     </dl>
                     <dl>
                         <dt>评论</dt>
-                        <dd>89</dd>
+                        <dd>{{statistic.msgNum||0}}</dd>
                     </dl>
                     <dl>
                         <dt>收藏</dt>
-                        <dd>{{d.collectCount}}</dd>
+                        <dd>{{d.collectCount||0}}</dd>
                     </dl>
-                </dl>
+                </div>
+                <div class="tag_box">
+                    <el-tag v-for="(dr,index) in artTags" :type="tagStyle[index]" :key="index">{{dr.tagName}}</el-tag>
+                </div>
             </div>
         </aside>
     </div>

@@ -125,4 +125,73 @@ router.post("/updateArticleCountField",function(req,res,next){
     }  
 });
 
+/**
+ * 获取文章的统计数据(文章数，评论数，收藏量)
+ */
+router.get("/getArticleStatistics",function(req,res,next){
+    let reqObj = appUtil.getQueryString(req),aid = reqObj.id;
+    let sql1 = `select tag,docType,collectCount FROM t_article WHERE id='${aid}'`;
+    let sql2 = `SELECT count(*) as artNum from t_article WHERE author =(SELECT author FROM t_article WHERE id='${aid}')`;
+    let sql3 = `SELECT count(*) as msgNum from t_message WHERE articleId = '${aid}'`;
+    var ret1={},ret2={},ret3={};
+    query(sql1,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = (results.length>0)?"success":"error";
+            let row = (results.length>0)?results[0]:({});
+            ret1 = row;
+        }
+    });
+    if(responseData.status === "error"){
+        return res.json(responseData);
+    }
+    query(sql2,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = results.length>0?"success":"error";
+            let ret = (results.length>0)?results[0]:({});
+            ret2 = ret;
+        }
+    });
+    if(responseData.status === "error"){
+        return res.json(responseData);
+    }
+    query(sql3,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = results.length>0?"success":"error";
+            let ret = results.length>0?results[0]:{};
+            ret3 = ret;
+        }
+        responseData.message = {...ret1,...ret2,...ret3};
+        res.json(responseData);
+    });
+});
+
+/**
+ * 取全表的值(标签、分类等)
+ */
+router.get("/database/:tid",function(req,res,next){
+    let mapTabs = ['t_class','t_documentType','t_role','t_tag'];
+    let tid = req.params.tid||"0";
+    let index = mapTabs[tid];
+    let sql = `select * from ${index} where 1=1;`;
+    query(sql,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
 module.exports = router;

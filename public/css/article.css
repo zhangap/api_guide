@@ -6,7 +6,7 @@
 .article-bar{padding: 0 25px 0 25px;font-size: 14px;line-height: 34px;color: #888;border-bottom: 1px solid #e5e5e5;}
 .article-bar .time{display: inline-block;}
 .article-bar .read{display:block;float:right;}
-.right_column{background-color: #fff;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);}
+.right_column{background-color: #fff;box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);min-height: 624px;}
 .user-info{padding: 14px 0;}
 .user-info .info_bar{padding-bottom: 14px;border-bottom: 1px solid #e5e5e5;}
 .user-info .info_bar dt{margin-left: 24px;width: 64px;height: 64px;background-color:#0cb7eb;display: inline-block;border-radius: 50%;line-height: 64px;text-align: center;color: #fff;font-weight: bold;}
@@ -16,4 +16,8 @@
 .info_num_box dl{display: inline-block;text-align: center;width: 25%;}
 .info_num_box dl dt{color: #788087;overflow: hidden;width: 100%;line-height: 24px;}
 .info_num_box dl dd{color: #4f4f4f;overflow: hidden;width: 100%;font-weight: 700;line-height: 24px;}
-.article-container .article-content{padding: 20px;color: #454545;word-wrap: break-word;word-break: break-all;}
+.article-container .article-content{padding: 20px;color: #454545;word-wrap: break-word;word-break: break-all;min-height: 500px;}
+.tag_box {padding: 16px 8px;border-bottom: 1px solid #e5e5e5;}
+.tag_box .el-tag +.el-tag{margin-left: 10px;}
+.arc-class {display: inline-block;max-width: 480px;margin-left: 30px;overflow: hidden;vertical-align: bottom;}
+.arc-class .el-breadcrumb {line-height: 34px;vertical-align: bottom;}
