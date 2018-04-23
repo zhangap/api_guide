@@ -194,4 +194,37 @@ router.get("/database/:tid",function(req,res,next){
     });
 });
 
+/**
+ * 获取文章列表(最近，最新)
+ */
+router.get("/topArticleList",function(req,res,next){
+    let reqObj = appUtil.getQueryString(req);
+    let size = reqObj.pageSize||10;
+    let sql1 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 order BY t1.readCount DESC
+    LIMIT 0,${size};`;
+    let sql2 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 order BY t1.updatetime DESC
+    LIMIT 0,${size};`;  
+    let _numList = [],_dateList = []; 
+    query(sql1,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = (results.length>0)?"success":"error";
+            _numList = results;
+        }
+    });
+    query(sql2,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = (results.length>0)?"success":"error";
+            _dateList = results;
+        }
+        responseData.message = {_numList,_dateList};
+        res.json(responseData);
+    });    
+});
+
 module.exports = router;
