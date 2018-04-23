@@ -130,46 +130,21 @@ router.post("/updateArticleCountField",function(req,res,next){
  */
 router.get("/getArticleStatistics",function(req,res,next){
     let reqObj = appUtil.getQueryString(req),aid = reqObj.id;
-    let sql1 = `select tag,docType,collectCount FROM t_article WHERE id='${aid}'`;
-    let sql2 = `SELECT count(*) as artNum from t_article WHERE author =(SELECT author FROM t_article WHERE id='${aid}')`;
-    let sql3 = `SELECT count(*) as msgNum from t_message WHERE articleId = '${aid}'`;
+    let sql1 = `select tag,docType,collectCount FROM t_article WHERE id='${aid}';`;
+    let sql2 = `SELECT count(*) as artNum from t_article WHERE author =(SELECT author FROM t_article WHERE id='${aid}');`;
+    let sql3 = `SELECT count(*) as msgNum from t_message WHERE articleId = '${aid}';`;
     var ret1={},ret2={},ret3={};
-    query(sql1,function(errors,results){
+    query(sql1+sql2+sql3,function(errors,results){
         if(errors){
             responseData.status = "error";
             responseData.message = errors;
         }else{
-            responseData.status = (results.length>0)?"success":"error";
-            let row = (results.length>0)?results[0]:({});
-            ret1 = row;
+            responseData.status = "success";
+            ret1 = results[0][0];
+            ret2 = results[1][0];
+            ret3 = results[2][0];
+            responseData.message = {...ret1,...ret2,...ret3};
         }
-    });
-    if(responseData.status === "error"){
-        return res.json(responseData);
-    }
-    query(sql2,function(errors,results){
-        if(errors){
-            responseData.status = "error";
-            responseData.message = errors;
-        }else{
-            responseData.status = results.length>0?"success":"error";
-            let ret = (results.length>0)?results[0]:({});
-            ret2 = ret;
-        }
-    });
-    if(responseData.status === "error"){
-        return res.json(responseData);
-    }
-    query(sql3,function(errors,results){
-        if(errors){
-            responseData.status = "error";
-            responseData.message = errors;
-        }else{
-            responseData.status = results.length>0?"success":"error";
-            let ret = results.length>0?results[0]:{};
-            ret3 = ret;
-        }
-        responseData.message = {...ret1,...ret2,...ret3};
         res.json(responseData);
     });
 });
@@ -205,26 +180,17 @@ router.get("/topArticleList",function(req,res,next){
     let sql2 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 order BY t1.updatetime DESC
     LIMIT 0,${size};`;  
     let _numList = [],_dateList = []; 
-    query(sql1,function(errors,results){
+    query(sql1+sql2,function(errors,results){
         if(errors){
             responseData.status = "error";
             responseData.message = errors;
         }else{
             responseData.status = (results.length>0)?"success":"error";
-            _numList = results;
+            let _numList = results[0]||[],_dateList = results[1]||[];
+            responseData.message = {_numList,_dateList};
         }
-    });
-    query(sql2,function(errors,results){
-        if(errors){
-            responseData.status = "error";
-            responseData.message = errors;
-        }else{
-            responseData.status = (results.length>0)?"success":"error";
-            _dateList = results;
-        }
-        responseData.message = {_numList,_dateList};
         res.json(responseData);
-    });    
+    }); 
 });
 
 module.exports = router;
