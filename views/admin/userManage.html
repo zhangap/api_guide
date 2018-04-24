@@ -24,7 +24,7 @@
                     <el-col :sm="8" :md="6" :lg="6">
                         <el-form-item label="用户角色">
                             <el-select v-model="userForm.userrole" placeholder="用户角色" size="mini">
-                                <el-option v-for="(vo,index) in roleList" :label="vo.rolename" :value="vo.roleId"></el-option>
+                                <el-option v-for="(vo,index) in roleList" :label="vo.rolename" :value="vo.roleId" :key="index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -55,7 +55,7 @@
                 </el-row>
             </el-form>
             <template>
-                <el-table :data="tableData" style="width: 100%" size="mini" class="aa-table" @select="selectRow" @select-all="selectAll" ref="list">
+                <el-table id= 'userTxb' :data="tableData" style="width: 100%" size="mini" class="aa-table" @select="selectRow" @select-all="selectAll" ref="list">
                     <el-table-column fixed type="selection" label="" width="50"></el-table-column>
                     <el-table-column fixed type="index" label="序号" width="50"></el-table-column>
                     <el-table-column fixed prop="username" label="登录名" width="100"></el-table-column>
@@ -100,7 +100,7 @@
                             <el-col :sm="12" :md="12" :lg="8">
                                 <el-form-item label="用户角色" prop="userrole">
                                     <el-select v-model="newUser.userrole" placeholder="用户角色" size="mini">
-                                        <el-option v-for="(vo,index) in roleList" :label="vo.rolename" :value="vo.roleId"></el-option>
+                                        <el-option v-for="(vo,index) in roleList" :label="vo.rolename" :value="vo.roleId" :key="index"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>

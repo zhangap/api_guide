@@ -21,15 +21,22 @@
         if(typeof options === "string" && options){
             options = {text:options};
         }
+        if(options.target){
+            let dom = document.querySelector(options.target);
+            if(!dom){
+                return null;
+            }
+        }
         options = $.extend(true,{},loading_opts,options);
         loading = ELEMENT.Loading.service(options);
+        return loading;
     }; 
 
     /**
      * @description 解除锁屏
      */
     eleUtil.closeLoading = function(){   
-        loading.close();
+        loading && loading.close();
     };
 
     /**
