@@ -11,9 +11,10 @@ var upload = multer({dest:"uploads/"});
 var excel = require("../public/js/util/xlsxUtil");
 
 /* GET home page. */
-router.get('/*', function(req, res, next) {
+router.all('/*', function(req, res, next) {
+    //session过期后，不准提交POST请求，以免造成数据损毁
     var user = req.session.user;
-    if(user){
+    if(user||req.originalUrl.includes("api/login")){
         next();
     }else{
         req.session.originalUrl = req.originalUrl;
@@ -45,6 +46,7 @@ router.post("/login",function(req,res,next){
                 responseData.status = "success";
                 var oUrl = req.session.originalUrl;
                 responseData.message = oUrl ? oUrl : "/admin/main";
+                res.cookie("username",user.username,{maxAge:30*60*1000});
             }else{
                 responseData.status = "error";
                 responseData.message = "密码错误";

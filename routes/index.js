@@ -15,6 +15,7 @@ router.get("/login",function(req,res,next){
 router.get("/logout",function(req,res,next){
   req.session.user = null;
   req.session.originalUrl = null;
+  res.clearCookie("username");
   res.redirect("/login");
 });
 
