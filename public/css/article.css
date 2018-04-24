@@ -21,3 +21,10 @@
 .tag_box .el-tag +.el-tag{margin-left: 10px;}
 .arc-class {display: inline-block;max-width: 480px;margin-left: 30px;overflow: hidden;vertical-align: bottom;}
 .arc-class .el-breadcrumb {line-height: 34px;vertical-align: bottom;}
+.relative_box{padding: 16px 8px;border-bottom: 1px solid #e5e5e5;min-height: 150px;}
+.relative_box dl dt {color: #000;}
+.relative_box dl dd {padding:3px 0 3px 15px;font-size: 13px;}
+.relative_box dl dd a{color: #757a7e;}
+.relative_box dl dd a i{color: rgba(64,158,255,.6);}
+.relative_box .num-top{margin-bottom: 8px;}
+.relative_box .date-top{margin: 8px 0;}

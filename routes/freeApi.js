@@ -175,9 +175,11 @@ router.get("/database/:tid",function(req,res,next){
 router.get("/topArticleList",function(req,res,next){
     let reqObj = appUtil.getQueryString(req);
     let size = reqObj.pageSize||10;
-    let sql1 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 order BY t1.readCount DESC
+    let author = reqObj.author||"";
+    if(author) author = ` and t1.author='${author}'`;
+    let sql1 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 ${author} order BY t1.readCount DESC
     LIMIT 0,${size};`;
-    let sql2 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 order BY t1.updatetime DESC
+    let sql2 = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.updatetime,'%Y-%m-%d') time2 from t_article t1 left JOIN t_user t2 ON t1.author= t2.userid WHERE publish=1 ${author} order BY t1.updatetime DESC
     LIMIT 0,${size};`;  
     let _numList = [],_dateList = []; 
     query(sql1+sql2,function(errors,results){

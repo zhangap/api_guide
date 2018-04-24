@@ -1,15 +1,21 @@
 $(function(){
     var id = $("#aid").val();
+    hljs.initHighlightingOnLoad();
     var app = new Vue({
         el:"#article",
         data:{
             d:{
-                tag:""
+                tag:"",
+                readCount:0
             },
             statistic:{},
             artTags:[],
             tagStyle:['','success','info','warning','danger'],
-            arcClassList:[]
+            arcClassList:[],
+            topList:{
+                _numList:[],
+                _dateList:[]
+            }
         },
         mounted:function(){
             this.getArticleById();
@@ -18,10 +24,11 @@ $(function(){
                 "fieldName":"readCount"
             });
             this.getArticleStatistics();
-            this.getArticleTagList();
-            this.getArticleClassList();
         },
         updated:function(){
+            $('pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
         },
         methods:{
             getArticleById:function(){
@@ -31,6 +38,10 @@ $(function(){
                     if(response.status=="success"){
                         $("title").html(response.message.title);
                         _this.$data.d = response.message;
+                        //依赖文章的其他字段
+                        _this.getArticleTagList();
+                        _this.getArticleClassList();
+                        _this.getUserTopArticle();
                     }
                 });
             },
@@ -85,9 +96,7 @@ $(function(){
                 });
             },
             filterClassList:function(id,list){
-                if(!id){
-                    return [];
-                }
+                if(!id) return [];
                 for(var x=0,l=list.length;x<l;x++){
                     if(list[x].typeId == id){
                         if(list[x]["pId"] == "0"){
@@ -97,7 +106,18 @@ $(function(){
                         }
                     }
                 }
-
+            },
+            getUserTopArticle:function(){
+                var _this = this;
+                var params = {
+                    pageSize:5,
+                    author:this.$data.d.author
+                };
+                $.get("/freeApi/topArticleList",params,function(resp){
+                    if(resp.status == "success"){
+                        _this.$data.topList = resp.message;
+                    }
+                });
             }
         }
     });

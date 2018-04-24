@@ -6,6 +6,7 @@
     <%- include ../default.html%>
     <link href="/public/css/home.css" rel="stylesheet" type="text/css"/>
     <link href="/public/css/article.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/highlight/css/default.css" rel="stylesheet" type="text/css"/>
 </head>
 <body style="background: #f6f6f6">
     <header class="api-header">
@@ -61,9 +62,22 @@
                 <div class="tag_box">
                     <el-tag v-for="(dr,index) in artTags" :type="tagStyle[index]" :key="index">{{dr.tagName}}</el-tag>
                 </div>
+                <div class="relative_box">
+                    <dl>
+                        <dt class="num-top">{{d.realName}}的最热文章</dt>
+                        <dd v-for="(a,b) in topList._numList" :key="b">
+                            <a :href="'/article/'+a.id" target="_blank">{{a.title}}&nbsp;(<i class="fa fa-eye" title="浏览量"></i>{{a.readCount}})</a>
+                        </dd>
+                        <dt class="date-top">{{d.realName}}的最新文章</dt>
+                        <dd v-for="(c,d) in topList._dateList" :key="d+10">
+                            <a :href="'/article/'+c.id" target="_blank">{{c.title}}&nbsp;(<i class="el-icon-time" title="发布时间"></i>{{c.time2}})</a>
+                        </dd>
+                    </dl>
+                </div>
             </div>
         </aside>
     </div>
+    <script type="text/javascript" src="/public/plugins/highlight/highlight.pack.js"></script>
     <script type="text/javascript" src="/public/js/front/article.js"></script>
 </body>
 </html>
