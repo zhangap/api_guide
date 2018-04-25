@@ -10,18 +10,6 @@ var multer = require("multer");
 var upload = multer({dest:"uploads/"});
 var excel = require("../public/js/util/xlsxUtil");
 
-/* GET home page. */
-router.all('/*', function(req, res, next) {
-    //session过期后，不准提交POST请求，以免造成数据损毁
-    var user = req.session.user;
-    if(user||req.originalUrl.includes("api/login")){
-        next();
-    }else{
-        req.session.originalUrl = req.originalUrl;
-        res.redirect("/login");
-    }
-});
-
 var responseData; //返回格式
 router.use(function(req,res,next){
     responseData = {
@@ -29,6 +17,18 @@ router.use(function(req,res,next){
       message:""
     };
     next();
+});
+/* GET home page. */
+router.all('/*', function(req, res, next) {
+    let user = req.session.user;
+    if(user||req.originalUrl.includes("api/login")){
+        next();
+    }else{
+        req.session.originalUrl = req.headers.referer;
+        responseData.status = "302";
+        responseData.message = "/login";
+        res.json(responseData);
+    }
 });
 
 /**

@@ -91,9 +91,19 @@
         pageSize:10,
         currentPage:1,
         total:0
-    }
+    };
 
     function padLeftZero(str) {
         return ('00' + str).substr(str.length);
     }
+
+    /**
+     * ajax全局配置
+     */
+    $(document).ajaxComplete(function(event,request){
+        var data = JSON.parse(request.responseText);
+        if(data.status === "302"){
+            location.href = data.message;
+        }
+    });
 })(window);
