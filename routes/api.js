@@ -1018,6 +1018,38 @@ router.post("/deleteMessageById",function(req,res,next){
 });
 
 /**
+ * 添加文章的留言
+ */
+router.post("/addArticleMessage",function(req,res,next){
+    let reqObj = req.body,user = req.session.user,puid = reqObj.pid||"0";
+    let sql = "insert into t_message values (?,?,?,?,?,?,?);";
+    let mapValues = [UUID.v1(),user.userId,reqObj.articleId,new Date(),reqObj.content,0,puid];
+    query(sql,mapValues,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 获取用户的登录信息
+ */
+router.get("/loginInfo",function(req,res,next){
+    var user = req.session.user;
+    responseData.status = "success";
+    responseData.message = user;
+    if(!user){
+        responseData.status = "error"; 
+    }
+    return res.json(responseData);
+});
+
+/**
  * 单表记录删除公用服务(可批量)
  */
 router.post("/singleTableDeleteByKey",function(req,res,next){

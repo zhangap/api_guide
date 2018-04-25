@@ -195,4 +195,22 @@ router.get("/topArticleList",function(req,res,next){
     }); 
 });
 
+/**
+ * 获取文章的评论
+ */
+router.get("/getCommentsByArticleId",function(req,res,next){
+    let reqObj = appUtil.getQueryString(req),aid = reqObj.id;
+    let sql = `SELECT t1.*,t2.realName,DATE_FORMAT(t1.createTime,'%Y年%m月%d日 %H:%i:%S') time2  FROM t_message t1 LEFT JOIN t_user t2 ON t1.userId = t2.userId WHERE articleId = '${aid}' order by t1.createtime asc`;
+    query(sql,function(errors,results){
+        if(errors){
+            responseData.status = "error";
+            responseData.message = errors;
+        }else{
+            responseData.status = "success";
+            responseData.message = results;
+        }
+        res.json(responseData);
+    });
+});
+
 module.exports = router;
