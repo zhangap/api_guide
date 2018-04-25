@@ -553,8 +553,8 @@ router.post("/changePwd",function (req,res,next) {
  */
 router.get("/logs",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var username=reqObj.admin;
-    var sql="select  * from t_log where userName like '%"+username+"%' ";
+    var username = reqObj.admin;
+    var sql="select  *,DATE_FORMAT(loginTime,'%Y-%m-%d %H:%i:%S') loginTime1 from t_log  where userName like '%"+username+"%' order by loginTime desc";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     });
