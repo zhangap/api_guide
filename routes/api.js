@@ -59,7 +59,19 @@ router.post("/login",function(req,res,next){
             responseData.statusCode = "10002";
             appUtil.loginLog("",content.username,ip,responseData.message);
         }
-        res.json(responseData);
+        //如果登录成功，直接去查询菜单权限，并进行权限的验证，判断即将跳转的url是否在该登录用户的权限范围内
+        if(responseData.status === "success"){
+            getMenuListByUser(req,function(resultData){
+                var menuItem = resultData.find(function(item){
+                    return item.url === responseData.message;
+                });
+                responseData.message = menuItem ? menuItem.url : "/admin/main";
+                res.json(responseData);
+            });
+        }else{
+            res.json(responseData);
+        }
+
     });
 });
 
@@ -68,28 +80,41 @@ router.post("/login",function(req,res,next){
  * 获取菜单
  */
 router.get("/menuList",function(req,res,next){
-    // var sql = "select * from t_menu where FIND_IN_SET(menuId,getChildLst('0'))";
-    var user = req.session.user;
-    var sql = "select * from t_menu";
-    if(user.username === "superAdmin"){ //如果是超级管理员，拥有所有的角色
-        query(sql,function(errors,results){
-            var resultData = [];
-            getMenuList(resultData,results,"0","childs","menuId");
-            res.json(resultData);
-        });
-    }else{
-        sql = "select t1.menuId, t2.menuName,t2.pId,t2.url from (select * from t_rolemenu where " +
-            "roleid = (select roleId  from t_user where userId =?) and menuId != '0') t1 left join t_menu t2" +
-            " on t1.menuId = t2.menuId order by menuId";
-        query(sql,[user.userId],function(errs,results){
-            var resultData = [];
-            getMenuList(resultData,results,"0","childs","menuId");
-            res.json(resultData);
-        });
-    }
-
-
+    getMenuListByUser(req,function(results){
+        let resultData = [];
+        getMenuList(resultData,results,"0","childs","menuId");
+        res.json(resultData);
+    });
 });
+
+/**
+ * 菜单集合
+ * @type {Array}
+ */
+function getMenuListByUser(req,callback){
+    let user = req.session.user;
+    let menuList = req.session.menuList || [];
+    if(menuList.length){
+        callback(menuList);
+    }else{
+        if(user.username === "superAdmin"){ //如果是超级管理员，拥有所有的角色
+            let sql = "select * from t_menu";
+            query(sql,function(errors,results){
+                req.session.menuList = results;
+                callback(results);
+            });
+        }else{
+            let sql = "select t1.menuId, t2.menuName,t2.pId,t2.url from (select * from t_rolemenu where " +
+                "roleid = (select roleId  from t_user where userId =?) and menuId != '0') t1 left join t_menu t2" +
+                " on t1.menuId = t2.menuId order by menuId";
+            query(sql,[user.userId],function(errs,results){
+                req.session.menuList = results;
+                callback(results);
+            });
+        }
+
+    }
+}
 
 
 

@@ -5,9 +5,19 @@ var config = require(path.resolve("./config/config"));
 
 /* GET home page. */
 router.get('/*', function(req, res, next) {
-    var user = req.session.user;
+    let user = req.session.user;
+    let menuList = req.session.menuList;
     if(user){
-        next();
+        //后台页面做权限控制，如果直接在浏览器中输入某个url，但是这个url不在该用户权限范围内的，直接跳转到后台main页面
+        var result = menuList.find(function(item){
+            return item.url.replace("/admin","") === req.url;
+        });
+        if(req.url === "/main" || result){
+            next();
+        }else{
+            res.redirect("/admin/main");
+        }
+
     }else{
         req.session.originalUrl = req.originalUrl;
         res.redirect("/login");
