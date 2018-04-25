@@ -15,6 +15,15 @@ $(function(){
             topList:{
                 _numList:[],
                 _dateList:[]
+            },
+            talkList:[],
+            commentWord:'',
+            isLoged:false
+        },
+        computed:{
+            wordCount:function(){
+                var len = this.commentWord.length;
+                return len>=255?0:(255-len);
             }
         },
         mounted:function(){
@@ -39,9 +48,11 @@ $(function(){
                         $("title").html(response.message.title);
                         _this.$data.d = response.message;
                         //依赖文章的其他字段
+                        _this.getLoginState();
                         _this.getArticleTagList();
                         _this.getArticleClassList();
                         _this.getUserTopArticle();
+                        _this.getCommentList();
                     }
                 });
             },
@@ -118,7 +129,45 @@ $(function(){
                         _this.$data.topList = resp.message;
                     }
                 });
+            },
+            getCommentList:function(){
+                var _this = this;
+                var params = {
+                    id:this.$data.d.id
+                };
+                $.get("/freeApi/getCommentsByArticleId",params)
+                 .done(function(res){
+                    if(res.status == "success"){
+                        _this.$data.talkList = res.message;
+                    }
+                 });
+            },
+            controlCommentLength:function(){
+                this.$data.commentWord = this.$data.commentWord.substr(0,255);
+            },
+            addComment:function(){
+                var _this = this;
+                var params = {
+                    articleId:this.$data.d.id,
+                    content:this.commentWord
+                };
+                $.post("/api/addArticleMessage",params)
+                 .done(function(res){
+                    if(res.status == "success"){
+                        _this.$data.commentWord = '';
+                        _this.getCommentList();
+                    }
+                 });                
+            },
+            getLoginState:function(){
+                var _this = this;
+                $.get("/api/loginInfo",function(res){
+                    if(res.status == "success"){
+                        _this.$data.isLoged = true;
+                    }
+                });
             }
         }
     });
+    window.appx = app;
 });

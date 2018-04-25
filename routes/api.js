@@ -553,8 +553,8 @@ router.post("/changePwd",function (req,res,next) {
  */
 router.get("/logs",function(req,res,next){
     var reqObj = appUtil.getQueryString(req);
-    var username=reqObj.admin;
-    var sql="select  * from t_log where userName like '%"+username+"%' ";
+    var username = reqObj.admin;
+    var sql="select  *,DATE_FORMAT(loginTime,'%Y-%m-%d %H:%i:%S') loginTime1 from t_log  where userName like '%"+username+"%' order by loginTime desc";
     appUtil.queryByPage(sql,req,responseData,function(resData){
         res.json(resData);
     });
@@ -1015,6 +1015,38 @@ router.post("/deleteMessageById",function(req,res,next){
         }
         res.json(responseData);
     });
+});
+
+/**
+ * 添加文章的留言
+ */
+router.post("/addArticleMessage",function(req,res,next){
+    let reqObj = req.body,user = req.session.user,puid = reqObj.pid||"0";
+    let sql = "insert into t_message values (?,?,?,?,?,?,?);";
+    let mapValues = [UUID.v1(),user.userId,reqObj.articleId,new Date(),reqObj.content,0,puid];
+    query(sql,mapValues,function(errs,results){
+        if(errs){
+            responseData.status = "error";
+            responseData.message = errs;
+        }else{
+            responseData.status = "success";
+            responseData.message = "操作成功";
+        }
+        res.json(responseData);
+    });
+});
+
+/**
+ * 获取用户的登录信息
+ */
+router.get("/loginInfo",function(req,res,next){
+    var user = req.session.user;
+    responseData.status = "success";
+    responseData.message = user;
+    if(!user){
+        responseData.status = "error"; 
+    }
+    return res.json(responseData);
 });
 
 /**
