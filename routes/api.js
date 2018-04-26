@@ -35,6 +35,7 @@ router.all('/*', function(req, res, next) {
  * 登录
  */
 router.post("/login",function(req,res,next){
+    req.session.menuList = [];
     var sql = "select * from t_user where username=? and state=1";
     var content = req.body;
     var ip = appUtil.getClientIp(req);
