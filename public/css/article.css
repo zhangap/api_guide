@@ -47,3 +47,22 @@
 .comment-area .comment-list .list-box .cms_info .cms_user{max-width:80px;margin-right: 20px;color: #0cb7eb;cursor: pointer;}
 .comment-area .comment-list .list-box .cms_info .cms_time{margin-right: 40px;}
 .comment-area .comment-list .list-box .cms_content{text-indent: 2em;line-height: 22px;}
+.right_column .navigation {border-bottom: 1px solid #e5e5e5;position: relative;color:#000;}
+body #autocjs-0{
+    position: absolute;
+    left:0;
+    top:0;
+    width: 300px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+.autocjs-code{
+    padding-right: 5px;
+}
+.autocjs-subjects{
+    margin-left: 5px;
+}
+.autocjs-bd{margin-top: 10px;}
+.right_column .navigation li{list-style: square;list-style-position: inside;}
+.right_column .navigation a{color: #000;}

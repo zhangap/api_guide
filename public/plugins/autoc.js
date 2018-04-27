@@ -870,6 +870,11 @@
             if ( this.get( 'isAnchorsOnly' ) ) {
                 return this;
             }
+            
+            //add by hiliny 如果配置了容器，把插件渲染到容器中去
+            if(this.get('container')){
+                $body = $(this.get('container'));
+            }
 
             // 绘制head
             $footer.append( elements.switcher ).append( elements.top );

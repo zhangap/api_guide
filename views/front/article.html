@@ -34,7 +34,7 @@
                     </div>
                     <span class="read"><i class="fa fa-eye" style="margin:0 3px;"></i>{{d.readCount+1}}</span>
                 </div>
-                <div class="article-content" v-html="d.content"></div>
+                <div id="artc" class="article-content" v-html="d.content"></div>
             </div>
             <div class="comment-area">
                 <div class="no-login" v-if="!isLoged">
@@ -53,12 +53,6 @@
                                 <dd class="cms_content">{{vo.content}}</dd>
                             </dl>
                         </li>
-                        <!-- <li>
-                            <dl>
-                                <dt class="cms_info"><span class="cms_user">李云峰</span><span class="cms_time">2018-04-17 09:45:15</span><span class="number">#1楼</span></dt>
-                                <dd class="cms_content">作为关系型数据库中使用最广泛的数据库，oracle确实有其优秀之处。作为关系型数据库中使用最广泛的数据库，oracle确实有其优秀之处。作为关系型数据库中使用最广泛的数据库，oracle确实有其优秀之处。</dd>
-                            </dl>
-                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -100,10 +94,13 @@
                         </dd>
                     </dl>
                 </div>
+                <div class="navigation" id="nav">
+                </div>
             </div>
         </aside>
     </div>
     <script type="text/javascript" src="/public/plugins/highlight/highlight.pack.js"></script>
+    <script type="text/javascript" src="/public/plugins/autoc.js"></script>
     <script type="text/javascript" src="/public/js/front/article.js"></script>
 </body>
 </html>

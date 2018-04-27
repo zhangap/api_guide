@@ -18,7 +18,8 @@ $(function(){
             },
             talkList:[],
             commentWord:'',
-            isLoged:false
+            isLoged:false,
+            scrollPos:{}
         },
         computed:{
             wordCount:function(){
@@ -35,6 +36,7 @@ $(function(){
             this.getArticleStatistics();
         },
         updated:function(){
+            this.$data.scrollPos = $("#nav").offset();
             $('pre code').each(function(i, block) {
                 hljs.highlightBlock(block);
             });
@@ -48,6 +50,9 @@ $(function(){
                         $("title").html(response.message.title);
                         _this.$data.d = response.message;
                         //依赖文章的其他字段
+                        _this.$nextTick(function(){
+                            _this.initNavigation();
+                        });
                         _this.getLoginState();
                         _this.getArticleTagList();
                         _this.getArticleClassList();
@@ -166,6 +171,42 @@ $(function(){
                         _this.$data.isLoged = true;
                     }
                 });
+            },
+            initNavigation:function(){
+                //初始化导航窗格
+                if($("#artc").find("h1,h2").size()==0) return $("#nav").hide();
+                var ajs = new AutocJS({
+                    article:"#artc",
+                    title:"文章目录",
+                    isAnimateScroll:true,
+                    selector:"h1,h2",
+                    container:"#nav",
+                    SWITCHER:"",
+                    TOP:'<a class="autocjs-top" href="#top" aria-hidden="true">回到顶部</a>',
+                    hasChapterCodeInDirectory:false
+                });
+                window.addEventListener('scroll',this.scrollHandle);
+                window.addEventListener('resize',this.resizeHandle);
+            },
+            scrollHandle:function(){
+               var dst = $(document).scrollTop(),pos = this.$data.scrollPos;
+               if(dst>pos.top){
+                $("#autocjs-0").css({
+                    position:"fixed",
+                    left:pos.left,
+                    top:10
+                });
+               }else{
+                $("#autocjs-0").css({
+                    position:"absolute",
+                    left:0,
+                    top:0
+                });   
+               }
+            },
+            resizeHandle:function(){
+                this.$data.scrollPos = $("#nav").offset();
+                this.scrollHandle();
             }
         }
     });
