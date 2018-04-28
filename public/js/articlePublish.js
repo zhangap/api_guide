@@ -36,7 +36,15 @@ $(function(){
             wdr = new wangEditor("#editor");
             wdr.customConfig.uploadImgServer = '/api/upload-img';
             wdr.customConfig.uploadFileName = 'file';
-        	wdr.customConfig.uploadImgHooks ={};
+            wdr.customConfig.uploadImgHooks ={};
+            wdr.customConfig.pasteTextHandle = function(content){
+                var exp = /<body(?:.|\n)*>([\s\S]+)<\/body>/;
+                var l = content.match(exp);
+                if(l && l.length>0){
+                    content = l[1];
+                }
+                return content;
+            };
 			wdr.create();
         },
         methods:{
@@ -144,7 +152,7 @@ $(function(){
                 this.checkdTags = [];
             },
             handleChange:function(value){
-                console.log(value);
+                //console.log(value);
             },
             getDocumentType:function () {
                 var _this = this;

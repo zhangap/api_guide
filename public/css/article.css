@@ -17,6 +17,7 @@
 .info_num_box dl dt{color: #788087;overflow: hidden;width: 100%;line-height: 24px;}
 .info_num_box dl dd{color: #4f4f4f;overflow: hidden;width: 100%;font-weight: 700;line-height: 24px;}
 .article-container .article-content{padding: 20px;color: #454545;word-wrap: break-word;word-break: break-all;min-height: 500px;}
+.article-container .article-content img{max-width: 100%;}
 .tag_box {padding: 16px 8px;border-bottom: 1px solid #e5e5e5;}
 .tag_box .el-tag +.el-tag{margin-left: 10px;}
 .arc-class {display: inline-block;max-width: 480px;margin-left: 30px;overflow: hidden;vertical-align: bottom;}
