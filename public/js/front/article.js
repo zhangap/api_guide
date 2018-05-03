@@ -19,7 +19,8 @@ $(function(){
             talkList:[],
             commentWord:'',
             isLoged:false,
-            scrollPos:{}
+            scrollPos:{},
+            scrollTid:null
         },
         computed:{
             wordCount:function(){
@@ -189,20 +190,27 @@ $(function(){
                 window.addEventListener('resize',this.resizeHandle);
             },
             scrollHandle:function(){
-               var dst = $(document).scrollTop(),pos = this.$data.scrollPos;
-               if(dst>pos.top){
-                $("#autocjs-0").css({
-                    position:"fixed",
-                    left:pos.left,
-                    top:10
-                });
-               }else{
-                $("#autocjs-0").css({
-                    position:"absolute",
-                    left:0,
-                    top:0
-                });   
-               }
+                var _this = this;
+                if(this.scrollTid) {
+                    window.clearTimeout(this.scrollTid);
+                    this.scrollTid = null;
+                }
+                var dst = $(document).scrollTop(),pos = this.$data.scrollPos;
+                this.scrollTid = setTimeout(function(){
+                    if(dst>pos.top){
+                        $("#autocjs-0").css({
+                            position:"fixed",
+                            left:pos.left,
+                            top:10
+                        });
+                       }else{
+                        $("#autocjs-0").css({
+                            position:"absolute",
+                            left:0,
+                            top:0
+                        });   
+                       }
+                },250);
             },
             resizeHandle:function(){
                 this.$data.scrollPos = $("#nav").offset();
