@@ -38,7 +38,7 @@
 .comment-area .comment-box .comment-publish{display: flex;flex-direction: row;justify-content: flex-end;margin-top: 6px;padding-right: 10px;}
 .comment-area .comment-box .comment-publish span{line-height: 26px;padding-top: 1px;}
 .comment-area .comment-box .comment-publish span i{font-style: normal;color: #ff0000;}
-.comment-area .comment-box .comment-publish a{padding: 1px 10px;border: 1px solid #0cb7eb;border-radius: 5px;margin-left: 10px;line-height: 26px;}
+.comment-area .comment-box .comment-publish a{padding: 1px 10px;border: 1px solid #0cb7eb;border-radius: 5px;margin-left: 10px;line-height: 26px;text-decoration: none;color: #999;}
 .comment-area .comment-box .comment-publish a:hover{background-color: #0cb7eb;color: #fff;}
 .comment-area .comment-list{width: 800px;margin-top: 20px;}
 .comment-area .comment-list .list-box{margin: 0;padding: 0;}
