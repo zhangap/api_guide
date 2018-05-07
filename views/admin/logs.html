@@ -24,7 +24,7 @@
         <el-table :data="tableData" style="width: 100%"  class="aa-table" size="mini">
             <el-table-column prop="loginTime1" label="登录时间" width="300" align="center">
             </el-table-column>
-            <el-table-column prop="ip" label="登录IP" width="300" align="center">
+            <el-table-column prop="ip" label="登录IP" width="300" align="center" :formatter="formatIp">
             </el-table-column>
             <el-table-column prop="result" label="登录结果" width="300" align="center">
             </el-table-column>

@@ -35,6 +35,9 @@ $(function () {
             currentChangeHandler:function (cPage) {
                 this.$data.page.currentPage = cPage;
                 this.queryLogs();
+            },
+            formatIp:function(row,column,cellValue,index){
+                return cellValue.replace(/[^\d.]/g,"");
             }
         }
     })

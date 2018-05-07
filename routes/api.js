@@ -214,6 +214,7 @@ router.post("/saveMenu",function(req,res,next){
         msg = "菜单修改成功",
         map =[];
     mo.url = mo.url ? "/admin/"+mo.url : mo.url;
+    mo.url = mo.url.replace(/\/\//g,"\/");//兼容多于的路径符号
     if(mo.menuId){ //update
         sql = "update t_menu set menuName=?, url=?,pId=?,memo=? where menuId =?";
         map =[mo.menuName,mo.url,mo.pId,mo.memo,mo.menuId];
