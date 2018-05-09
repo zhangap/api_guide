@@ -93,7 +93,7 @@ $(function(){
                 this.$data.dialogFormVisible=false;
                 this.$refs[formName].resetFields();
             },
-            switchMenu(){
+            switchMenu:function(){
                 this.isOpen = ! this.isOpen;
                 var iLeft1 = 0,
                     iLeft2 = 202;
